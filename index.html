@@ -444,8 +444,8 @@ var audioCache = {};      // showId -> mp3 url
 var audioLoading = {};    // showId -> true while fetching
 var playingId = null;
 var playTimer = null;
-var CLIP_START = 20 * 60; // start at 20 min mark
-var CLIP_DURATION = 120;  // play 2 minutes
+var CLIP_START = 4 * 60;  // start at 4 min mark (past intro/ads)
+var CLIP_DURATION = 30;   // play 30 seconds
 
 function makeWave(prog, ac, cid) {
   var bars = 32;
@@ -812,7 +812,7 @@ function buildCard(c,idx){
     +'<button class="play-btn" id="pb'+c.id+'" onclick="doPlay('+c.id+')" style="background:'+c.ac+'">'+pico()+'</button>'
     +'<button class="player-skip" onclick="skipSeconds('+c.id+',15)" title="Forward 15s">&#187;</button>'
     +'<span class="time-disp" id="td'+c.id+'">0:00</span>'
-    +'<span style="font-size:9px;color:var(--muted);margin-left:auto">2 min clip</span>'
+    +'<span style="font-size:9px;color:var(--muted);margin-left:auto">30s clip</span>'
     +'</div></div>'
     +'<div class="platform-row">'
     +'<button class="plt-btn plt-apple" id="ab'+c.id+'" onclick="doPlatform(\'a\','+c.id+')">'+apSVG()+'<span id="al'+c.id+'">Apple Podcasts</span></button>'
