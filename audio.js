@@ -1,6 +1,5 @@
-const fetch = require('node-fetch');
+// Vercel serverless function — Node 18+ native fetch, no dependencies needed
 
-// RSS feeds for all 16 shows
 const RSS_FEEDS = {
   1:  'https://feeds.acast.com/public/shows/lawfare',
   2:  'https://feeds.buzzsprout.com/1906302.rss',
@@ -20,54 +19,61 @@ const RSS_FEEDS = {
   16: 'https://feeds.simplecast.com/54nAGcIl',
 };
 
-// Cache to avoid refetching on every request
 const cache = {};
-const CACHE_TTL = 3600 * 1000; // 1 hour
+const CACHE_MS = 60 * 60 * 1000;
 
 async function getAudioUrl(showId) {
   const now = Date.now();
-  if (cache[showId] && (now - cache[showId].ts) < CACHE_TTL) {
+  if (cache[showId] && (now - cache[showId].ts) < CACHE_MS) {
     return cache[showId].url;
   }
 
   const feedUrl = RSS_FEEDS[showId];
-  if (!feedUrl) return null;
+  if (!feedUrl) throw new Error('Unknown show');
 
-  try {
-    const res = await fetch(feedUrl, {
-      headers: {
-        'User-Agent': 'HiddenPod/1.0 (podcast discovery prototype)',
-        'Accept': 'application/rss+xml, application/xml, text/xml, */*'
-      },
-      timeout: 8000
-    });
+  const res = await fetch(feedUrl, {
+    headers: {
+      'User-Agent': 'Mozilla/5.0 (compatible; HiddenPod/1.0; +https://hiddenpod.vercel.app)',
+      'Accept': 'application/rss+xml, application/xml, text/xml, */*',
+    },
+    redirect: 'follow',
+    signal: AbortSignal.timeout(10000),
+  });
 
-    if (!res.ok) return null;
-    const text = await res.text();
+  if (!res.ok) throw new Error(`Feed returned ${res.status}`);
 
-    // Extract first enclosure URL from RSS
-    const match = text.match(/<enclosure[^>]+url="([^"]+)"/);
-    if (!match) return null;
+  const text = await res.text();
+  let url = null;
 
-    const url = match[1];
-    cache[showId] = { url, ts: now };
-    return url;
+  const m1 = text.match(/<enclosure[^>]+url="([^"]+\.mp3[^"]*)"/i);
+  if (m1) url = m1[1];
 
-  } catch (e) {
-    console.error(`Feed fetch error for show ${showId}:`, e.message);
-    return null;
+  if (!url) {
+    const m2 = text.match(/<enclosure[^>]+url='([^']+\.mp3[^']*)'/i);
+    if (m2) url = m2[1];
   }
+  if (!url) {
+    const m3 = text.match(/<media:content[^>]+url="([^"]+\.mp3[^"]*)"/i);
+    if (m3) url = m3[1];
+  }
+  if (!url) {
+    const m4 = text.match(/<enclosure[^>]+url="([^"]+)"/i);
+    if (m4) url = m4[1];
+  }
+
+  if (!url) throw new Error('No audio URL in feed');
+
+  url = url.replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>');
+  cache[showId] = { url, ts: now };
+  return url;
 }
 
 module.exports = async (req, res) => {
-  // CORS headers — allow any origin for prototype
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  res.setHeader('Cache-Control', 'public, s-maxage=3600');
 
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end();
-  }
+  if (req.method === 'OPTIONS') return res.status(200).end();
 
   const showId = parseInt(req.query.show, 10);
   if (!showId || showId < 1 || showId > 16) {
@@ -75,12 +81,10 @@ module.exports = async (req, res) => {
   }
 
   try {
-    const audioUrl = await getAudioUrl(showId);
-    if (!audioUrl) {
-      return res.status(404).json({ error: 'Audio URL not found' });
-    }
-    return res.status(200).json({ url: audioUrl });
+    const url = await getAudioUrl(showId);
+    return res.status(200).json({ url });
   } catch (e) {
-    return res.status(500).json({ error: 'Server error' });
+    console.error('Show ' + showId + ' error:', e.message);
+    return res.status(502).json({ error: e.message || 'Feed unavailable' });
   }
 };

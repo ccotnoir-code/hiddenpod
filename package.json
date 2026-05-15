@@ -1,12 +1,5 @@
 {
   "name": "hiddenpod",
   "version": "1.0.0",
-  "description": "HiddenPod — podcast discovery prototype",
-  "main": "index.js",
-  "scripts": {
-    "start": "node index.js"
-  },
-  "dependencies": {
-    "node-fetch": "^2.7.0"
-  }
+  "description": "HiddenPod — podcast discovery prototype"
 }
