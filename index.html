@@ -211,6 +211,9 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--text);font-fam
 .ni-badge{position:absolute;top:3px;right:5px;width:15px;height:15px;background:var(--accent);border-radius:50%;font-size:8px;font-weight:700;color:#0a0a0f;display:flex;align-items:center;justify-content:center;font-family:var(--font-d)}
 .nc{width:46px;height:46px;border-radius:50%;background:var(--green);display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 0 16px rgba(26,107,60,0.35);margin-bottom:5px;transition:transform 0.15s}
 .nc:active{transform:scale(0.93)}
+.autoplay-btn{display:flex;align-items:center;gap:5px;padding:4px 10px;border-radius:16px;border:1px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.06);color:var(--muted);font-size:10px;font-family:var(--font-b);font-weight:500;cursor:pointer;transition:all 0.2s;flex-shrink:0}
+.autoplay-btn.on{border-color:var(--accent);background:rgba(232,255,71,0.12);color:var(--accent)}
+.autoplay-btn .ap-dot{width:6px;height:6px;border-radius:50%;background:currentColor;flex-shrink:0}
 </style>
 </head>
 <body>
@@ -242,6 +245,7 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--text);font-fam
     <div class="nav-tab" onclick="switchTab(this,'following')">Following</div>
     <div class="nav-tab" onclick="switchTab(this,'trending')">Trending</div>
   </div>
+  <button class="autoplay-btn on" id="apToggle" onclick="toggleAutoplay()"><div class="ap-dot"></div>Autoplay</button>
   <div class="avatar">CL</div>
 </div>
 
@@ -680,7 +684,9 @@ function startPlayTimer(id) {
 
     // Stop at 2 minutes
     if (audioEl.currentTime >= clipEnd || elapsed >= CLIP_DURATION) {
+      var finishedId = id;
       stopCurrentAudio();
+      advanceToNext(finishedId);
     }
   }, 250);
 }
@@ -749,6 +755,56 @@ function doPlatform(p, id) {
     if (btn) btn.classList.add('done');
     if (lbl) lbl.textContent = 'Following on Apple';
   }
+}
+
+var autoplayEnabled = true;
+var intersectionObserver = null;
+var visibleCardId = null;
+var autoplayPending = false;
+
+function toggleAutoplay() {
+  autoplayEnabled = !autoplayEnabled;
+  var btn = document.getElementById('apToggle');
+  if (btn) {
+    btn.className = 'autoplay-btn' + (autoplayEnabled ? ' on' : '');
+    btn.innerHTML = '<div class="ap-dot"></div>Autoplay';
+  }
+  if (!autoplayEnabled) stopCurrentAudio();
+  showToast(autoplayEnabled ? '▶ Autoplay on' : '⏹ Autoplay off');
+}
+
+function advanceToNext(currentId) {
+  if (!autoplayEnabled) return;
+  var idx = filteredData.findIndex(function(c) { return c.id === currentId; });
+  if (idx === -1) idx = 0;
+  var nextIdx = (idx + 1) % filteredData.length;
+  var nextCard = filteredData[nextIdx];
+  if (!nextCard) return;
+  var el = document.getElementById('cc' + nextCard.id);
+  if (el) {
+    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    setTimeout(function() { if (autoplayEnabled) doPlay(nextCard.id); }, 500);
+  }
+}
+
+function setupIntersectionObserver() {
+  if (intersectionObserver) intersectionObserver.disconnect();
+  intersectionObserver = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting && entry.intersectionRatio > 0.6) {
+        var idMatch = entry.target.id.match(/cc(\d+)/);
+        if (!idMatch) return;
+        var newId = parseInt(idMatch[1], 10);
+        if (newId === visibleCardId) return;
+        visibleCardId = newId;
+        clearTimeout(autoplayPending);
+        autoplayPending = setTimeout(function() {
+          if (visibleCardId === newId && autoplayEnabled && playingId !== newId) doPlay(newId);
+        }, 400);
+      }
+    });
+  }, { root: document.getElementById('feed'), threshold: 0.6 });
+  document.querySelectorAll('.clip-card').forEach(function(card) { intersectionObserver.observe(card); });
 }
 
 // ── STATE ─────────────────────────────────────────────────────────────────────
@@ -839,8 +895,7 @@ function render(data){
   Object.keys(liked).forEach(function(id){if(liked[id])applyLike(parseInt(id),true)});
   Object.keys(saved).forEach(function(id){if(saved[id])applySave(parseInt(id),true)});
   Object.keys(followed).forEach(function(id){if(followed[id])applyFollow(parseInt(id),true)});
-  
-  
+  setTimeout(setupIntersectionObserver, 100);
 }
 
 // ── INTERACTIONS ──────────────────────────────────────────────────────────────
@@ -1005,6 +1060,12 @@ function showToast(msg,green){
 
 // ── INIT ──────────────────────────────────────────────────────────────────────
 render(DATA);
+setTimeout(function() {
+  if (autoplayEnabled && filteredData.length > 0) {
+    visibleCardId = filteredData[0].id;
+    doPlay(filteredData[0].id);
+  }
+}, 800);
 </script>
 </body>
 </html>
