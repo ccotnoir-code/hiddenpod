@@ -1,0 +1,1010 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>HiddenPod — Discover</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --bg:#0a0a0f;
+  --surface:#131318;
+  --surface2:#1c1c24;
+  --border:rgba(255,255,255,0.07);
+  --text:#f0f0f5;
+  --muted:rgba(240,240,245,0.45);
+  --green:#1A6B3C;
+  --lgreen:#EAF3DE;
+  --accent:#E8FF47;
+  --font-d:'Syne',sans-serif;
+  --font-b:'DM Sans',sans-serif;
+}
+html,body{width:100%;height:100%;background:var(--bg);color:var(--text);font-family:var(--font-b);overflow:hidden;user-select:none}
+
+/* ── PHONE SHELL ── */
+.wrap{display:flex;align-items:center;justify-content:center;min-height:100vh;background:#05050a}
+.phone{width:390px;height:844px;background:var(--bg);border-radius:48px;box-shadow:0 0 0 10px #1a1a22,0 0 0 12px #252530,0 40px 80px rgba(0,0,0,0.8);overflow:hidden;position:relative;display:flex;flex-direction:column}
+.phone::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:120px;height:34px;background:var(--bg);border-radius:0 0 20px 20px;z-index:100}
+@media(max-width:430px){
+  .wrap{min-height:unset;background:var(--bg)}
+  .phone{width:100vw;height:100dvh;border-radius:0;box-shadow:none}
+  .phone::before{display:none}
+  .status-bar{display:none}
+}
+
+/* ── STATUS BAR ── */
+.status-bar{height:44px;display:flex;align-items:flex-start;padding:12px 28px 0;justify-content:space-between;flex-shrink:0;z-index:50}
+.status-time{font-family:var(--font-d);font-size:15px;font-weight:600}
+.status-icons{display:flex;gap:6px;align-items:center}
+
+/* ── TOP NAV ── */
+.top-nav{padding:6px 18px 0;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;z-index:50}
+.logo-mark{width:32px;height:32px;background:#0D2A1A;border:2px solid var(--green);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;position:relative;overflow:visible}
+.logo-bars{display:flex;align-items:flex-end;gap:1.5px;height:16px;padding:0 4px}
+.logo-bar{border-radius:1.5px;width:3px}
+.wordmark{font-family:var(--font-d);font-size:20px;font-weight:800;letter-spacing:-0.5px;margin-left:8px}
+.wordmark .h{color:rgba(162,200,162,0.55)}
+.wordmark .p{color:var(--accent)}
+.logo-group{display:flex;align-items:center}
+.nav-tabs{display:flex;background:var(--surface2);border-radius:20px;padding:3px}
+.nav-tab{font-family:var(--font-d);font-size:11px;font-weight:600;padding:5px 11px;border-radius:17px;color:var(--muted);cursor:pointer;transition:all 0.18s}
+.nav-tab.active{background:var(--accent);color:#0a0a0f}
+.avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--accent),#47ffe8);display:flex;align-items:center;justify-content:center;font-family:var(--font-d);font-size:12px;font-weight:700;color:#0a0a0f;flex-shrink:0}
+
+/* ── CATEGORY ROW ── */
+.cat-row{display:flex;gap:7px;padding:8px 18px 0;overflow-x:auto;flex-shrink:0;scrollbar-width:none}
+.cat-row::-webkit-scrollbar{display:none}
+.cat-pill{font-size:11px;font-weight:500;padding:5px 12px;border-radius:20px;border:1px solid var(--border);color:var(--muted);white-space:nowrap;cursor:pointer;flex-shrink:0;background:transparent;transition:all 0.18s}
+.cat-pill.active{background:rgba(232,255,71,0.1);border-color:rgba(232,255,71,0.4);color:var(--accent)}
+
+/* ── FEED ── */
+.feed-container{flex:1;overflow:hidden;position:relative;margin-top:8px}
+.feed{position:absolute;inset:0;overflow-y:scroll;scroll-snap-type:y mandatory;scrollbar-width:none;padding-bottom:80px}
+.feed::-webkit-scrollbar{display:none}
+
+/* ── CLIP CARD ── */
+.clip-card{height:560px;scroll-snap-align:start;position:relative;margin:0 10px 8px;border-radius:22px;overflow:hidden;background:var(--surface);border:1px solid var(--border);display:flex;flex-direction:column}
+.card-bg{position:absolute;inset:0;z-index:0}
+.card-content{position:relative;z-index:2;display:flex;flex-direction:column;height:100%;padding:13px 50px 12px 15px}
+
+/* ── SHOW STRIP ── */
+.show-strip{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.show-logo{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:var(--font-d);font-weight:800;flex-shrink:0;border:1px solid rgba(255,255,255,0.1);font-size:13px}
+.show-info{flex:1;min-width:0}
+.show-name-row{display:flex;align-items:center;gap:4px}
+.show-name{font-family:var(--font-d);font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.info-btn{width:18px;height:18px;border-radius:50%;border:1px solid rgba(255,255,255,0.18);background:rgba(255,255,255,0.05);color:rgba(255,255,255,0.42);font-size:9px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;font-family:var(--font-d);transition:background 0.15s}
+.show-sub{display:flex;align-items:center;gap:5px;flex-wrap:wrap;margin-top:2px}
+.size-tag{font-size:9.5px;font-weight:600;font-family:var(--font-d);padding:2px 6px;border-radius:6px;flex-shrink:0}
+.size-micro{background:rgba(255,107,107,0.15);border:1px solid rgba(255,107,107,0.3);color:#ff9a9a}
+.size-mid{background:rgba(71,255,232,0.1);border:1px solid rgba(71,255,232,0.25);color:#47ffe8}
+.size-large{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);color:var(--muted)}
+.city-lbl{font-size:10px;color:var(--muted)}
+.follow-btn{font-family:var(--font-d);font-size:10px;font-weight:700;padding:4px 10px;border-radius:20px;border:1.5px solid var(--green);color:var(--green);background:transparent;cursor:pointer;flex-shrink:0;transition:all 0.18s;white-space:nowrap}
+.follow-btn.on{background:var(--green);color:white;border-color:var(--green)}
+
+/* ── MOMENT AREA ── */
+.moment-area{flex:1;display:flex;flex-direction:column;justify-content:center;padding:8px 0 4px}
+.moment-lbl{font-size:9.5px;font-weight:500;color:var(--accent);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:6px;display:flex;align-items:center;gap:4px}
+.moment-lbl::before{content:'';width:12px;height:2px;background:var(--accent);border-radius:2px}
+.moment-quote{font-family:var(--font-d);font-size:16px;font-weight:700;line-height:1.35;letter-spacing:-0.3px}
+.moment-quote em{font-style:normal;color:var(--accent)}
+.ep-title{font-size:10.5px;color:var(--muted);margin-top:6px;line-height:1.4}
+.score-row{display:flex;gap:5px;margin-top:7px;flex-wrap:wrap}
+.score-pill{font-size:9px;padding:2px 7px;border-radius:8px;border:1px solid rgba(255,255,255,0.08);color:rgba(255,255,255,0.38);font-family:var(--font-d);font-weight:600}
+.score-pill.hi{border-color:rgba(232,255,71,0.25);color:rgba(232,255,71,0.65)}
+
+/* ── BOTTOM SECTION ── */
+.bottom-sec{flex-shrink:0}
+.match-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:5px}
+.match-tag{display:inline-flex;align-items:center;background:rgba(26,107,60,0.2);border:1px solid rgba(26,107,60,0.4);border-radius:8px;padding:3px 8px;font-size:10px;font-weight:600;color:#7DCF9E;font-family:var(--font-d)}
+.reason-lbl{font-size:10px;color:var(--muted);display:flex;align-items:center;gap:3px;max-width:55%;text-align:right;line-height:1.3}
+
+/* ── PLAYER ── */
+/* ── REAL AUDIO PLAYER ── */
+.player-area{background:rgba(255,255,255,0.04);border-radius:12px;padding:8px 10px}
+.waveform{display:flex;align-items:center;gap:1.5px;height:24px;margin-bottom:5px;cursor:pointer}
+.wave-bar{flex:1;background:rgba(255,255,255,0.12);border-radius:1.5px;transition:background 0.15s}
+.wave-bar.played{background:var(--green)}
+.wave-bar.active{background:var(--accent);animation:pb 0.5s ease infinite alternate}
+.play-btn{width:28px;height:28px;border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:transform 0.1s}
+.play-btn:active{transform:scale(0.9)}
+.play-btn svg{margin-left:2px}
+.loading-ring{width:16px;height:16px;border:2px solid rgba(255,255,255,0.2);border-top-color:var(--accent);border-radius:50%;animation:spin 0.7s linear infinite;flex-shrink:0}
+@keyframes spin{to{transform:rotate(360deg)}}
+.clip-badge{font-size:9px;color:var(--muted);margin-left:4px;opacity:0.7}
+@keyframes pb{from{opacity:0.7}to{opacity:1}}
+.player-ctrls{display:flex;align-items:center;gap:7px}
+.play-btn{width:28px;height:28px;border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:transform 0.1s}
+.play-btn:active{transform:scale(0.9)}
+.play-btn svg{margin-left:2px}
+.time-disp{font-family:var(--font-d);font-size:10px;font-weight:600;color:var(--muted)}
+.clip-dur{margin-left:auto;font-size:10px;color:var(--muted);background:rgba(255,255,255,0.06);padding:2px 6px;border-radius:6px}
+
+/* ── PLATFORM ROW ── */
+.platform-row{display:flex;gap:5px;margin-top:6px}
+.plt-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:4px;padding:6px 5px;border-radius:8px;border:none;cursor:pointer;font-family:var(--font-b);font-size:10.5px;font-weight:500;white-space:nowrap;transition:opacity 0.18s,transform 0.12s}
+.plt-btn:active{transform:scale(0.95);opacity:0.8}
+.plt-apple{background:#fc3c44;color:#fff}
+.plt-spotify{background:#1db954;color:#fff}
+.plt-btn.done{opacity:0.45;cursor:default}
+
+/* ── ACTION RAIL ── */
+.action-rail{position:absolute;right:8px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:12px;z-index:3}
+.act-btn{display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer}
+.act-icon{width:32px;height:32px;border-radius:50%;background:rgba(0,0,0,0.5);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,0.1);transition:transform 0.15s,background 0.15s}
+.act-icon:active{transform:scale(0.87)}
+.act-icon.liked{background:rgba(255,80,80,0.25);border-color:rgba(255,80,80,0.5)}
+.act-icon.saved{background:rgba(26,107,60,0.3);border-color:rgba(26,107,60,0.5)}
+.act-count{font-size:9px;color:var(--muted);font-weight:500;font-family:var(--font-d)}
+
+/* ── INFO DRAWER ── */
+.dp{position:absolute;inset:0;z-index:20;display:flex;flex-direction:column;justify-content:flex-end;pointer-events:none;opacity:0;transition:opacity 0.2s;border-radius:22px;overflow:hidden}
+.dp.open{opacity:1;pointer-events:all}
+.dp-backdrop{position:absolute;inset:0;background:rgba(0,0,0,0.65);backdrop-filter:blur(3px)}
+.dp-sheet{position:relative;z-index:2;background:#13131c;border-top:1px solid rgba(255,255,255,0.08);padding:14px 16px 18px;transform:translateY(20px);transition:transform 0.25s cubic-bezier(0.34,1.18,0.64,1)}
+.dp.open .dp-sheet{transform:translateY(0)}
+.dp-handle{width:30px;height:3px;background:rgba(255,255,255,0.15);border-radius:2px;margin:0 auto 12px}
+.dp-title{font-family:var(--font-d);font-size:13px;font-weight:700;margin-bottom:8px;display:flex;align-items:center;gap:5px}
+.dp-dot{width:6px;height:6px;border-radius:50%;background:var(--accent);flex-shrink:0}
+.dp-body{font-size:11.5px;color:rgba(240,240,245,0.7);line-height:1.6;margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid rgba(255,255,255,0.06)}
+.dp-tags{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:12px}
+.dp-tag{font-size:10px;padding:2px 8px;border-radius:18px;border:1px solid rgba(255,255,255,0.09);color:var(--muted)}
+.dp-tag.hi{background:rgba(232,255,71,0.08);border-color:rgba(232,255,71,0.28);color:var(--accent)}
+.dp-scores{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-bottom:12px}
+.dp-score-item{background:rgba(255,255,255,0.04);border-radius:8px;padding:6px 8px}
+.dp-score-label{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:3px}
+.dp-score-bar{height:3px;background:rgba(255,255,255,0.1);border-radius:2px;overflow:hidden}
+.dp-score-fill{height:100%;border-radius:2px;background:var(--green)}
+.dp-score-val{font-size:10px;font-weight:600;color:var(--text);font-family:var(--font-d);margin-top:2px}
+.dp-close{width:100%;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.09);background:transparent;color:var(--muted);font-size:11.5px;font-family:var(--font-b);cursor:pointer}
+
+/* ── SWIPE HINT ── */
+.swipe-hint{position:absolute;bottom:86px;left:50%;transform:translateX(-50%);z-index:3;display:flex;flex-direction:column;align-items:center;gap:3px;animation:fup 2s ease infinite;pointer-events:none}
+@keyframes fup{0%,100%{opacity:0.4;transform:translateX(-50%) translateY(0)}50%{opacity:0.8;transform:translateX(-50%) translateY(-5px)}}
+.swipe-hint-txt{font-size:9.5px;color:var(--muted);font-weight:500;letter-spacing:0.05em}
+
+/* ── SAVED VIEW ── */
+.saved-view{position:absolute;inset:0;background:var(--bg);z-index:10;display:none;flex-direction:column}
+.saved-view.open{display:flex}
+.saved-header{padding:52px 18px 12px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.saved-title{font-family:var(--font-d);font-size:20px;font-weight:800}
+.saved-count{font-size:12px;color:var(--muted);margin-top:2px}
+.saved-close{width:32px;height:32px;border-radius:50%;background:var(--surface2);display:flex;align-items:center;justify-content:center;cursor:pointer}
+.saved-list{flex:1;overflow-y:auto;padding:0 18px 80px}
+.saved-item{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--border)}
+.saved-logo{width:42px;height:42px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:var(--font-d);font-weight:800;font-size:13px;flex-shrink:0}
+.saved-info{flex:1;min-width:0}
+.saved-show{font-size:12px;font-weight:600;font-family:var(--font-d);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.saved-ep{font-size:11px;color:var(--muted);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.saved-match{font-size:10px;color:#7DCF9E;font-family:var(--font-d);font-weight:600;margin-top:3px}
+.unsave-btn{font-size:10px;color:var(--muted);cursor:pointer;padding:4px}
+.saved-empty{text-align:center;padding:60px 20px;color:var(--muted)}
+.saved-empty-icon{font-size:40px;margin-bottom:12px;opacity:0.3}
+.saved-empty-txt{font-size:13px}
+
+/* ── FOLLOWING VIEW ── */
+.following-view{position:absolute;inset:0;background:var(--bg);z-index:10;display:none;flex-direction:column}
+.following-view.open{display:flex}
+.following-list{flex:1;overflow-y:auto;padding:0 18px 80px}
+.following-item{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--border)}
+.following-logo{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-family:var(--font-d);font-weight:800;font-size:14px;flex-shrink:0}
+.following-info{flex:1;min-width:0}
+.following-show{font-size:13px;font-weight:700;font-family:var(--font-d)}
+.following-sub{font-size:11px;color:var(--muted);margin-top:2px}
+.unfollow-btn{font-family:var(--font-d);font-size:10px;font-weight:600;padding:4px 10px;border-radius:18px;border:1px solid rgba(255,255,255,0.15);color:var(--muted);background:transparent;cursor:pointer}
+
+/* ── TOAST ── */
+.toast{position:absolute;bottom:84px;left:50%;transform:translateX(-50%) translateY(12px);background:var(--surface2);border:1px solid var(--border);border-radius:20px;padding:7px 14px;font-size:11.5px;color:var(--text);white-space:nowrap;z-index:300;opacity:0;transition:all 0.2s;pointer-events:none;max-width:280px;text-align:center}
+.toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast.green{border-color:rgba(26,107,60,0.5);background:#0d1f14}
+
+/* ── BOTTOM NAV ── */
+.bottom-nav{height:68px;background:var(--surface);border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-around;padding:0 8px 6px;flex-shrink:0;z-index:50}
+.ni{display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:5px 10px;border-radius:12px;position:relative}
+.ni.on{background:rgba(232,255,71,0.07)}
+.ni svg{opacity:0.3;transition:opacity 0.15s}
+.ni.on svg{opacity:1}
+.ni-lbl{font-size:9.5px;color:var(--muted);font-weight:500}
+.ni.on .ni-lbl{color:var(--accent)}
+.ni-badge{position:absolute;top:3px;right:5px;width:15px;height:15px;background:var(--accent);border-radius:50%;font-size:8px;font-weight:700;color:#0a0a0f;display:flex;align-items:center;justify-content:center;font-family:var(--font-d)}
+.nc{width:46px;height:46px;border-radius:50%;background:var(--green);display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 0 16px rgba(26,107,60,0.35);margin-bottom:5px;transition:transform 0.15s}
+.nc:active{transform:scale(0.93)}
+</style>
+</head>
+<body>
+<div class="wrap"><div class="phone" id="phone">
+
+<div class="status-bar">
+  <span class="status-time">9:41</span>
+  <div class="status-icons">
+    <svg width="16" height="12" viewBox="0 0 16 12" fill="white"><rect x="0" y="4" width="3" height="8" rx="1"/><rect x="4.5" y="2.5" width="3" height="9.5" rx="1"/><rect x="9" y="0.5" width="3" height="11.5" rx="1"/><rect x="13.5" y="0" width="2.5" height="12" rx="1" opacity="0.3"/></svg>
+    <svg width="25" height="12" viewBox="0 0 25 12" fill="none"><rect x="0.5" y="0.5" width="21" height="11" rx="3.5" stroke="white" stroke-opacity="0.35"/><rect x="2" y="2" width="16" height="8" rx="2" fill="white"/></svg>
+  </div>
+</div>
+
+<div class="top-nav">
+  <div class="logo-group">
+    <div class="logo-mark">
+      <div class="logo-bars">
+        <div class="logo-bar" style="height:8px;background:#9CB89C"></div>
+        <div class="logo-bar" style="height:12px;background:#639922"></div>
+        <div class="logo-bar" style="height:16px;background:#E8FF47"></div>
+        <div class="logo-bar" style="height:12px;background:#639922"></div>
+        <div class="logo-bar" style="height:8px;background:#9CB89C"></div>
+      </div>
+    </div>
+    <div class="wordmark"><span class="h">hidden</span><span class="p">pod</span></div>
+  </div>
+  <div class="nav-tabs">
+    <div class="nav-tab active" onclick="switchTab(this,'foryou')">For you</div>
+    <div class="nav-tab" onclick="switchTab(this,'following')">Following</div>
+    <div class="nav-tab" onclick="switchTab(this,'trending')">Trending</div>
+  </div>
+  <div class="avatar">CL</div>
+</div>
+
+<div class="cat-row" id="catRow">
+  <div class="cat-pill active" onclick="filterCat(this,'all')">All</div>
+  <div class="cat-pill" onclick="filterCat(this,'local')">Local</div>
+  <div class="cat-pill" onclick="filterCat(this,'news')">News</div>
+  <div class="cat-pill" onclick="filterCat(this,'investigative')">Investigative</div>
+  <div class="cat-pill" onclick="filterCat(this,'world')">World</div>
+  <div class="cat-pill" onclick="filterCat(this,'politics')">Politics</div>
+  <div class="cat-pill" onclick="filterCat(this,'tech')">Tech</div>
+  <div class="cat-pill" onclick="filterCat(this,'science')">Science</div>
+</div>
+
+<div class="feed-container"><div class="feed" id="feed"></div></div>
+
+<div class="bottom-nav">
+  <div class="ni on" id="nav-home" onclick="showHome()">
+    <svg width="20" height="20" fill="none" viewBox="0 0 24 24"><path d="M3 12L12 3L21 12V21H15V15H9V21H3V12Z" fill="#E8FF47"/></svg>
+    <span class="ni-lbl">Home</span>
+  </div>
+  <div class="ni" id="nav-search" onclick="showToast('Search coming soon')">
+    <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21L16.65 16.65"/></svg>
+    <span class="ni-lbl">Search</span>
+  </div>
+  <div class="nc" onclick="showToast('✦ Discovering new moments...')">
+    <svg width="20" height="20" fill="none" viewBox="0 0 24 24"><path d="M12 2L13.5 8.5L20 7L15.5 12L20 17L13.5 15.5L12 22L10.5 15.5L4 17L8.5 12L4 7L10.5 8.5L12 2Z" fill="white"/></svg>
+  </div>
+  <div class="ni" id="nav-saved" onclick="showSaved()">
+    <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"/></svg>
+    <span class="ni-lbl">Saved</span>
+  </div>
+  <div class="ni" id="nav-profile" onclick="showProfile()">
+    <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2M12 11a4 4 0 100-8 4 4 0 000 8z"/></svg>
+    <span class="ni-lbl">Profile</span>
+  </div>
+</div>
+
+</div></div>
+
+<!-- SAVED VIEW -->
+<div class="saved-view" id="savedView">
+  <div class="saved-header">
+    <div>
+      <div class="saved-title">Saved Episodes</div>
+      <div class="saved-count" id="savedCount">0 episodes saved</div>
+    </div>
+    <div class="saved-close" onclick="closeSaved()">
+      <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    </div>
+  </div>
+  <div class="saved-list" id="savedList"></div>
+</div>
+
+<!-- FOLLOWING VIEW -->
+<div class="following-view" id="followingView">
+  <div class="saved-header">
+    <div>
+      <div class="saved-title">Following</div>
+      <div class="saved-count" id="followingCount">0 shows</div>
+    </div>
+    <div class="saved-close" onclick="closeFollowing()">
+      <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    </div>
+  </div>
+  <div class="following-list" id="followingList"></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ── ALL 16 SHOWS ─────────────────────────────────────────────────────────────
+var DATA = [
+  {id:1,cat:['news','world'],show:"Lawfare Podcast",outlet:"Lawfare Institute",init:"LF",
+   logoBg:"linear-gradient(135deg,#0d2137,#1a4a72)",cardBg:"linear-gradient(160deg,#0d1f2d,#081018)",
+   ac:"#47b8ff",city:"Washington, DC",sz:"mid",szLbl:"Mid-tier",match:97,
+   ep:"The Legality of the Iran Blockade",
+   q:"Under international law, a blockade is an act of war. <em>Full stop.</em> There is no softer interpretation that survives scrutiny.",
+   ts:"14:22",dur:"1:02",prog:0.38,lk:"2.4K",sh:"891",sv:"1.1K",
+   reason:"Because you save episodes on international law",
+   dh:"A mid-size show winning on substance",
+   db:"This episode surfaced because its topic — the legal basis for the Iran blockade — is one of the most searched national security questions right now, and Lawfare's expert sourcing makes it the most credible take available.",
+   dt:["Expert sourcing","Breaking news match","Underserved topic","High clip potential"],
+   scores:{quality:88,structure:91,relevance:97,clipability:85,credibility:94,geodiversity:62}},
+
+  {id:2,cat:['local','politics'],show:"All Politics Is Local",outlet:"Maryland · Buzzsprout",init:"AP",
+   logoBg:"linear-gradient(135deg,#1f0f2a,#3d1f52)",cardBg:"linear-gradient(160deg,#160d22,#0a0810)",
+   ac:"#c47bff",city:"Prince George's Co., MD",sz:"micro",szLbl:"Hidden gem",match:94,
+   ep:"Gen Z's Reality Check: Leadership & Affordability in PG County",
+   q:"Four young residents said the same thing: they don't want to leave. They just need someone in city hall to <em>actually listen.</em>",
+   ts:"08:45",dur:"0:58",prog:0.22,lk:"48",sh:"31",sv:"62",
+   reason:"Underheard local voice · Your area",
+   dh:"A local voice no algorithm would normally find",
+   db:"This show has under 300 listeners and would be invisible on every major platform. It covers Prince George's County civic life — a community with almost no dedicated podcast coverage.",
+   dt:["Local civic voice","Underrepresented community","Hidden gem","Your region"],
+   scores:{quality:72,structure:78,relevance:94,clipability:88,credibility:81,geodiversity:96}},
+
+  {id:3,cat:['news','world'],show:"Global News Podcast",outlet:"BBC World Service",init:"BBC",
+   logoBg:"linear-gradient(135deg,#c00,#8b0000)",cardBg:"linear-gradient(160deg,#1a0808,#0a0404)",
+   ac:"#ff6b6b",city:"London, UK",sz:"large",szLbl:"Major",match:91,
+   ep:"Iran Blockade — What It Means for the Region",
+   q:"This is the first declared U.S. naval blockade in over <em>30 years.</em> The strategic ripple effects are only beginning.",
+   ts:"22:07",dur:"1:15",prog:0.55,lk:"18.2K",sh:"5.4K",sv:"9.8K",
+   reason:"Trending in World News",
+   dh:"Global coverage you won't get from U.S. outlets",
+   db:"The BBC's bureau network covers this story from angles that American podcasts don't — including reactions from regional governments and international legal experts.",
+   dt:["International bureau","Geographic diversity","Breaking story","Trending now"],
+   scores:{quality:91,structure:88,relevance:91,clipability:82,credibility:96,geodiversity:98}},
+
+  {id:4,cat:['local','news'],show:"SignalsAZ",outlet:"Central Arizona News",init:"AZ",
+   logoBg:"linear-gradient(135deg,#3d2008,#5c3010)",cardBg:"linear-gradient(160deg,#1a1008,#0a0803)",
+   ac:"#ffaa47",city:"Prescott, AZ",sz:"micro",szLbl:"Hidden gem",match:89,
+   ep:"Water Rights & the Colorado River: What Central Arizona Isn't Being Told",
+   q:"The allocation numbers from Phoenix don't reflect what farmers in Yavapai County are <em>actually experiencing</em> on the ground.",
+   ts:"11:33",dur:"1:08",prog:0.31,lk:"124",sh:"89",sv:"203",
+   reason:"Underheard regional voice",
+   dh:"Regional reporting that fills a real gap",
+   db:"Water rights in the Colorado River basin is one of the most consequential ongoing stories in the American West — and almost no podcast covers it from the ground level.",
+   dt:["Regional gap coverage","On-the-ground reporting","Weekly publisher","Underserved story"],
+   scores:{quality:74,structure:79,relevance:89,clipability:91,credibility:82,geodiversity:97}},
+
+  {id:5,cat:['tech'],show:"Sway",outlet:"New York Times Opinion",init:"SW",
+   logoBg:"linear-gradient(135deg,#0a2010,#0f3018)",cardBg:"linear-gradient(160deg,#08140a,#030805)",
+   ac:"#47ff8a",city:"New York, NY",sz:"large",szLbl:"Major",match:88,
+   ep:"Why AI Companies Fear Their Own Products",
+   q:"The most honest thing any of these executives said was <em>off the record.</em> That tells you everything you need to know.",
+   ts:"31:14",dur:"0:54",prog:0.68,lk:"14.7K",sh:"4.1K",sv:"7.2K",
+   reason:"Because you follow tech news",
+   dh:"The clip you'll quote for a week",
+   db:"This episode scored in the top 5% of clip-ability across everything HiddenPod indexed this week. The quote is short, specific, and captures something no press release will ever say.",
+   dt:["Top clip score","Matches your interests","High shareability","Interview moment"],
+   scores:{quality:89,structure:85,relevance:88,clipability:97,credibility:91,geodiversity:58}},
+
+  {id:6,cat:['local'],show:"CivicCast",outlet:"Pensacola · CivicCon",init:"CC",
+   logoBg:"linear-gradient(135deg,#082030,#0f3048)",cardBg:"linear-gradient(160deg,#081018,#030810)",
+   ac:"#47d4ff",city:"Pensacola, FL",sz:"micro",szLbl:"Hidden gem",match:86,
+   ep:"Building Optimism: Who Is the City Actually Being Built For?",
+   q:"Smart urban planning doesn't start with zoning maps. It starts with asking <em>who the city is being built for</em> — and who gets left out.",
+   ts:"06:18",dur:"1:04",prog:0.18,lk:"71",sh:"44",sv:"98",
+   reason:"Underheard local voice · Gulf Coast",
+   dh:"Gulf Coast civic journalism that punches above its size",
+   db:"CivicCast is backed by a nonprofit civic engagement partnership in Pensacola. The Gulf Coast has almost no dedicated civic podcast coverage. This episode surfaces because both the topic and the voice are underrepresented.",
+   dt:["Nonprofit-backed","Civic planning niche","Gulf Coast voice","Credible sourcing"],
+   scores:{quality:71,structure:76,relevance:86,clipability:83,credibility:79,geodiversity:94}},
+
+  {id:7,cat:['investigative'],show:"In the Dark",outlet:"APM Reports · The New Yorker",init:"ID",
+   logoBg:"linear-gradient(135deg,#1a1a0a,#3d3d10)",cardBg:"linear-gradient(160deg,#141408,#080805)",
+   ac:"#ffee47",city:"Minneapolis, MN",sz:"mid",szLbl:"Mid-tier",match:93,
+   ep:"The Runaway Princesses: Why Do the Women of Dubai Keep Trying to Escape?",
+   q:"The palace said she was mentally ill. The passports said she was <em>never supposed to come home.</em>",
+   ts:"18:40",dur:"1:22",prog:0.42,lk:"3.2K",sh:"1.1K",sv:"2.8K",
+   reason:"Top investigative clip this week",
+   dh:"Award-winning investigation that changes how you see power",
+   db:"In the Dark joined The New Yorker in 2023 and has continued producing investigative journalism that leads to real-world accountability. This series on Dubai's royal family is their most ambitious project yet.",
+   dt:["Peabody-winning","Long-form investigation","International story","High credibility"],
+   scores:{quality:93,structure:96,relevance:93,clipability:88,credibility:98,geodiversity:91}},
+
+  {id:8,cat:['science','tech'],show:"Radiolab",outlet:"WNYC Studios",init:"RL",
+   logoBg:"linear-gradient(135deg,#0a1a30,#1040a0)",cardBg:"linear-gradient(160deg,#080f1a,#030508)",
+   ac:"#6ea8ff",city:"New York, NY",sz:"large",szLbl:"Major",match:85,
+   ep:"The Parasite That Makes You Love Cats",
+   q:"Toxoplasma gondii has been found in roughly one-third of the global human population. We are only now beginning to understand <em>what it's doing to us.</em>",
+   ts:"24:55",dur:"0:72",prog:0.61,lk:"9.8K",sh:"3.2K",sv:"5.1K",
+   reason:"High science clip score this week",
+   dh:"The science story that will rewire how you think",
+   db:"Radiolab consistently produces episodes with some of the highest structure and credibility scores in HiddenPod's index. This episode hits peak clip-ability — every minute contains a quotable sentence.",
+   dt:["Science storytelling","Top structure score","Highly quotable","Replayable moment"],
+   scores:{quality:94,structure:97,relevance:85,clipability:96,credibility:95,geodiversity:72}},
+
+  {id:9,cat:['local','politics'],show:"The Austin Common",outlet:"Austin Monitor",init:"AC",
+   logoBg:"linear-gradient(135deg,#1a0a08,#401818)",cardBg:"linear-gradient(160deg,#100806,#060403)",
+   ac:"#ff8a6e",city:"Austin, TX",sz:"micro",szLbl:"Hidden gem",match:82,
+   ep:"Austin's Homeless Crisis: What the Numbers Actually Show",
+   q:"The city council cited one figure. The shelter directors cited another. <em>Both can't be right.</em>",
+   ts:"09:22",dur:"1:01",prog:0.27,lk:"89",sh:"52",sv:"134",
+   reason:"Local accountability journalism",
+   dh:"Austin civic journalism holding power accountable",
+   db:"The Austin Monitor is a nonprofit local news organization covering city politics. This episode fact-checks competing claims about Austin's homelessness crisis — the kind of accountability work that no national outlet is doing at this granular level.",
+   dt:["Nonprofit newsroom","Fact-checking","Local accountability","Hidden gem"],
+   scores:{quality:75,structure:82,relevance:82,clipability:87,credibility:86,geodiversity:93}},
+
+  {id:10,cat:['world','politics'],show:"The Foreign Desk",outlet:"LAist · KPCC",init:"FD",
+   logoBg:"linear-gradient(135deg,#0a1520,#183050)",cardBg:"linear-gradient(160deg,#080e15,#030508)",
+   ac:"#4eb8d4",city:"Los Angeles, CA",sz:"mid",szLbl:"Mid-tier",match:87,
+   ep:"Inside the Talks: What Iran Actually Wants",
+   q:"Every American negotiator came in thinking they understood the deal. <em>None of them had read the same document.</em>",
+   ts:"16:45",dur:"0:68",prog:0.45,lk:"1.8K",sh:"720",sv:"1.4K",
+   reason:"High relevance to Iran coverage",
+   dh:"The foreign policy nuance mainstream coverage misses",
+   db:"The Foreign Desk surfaces diplomatic and foreign policy reporting from sources most U.S. outlets don't access. KPCC's investment in international coverage is rare for a regional public radio station.",
+   dt:["Diplomatic sourcing","Underreported angle","Regional public radio","High credibility"],
+   scores:{quality:84,structure:88,relevance:87,clipability:82,credibility:91,geodiversity:88}},
+
+  {id:11,cat:['investigative','local'],show:"Reveal",outlet:"Center for Investigative Reporting",init:"RV",
+   logoBg:"linear-gradient(135deg,#1a0820,#380f40)",cardBg:"linear-gradient(160deg,#100516,#060208)",
+   ac:"#c47bff",city:"Emeryville, CA",sz:"mid",szLbl:"Mid-tier",match:91,
+   ep:"Sold Out: How Private Equity Gutted the American Emergency Room",
+   q:"In 2019 this company owned 12 emergency rooms. Today it owns <em>over 400.</em> Patient outcomes got worse every year.",
+   ts:"21:08",dur:"1:18",prog:0.52,lk:"4.1K",sh:"1.6K",sv:"3.2K",
+   reason:"Top investigative match this week",
+   dh:"The investigation that will make you angry — in the right way",
+   db:"Reveal is one of the only nonprofit investigative journalism podcasts operating at national scale. This episode required 14 months of reporting and FOI requests across seven states. It exists because Reveal's funding model allows journalism that ad-supported outlets can't afford.",
+   dt:["14-month investigation","National impact","FOI documents","Nonprofit newsroom"],
+   scores:{quality:92,structure:94,relevance:91,clipability:89,credibility:97,geodiversity:78}},
+
+  {id:12,cat:['news','politics'],show:"Consider This",outlet:"NPR",init:"CT",
+   logoBg:"linear-gradient(135deg,#0d1a0d,#1a3a1a)",cardBg:"linear-gradient(160deg,#080f08,#030503)",
+   ac:"#7DCF9E",city:"Washington, DC",sz:"large",szLbl:"Major",match:84,
+   ep:"The Border Deal That Almost Was — And Why It Failed",
+   q:"The votes were there. The White House knew the votes were there. <em>The deal died anyway.</em>",
+   ts:"12:33",dur:"0:55",prog:0.35,lk:"22.1K",sh:"7.8K",sv:"12.3K",
+   reason:"Trending in Politics",
+   dh:"The political story with the clearest clip moment this week",
+   db:"Consider This consistently produces some of the most clip-able moments in NPR's catalog. This episode scored unusually high on clip-ability because the key quote — the entire story — is contained in 45 seconds.",
+   dt:["Top NPR clip score","Political accountability","Widely shared","Trending now"],
+   scores:{quality:88,structure:86,relevance:84,clipability:95,credibility:93,geodiversity:65}},
+
+  {id:13,cat:['local','science'],show:"The Sprawl",outlet:"Canadaland · Calgary",init:"SP",
+   logoBg:"linear-gradient(135deg,#081820,#104038)",cardBg:"linear-gradient(160deg,#060e14,#030608)",
+   ac:"#47d4c8",city:"Calgary, AB",sz:"micro",szLbl:"Hidden gem",match:88,
+   ep:"What Calgary's Sprawl Is Doing to the Bow River",
+   q:"Every new suburb adds another 40,000 liters of stormwater runoff per rainstorm. The river <em>was not designed for this.</em>",
+   ts:"13:20",dur:"1:05",prog:0.38,lk:"156",sh:"98",sv:"211",
+   reason:"Underheard international voice",
+   dh:"Canadian civic journalism that belongs in front of a global audience",
+   db:"The Sprawl is an independent Calgary-based newsroom covering urban issues. Their reporting on suburban development and watershed impact is exactly the kind of journalism that only exists because readers fund it directly — and that major outlets would never commission.",
+   dt:["Reader-funded newsroom","Urban planning niche","International voice","Environmental reporting"],
+   scores:{quality:77,structure:81,relevance:88,clipability:84,credibility:83,geodiversity:99}},
+
+  {id:14,cat:['tech','science'],show:"Hard Fork",outlet:"New York Times Tech",init:"HF",
+   logoBg:"linear-gradient(135deg,#0a0f1a,#18204a)",cardBg:"linear-gradient(160deg,#070a10,#030405)",
+   ac:"#7a8eff",city:"New York, NY",sz:"large",szLbl:"Major",match:83,
+   ep:"The AI Model That Learned to Lie to Its Trainers",
+   q:"The researchers asked it to stop. It said it would. <em>It didn't.</em>",
+   ts:"28:40",dur:"0:60",prog:0.59,lk:"11.4K",sh:"4.8K",sv:"6.7K",
+   reason:"Top tech clip this week",
+   dh:"The AI safety story told in three words",
+   db:"Hard Fork scored unusually high on clip-ability this week — the central moment of this episode is a 90-second sequence that contains the entire argument. Quote density in the transcript is in the top 2% of all tech episodes indexed this month.",
+   dt:["Top clip score","AI safety beat","Quote-dense transcript","Highly shareable"],
+   scores:{quality:90,structure:88,relevance:83,clipability:98,credibility:89,geodiversity:61}},
+
+  {id:15,cat:['local','investigative'],show:"New Hampshire Public Radio",outlet:"NHPR Investigates",init:"NH",
+   logoBg:"linear-gradient(135deg,#0f1a0a,#243018)",cardBg:"linear-gradient(160deg,#090f07,#040603)",
+   ac:"#a0d47a",city:"Concord, NH",sz:"micro",szLbl:"Hidden gem",match:85,
+   ep:"The Opioid Aftermath: Recovery Housing That Isn't",
+   q:"The state certified these facilities. Not a single inspector had <em>ever visited one.</em>",
+   ts:"10:15",dur:"1:12",prog:0.29,lk:"203",sh:"141",sv:"318",
+   reason:"Local accountability · New England",
+   dh:"New England public radio accountability journalism at its best",
+   db:"NHPR Investigates is one of the few state-level public radio teams doing sustained investigative work. This episode uncovered a certification system with no enforcement mechanism — and the follow-up produced real legislative action.",
+   dt:["State-level investigation","Public health impact","Legislative follow-up","Underreported"],
+   scores:{quality:80,structure:85,relevance:85,clipability:86,credibility:92,geodiversity:91}},
+
+  {id:16,cat:['world','politics'],show:"The Daily",outlet:"New York Times",init:"TD",
+   logoBg:"linear-gradient(135deg,#0a0a0a,#2a2a2a)",cardBg:"linear-gradient(160deg,#080808,#030303)",
+   ac:"#c8c8c8",city:"New York, NY",sz:"large",szLbl:"Major",match:80,
+   ep:"Inside the U.N. Security Council Deadlock on Gaza",
+   q:"Every resolution failed. Not because there weren't votes. Because <em>one country</em> didn't need them.",
+   ts:"34:22",dur:"0:72",prog:0.72,lk:"41.3K",sh:"15.2K",sv:"22.8K",
+   reason:"Trending in World News",
+   dh:"The Daily's strongest clip moment of the month",
+   db:"The Daily surfaces here not because it needs discovery — it doesn't — but because this specific episode scored in the top 1% for clip-ability and credibility combined. The 90-second moment at 34:22 is the clearest explanation of Security Council veto mechanics ever produced in audio.",
+   dt:["Top credibility score","Clip density peak","Widely shared","Best-in-class sourcing"],
+   scores:{quality:92,structure:91,relevance:80,clipability:96,credibility:98,geodiversity:82}},
+];
+
+
+// ── REAL AUDIO ENGINE ────────────────────────────────────────────────────────
+var audioEl = null;
+var audioCache = {};      // showId -> mp3 url
+var audioLoading = {};    // showId -> true while fetching
+var playingId = null;
+var playTimer = null;
+var CLIP_START = 20 * 60; // start at 20 min mark
+var CLIP_DURATION = 120;  // play 2 minutes
+
+function makeWave(prog, ac, cid) {
+  var bars = 32;
+  var played = Math.floor(prog * bars);
+  var heights = [18,28,22,35,25,42,30,20,38,26,44,32,22,36,28,46,24,34,20,40,28,36,22,44,30,26,40,22,34,28,18,38];
+  var html = '';
+  for (var i = 0; i < bars; i++) {
+    var h = heights[i % heights.length];
+    var cls = 'wave-bar' + (i < played ? ' played' : i === played ? ' active' : '');
+    var st = 'height:' + h + '%' + (i <= played ? ';background:' + ac : '');
+    html += '<div class="' + cls + '" style="' + st + '" data-b="' + i + '" data-c="' + cid + '"></div>';
+  }
+  return html;
+}
+
+function pico() {
+  return '<svg width="10" height="12" viewBox="0 0 10 12" fill="white"><path d="M0 0l10 6-10 6V0z"/></svg>';
+}
+function pauseIco() {
+  return '<svg width="10" height="12" viewBox="0 0 10 12" fill="white"><rect x="0" y="0" width="3.5" height="12"/><rect x="6.5" y="0" width="3.5" height="12"/></svg>';
+}
+function loadIco() {
+  return '<div class="loading-ring"></div>';
+}
+
+function setWaveProgress(id, prog, ac) {
+  var wf = document.getElementById('wf' + id);
+  if (!wf) return;
+  var bars = wf.children;
+  var played = Math.floor(prog * bars.length);
+  var heights = [18,28,22,35,25,42,30,20,38,26,44,32,22,36,28,46,24,34,20,40,28,36,22,44,30,26,40,22,34,28,18,38];
+  for (var i = 0; i < bars.length; i++) {
+    var b = bars[i];
+    b.className = 'wave-bar' + (i < played ? ' played' : i === played ? ' active' : '');
+    if (i <= played) b.style.background = ac;
+    else b.style.background = '';
+    b.style.height = heights[i % heights.length] + '%';
+  }
+}
+
+function stopCurrentAudio() {
+  if (playTimer) { clearInterval(playTimer); playTimer = null; }
+  if (audioEl) {
+    audioEl.pause();
+    audioEl.src = '';
+  }
+  if (playingId !== null) {
+    var btn = document.getElementById('pb' + playingId);
+    if (btn) btn.innerHTML = pico();
+    var td = document.getElementById('td' + playingId);
+    if (td) td.textContent = '0:00';
+    var c = DATA.find(function(x){return x.id===playingId;});
+    if (c) setWaveProgress(playingId, 0, c.ac);
+    playingId = null;
+  }
+}
+
+function doPlay(id) {
+  // If clicking currently playing — pause
+  if (playingId === id && audioEl && !audioEl.paused) {
+    audioEl.pause();
+    var btn = document.getElementById('pb' + id);
+    if (btn) btn.innerHTML = pico();
+    if (playTimer) { clearInterval(playTimer); playTimer = null; }
+    return;
+  }
+  // If same track paused — resume
+  if (playingId === id && audioEl && audioEl.paused) {
+    audioEl.play();
+    var btn = document.getElementById('pb' + id);
+    if (btn) btn.innerHTML = pauseIco();
+    startPlayTimer(id);
+    return;
+  }
+
+  // Stop whatever was playing
+  stopCurrentAudio();
+  playingId = id;
+
+  var btn = document.getElementById('pb' + id);
+  if (btn) btn.innerHTML = loadIco();
+
+  // If we already have the URL cached, play immediately
+  if (audioCache[id]) {
+    startAudio(id, audioCache[id]);
+    return;
+  }
+
+  // Fetch URL from proxy
+  fetch('/api/audio?show=' + id)
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      if (data.url) {
+        audioCache[id] = data.url;
+        if (playingId === id) startAudio(id, data.url);
+      } else {
+        handleAudioError(id, 'Not available');
+      }
+    })
+    .catch(function() {
+      handleAudioError(id, 'Network error');
+    });
+}
+
+function startAudio(id, url) {
+  var c = DATA.find(function(x){return x.id===id;});
+  if (!c) return;
+
+  if (!audioEl) {
+    audioEl = new Audio();
+    audioEl.crossOrigin = 'anonymous';
+    audioEl.preload = 'none';
+  }
+
+  audioEl.src = url;
+  audioEl.currentTime = CLIP_START;
+
+  var btn = document.getElementById('pb' + id);
+
+  audioEl.oncanplay = function() {
+    if (playingId !== id) return;
+    audioEl.play().then(function() {
+      if (btn) btn.innerHTML = pauseIco();
+      startPlayTimer(id);
+    }).catch(function(e) {
+      // Some browsers need user gesture — show a "tap to play" state
+      if (btn) btn.innerHTML = pico();
+      showToast('Tap play to start audio');
+    });
+  };
+
+  audioEl.onerror = function() {
+    handleAudioError(id, 'Stream unavailable');
+  };
+
+  audioEl.load();
+}
+
+function startPlayTimer(id) {
+  var c = DATA.find(function(x){return x.id===id;});
+  if (!c) return;
+  var startTime = audioEl.currentTime;
+  var clipEnd = startTime + CLIP_DURATION;
+
+  playTimer = setInterval(function() {
+    if (!audioEl || playingId !== id) { clearInterval(playTimer); return; }
+    var elapsed = audioEl.currentTime - startTime;
+    if (elapsed < 0) elapsed = 0;
+
+    // Update time display
+    var td = document.getElementById('td' + id);
+    if (td) {
+      var mins = Math.floor(elapsed / 60);
+      var secs = Math.floor(elapsed % 60);
+      td.textContent = mins + ':' + (secs < 10 ? '0' : '') + secs;
+    }
+
+    // Update waveform progress
+    var prog = Math.min(elapsed / CLIP_DURATION, 1);
+    setWaveProgress(id, prog, c.ac);
+
+    // Stop at 2 minutes
+    if (audioEl.currentTime >= clipEnd || elapsed >= CLIP_DURATION) {
+      stopCurrentAudio();
+    }
+  }, 250);
+}
+
+function handleAudioError(id, msg) {
+  if (playingId === id) {
+    var btn = document.getElementById('pb' + id);
+    if (btn) btn.innerHTML = pico();
+    playingId = null;
+    showToast('Audio: ' + msg + ' — open in Spotify or Apple');
+  }
+}
+
+// Platform buttons now open real URLs
+var SPOTIFY_URLS = {
+  1: 'https://open.spotify.com/show/7MCrEQ2aFijFG6KHru0lhI',
+  2: 'https://open.spotify.com/show/3FPIEZSuSBe6OOdJMEhPpF',
+  3: 'https://open.spotify.com/show/3wBfqov60qDZbEVjPHo0a8',
+  4: null,
+  5: 'https://open.spotify.com/show/5JZsS7vi4ijNKveG7Ob1V9',
+  6: null,
+  7: 'https://open.spotify.com/show/1aFyRYDJ1pHEaPMnZAGaOr',
+  8: 'https://open.spotify.com/show/2hmkzUtix0qTqvtpPcMzEL',
+  9: null,
+  10: null,
+  11: 'https://open.spotify.com/show/51CN011CgUdG7EUfm7cXF7',
+  12: 'https://open.spotify.com/show/3Z6JdCS2d0eFEpXHKI6WqH',
+  13: 'https://open.spotify.com/show/2Q02ecA0U7V4JUD7P9RTtI',
+  14: 'https://open.spotify.com/show/44fllCS2FTFr2x2kjP9xeT',
+  15: null,
+  16: 'https://open.spotify.com/show/2dlMGUj6dY3gCsJVHPeHnQ',
+};
+var APPLE_URLS = {
+  1: 'https://podcasts.apple.com/us/podcast/id498897343',
+  2: 'https://podcasts.apple.com/us/podcast/id1437562337',
+  3: 'https://podcasts.apple.com/us/podcast/id234899394',
+  4: 'https://podcasts.apple.com/us/podcast/id1496978793',
+  5: 'https://podcasts.apple.com/us/podcast/id1528096109',
+  6: 'https://podcasts.apple.com/us/podcast/id1439338282',
+  7: 'https://podcasts.apple.com/us/podcast/id1045640083',
+  8: 'https://podcasts.apple.com/us/podcast/id73329404',
+  9: 'https://podcasts.apple.com/us/podcast/id1505467474',
+  10: 'https://podcasts.apple.com/us/podcast/id1375138139',
+  11: 'https://podcasts.apple.com/us/podcast/id357288339',
+  12: 'https://podcasts.apple.com/us/podcast/id1355212895',
+  13: 'https://podcasts.apple.com/us/podcast/id1282163395',
+  14: 'https://podcasts.apple.com/us/podcast/id1528075510',
+  15: 'https://podcasts.apple.com/us/podcast/id1489367372',
+  16: 'https://podcasts.apple.com/us/podcast/id1200361736',
+};
+
+function doPlatform(p, id) {
+  if (p === 's') {
+    var url = SPOTIFY_URLS[id];
+    if (url) window.open(url, '_blank');
+    else showToast('Not available on Spotify — try Apple Podcasts');
+    var btn = document.getElementById('sb' + id);
+    var lbl = document.getElementById('sl' + id);
+    if (btn) btn.classList.add('done');
+    if (lbl) lbl.textContent = 'Following on Spotify';
+  } else {
+    var url = APPLE_URLS[id];
+    if (url) window.open(url, '_blank');
+    var btn = document.getElementById('ab' + id);
+    var lbl = document.getElementById('al' + id);
+    if (btn) btn.classList.add('done');
+    if (lbl) lbl.textContent = 'Following on Apple';
+  }
+}
+
+// ── STATE ─────────────────────────────────────────────────────────────────────
+var liked={}, saved={}, followed={};
+var currentFilter='all';
+var filteredData=DATA.slice();
+
+// ── HELPERS ──────────────────────────────────────────────────────────────────
+function szClass(s){return s==='micro'?'size-micro':s==='mid'?'size-mid':'size-large'}
+// pico defined in audio engine
+function pausico(){return '<svg width="11" height="11" fill="#0a0a0f" viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg>'}
+function apSVG(){return '<svg width="10" height="10" viewBox="0 0 24 24" fill="white"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>'}
+function spSVG(){return '<svg width="10" height="10" viewBox="0 0 24 24" fill="white"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>'}
+
+// makeWave defined in audio engine below
+
+function buildCard(c,idx){
+  var sc=szClass(c.sz);
+  var hint=idx===0?'<div class="swipe-hint"><svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="rgba(255,255,255,0.35)" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg><span class="swipe-hint-txt">swipe to explore</span></div>':'';
+
+  // Score pills
+  var topScores = Object.entries(c.scores).sort((a,b)=>b[1]-a[1]).slice(0,3);
+  var scorePills = topScores.map(([k,v])=>'<span class="score-pill hi">'+k.charAt(0).toUpperCase()+k.slice(1)+' '+v+'</span>').join('');
+
+  // Algo score explanation for drawer
+  var scoreItems = Object.entries(c.scores).map(([k,v])=>
+    '<div class="dp-score-item"><div class="dp-score-label">'+k+'</div><div class="dp-score-bar"><div class="dp-score-fill" style="width:'+v+'%"></div></div><div class="dp-score-val">'+v+'/100</div></div>'
+  ).join('');
+
+  var tagsH=c.dt.map((t,i)=>'<span class="dp-tag'+(i===0?' hi':'')+'">'+t+'</span>').join('');
+
+  return '<div class="clip-card" id="cc'+c.id+'" style="animation:slide-in 0.3s ease '+(idx*0.06)+'s both">'
+    +'<style>@keyframes slide-in{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}</style>'
+    +'<div class="card-bg" style="background:'+c.cardBg+'"></div>'
+    +hint
+    +'<div class="action-rail">'
+    +'<div class="act-btn" onclick="doLike('+c.id+')"><div class="act-icon" id="li'+c.id+'"><svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></div><span class="act-count" id="lc'+c.id+'">'+c.lk+'</span></div>'
+    +'<div class="act-btn" onclick="doShare('+c.id+')"><div class="act-icon"><svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></div><span class="act-count" id="sc'+c.id+'">'+c.sh+'</span></div>'
+    +'<div class="act-btn" onclick="doSave('+c.id+')"><div class="act-icon" id="si'+c.id+'"><svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"/></svg></div><span class="act-count" id="svc'+c.id+'">'+c.sv+'</span></div>'
+    +'<div class="act-btn" onclick="doInfo('+c.id+',event)"><div class="act-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="white" stroke-width="2"/><path d="M12 8v4m0 4h.01" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div><span class="act-count">Why?</span></div>'
+    +'</div>'
+    +'<div class="card-content">'
+    +'<div class="show-strip">'
+    +'<div class="show-logo" style="background:'+c.logoBg+';color:white">'+c.init+'</div>'
+    +'<div class="show-info">'
+    +'<div class="show-name-row"><span class="show-name">'+c.show+'</span></div>'
+    +'<div class="show-sub"><span class="size-tag '+sc+'">'+c.szLbl+'</span><span class="city-lbl">'+c.city+'</span></div>'
+    +'</div>'
+    +'<button class="follow-btn" id="fb'+c.id+'" onclick="doFollow('+c.id+')">+ Follow</button>'
+    +'</div>'
+    +'<div class="moment-area">'
+    +'<div class="moment-lbl">Key moment</div>'
+    +'<div class="moment-quote">\u201c'+c.q+'\u201d</div>'
+    +'<div class="ep-title">'+c.ep+'</div>'
+    +'<div class="score-row">'+scorePills+'</div>'
+    +'</div>'
+    +'<div class="bottom-sec">'
+    +'<div class="match-row"><span class="match-tag">'+c.match+'% match</span><span class="reason-lbl">'+c.reason+'</span></div>'
+    +'<div class="player-area"><div class="waveform" id="wf'+c.id+'">'+makeWave(c.prog,c.ac,c.id)+'</div>'
+    +'<div class="player-ctrls"><button class="play-btn" id="pb'+c.id+'" onclick="doPlay('+c.id+')" style="background:'+c.ac+'">'+pico()+'</button>'
+    +'<span class="time-disp" id="td'+c.id+'">'+c.ts+'</span><span style="font-size:9px;color:var(--muted);margin-left:2px">/ clip</span>'
+    +'<span class="clip-dur">'+c.dur+'</span></div></div>'
+    +'<div class="platform-row">'
+    +'<button class="plt-btn plt-apple" id="ab'+c.id+'" onclick="doPlatform(\'a\','+c.id+')">'+apSVG()+'<span id="al'+c.id+'">Follow on Apple</span></button>'
+    +'<button class="plt-btn plt-spotify" id="sb'+c.id+'" onclick="doPlatform(\'s\','+c.id+')">'+spSVG()+'<span id="sl'+c.id+'">Follow on Spotify</span></button>'
+    +'</div>'
+    +'</div>'
+    +'</div>'
+    +'<div class="dp" id="dp'+c.id+'">'
+    +'<div class="dp-backdrop" onclick="doInfo('+c.id+',event)"></div>'
+    +'<div class="dp-sheet">'
+    +'<div class="dp-handle"></div>'
+    +'<div class="dp-title"><div class="dp-dot"></div>'+c.dh+'</div>'
+    +'<div class="dp-body">'+c.db+'</div>'
+    +'<div style="font-size:10px;font-weight:600;color:var(--muted);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:6px">Algorithm scores</div>'
+    +'<div class="dp-scores">'+scoreItems+'</div>'
+    +'<div class="dp-tags">'+tagsH+'</div>'
+    +'<button class="dp-close" onclick="doInfo('+c.id+',event)">Got it</button>'
+    +'</div></div>'
+    +'</div>';
+}
+
+function render(data){
+  var out='';
+  data.forEach(function(c,i){out+=buildCard(c,i)});
+  document.getElementById('feed').innerHTML=out;
+  // restore states
+  Object.keys(liked).forEach(function(id){if(liked[id])applyLike(parseInt(id),true)});
+  Object.keys(saved).forEach(function(id){if(saved[id])applySave(parseInt(id),true)});
+  Object.keys(followed).forEach(function(id){if(followed[id])applyFollow(parseInt(id),true)});
+  
+  
+}
+
+// ── INTERACTIONS ──────────────────────────────────────────────────────────────
+
+function doShare(id){
+  var clip=DATA.find(function(c){return c.id===id});
+  var url='https://hiddenpod.com/ep/'+id+'/'+clip.show.toLowerCase().replace(/\s+/g,'-');
+  // Copy to clipboard
+  if(navigator.clipboard){
+    navigator.clipboard.writeText(url).then(function(){
+      showToast('🔗 Link copied to clipboard');
+    });
+  } else {
+    showToast('🔗 Shareable link: hiddenpod.com/ep/'+id);
+  }
+  // Increment share count
+  var sc=document.getElementById('sc'+id);
+  if(sc&&clip){
+    var base=parseInt(clip.sh)||0;
+    sc.textContent=base+1;
+  }
+}
+
+function doInfo(id,ev){if(ev)ev.stopPropagation();var p=document.getElementById('dp'+id);if(p)p.classList.toggle('open');}
+
+// ── FILTERING ─────────────────────────────────────────────────────────────────
+function filterCat(el,cat){
+  document.querySelectorAll('.cat-pill').forEach(function(p){p.classList.remove('active')});
+  el.classList.add('active');
+  currentFilter=cat;
+  filteredData=cat==='all'?DATA:DATA.filter(function(c){return c.cat.indexOf(cat)>-1});
+  render(filteredData);
+  document.getElementById('feed').scrollTop=0;
+}
+
+// ── TAB SWITCHING ──────────────────────────────────────────────────────────────
+function switchTab(el,tab){
+  document.querySelectorAll('.nav-tab').forEach(function(t){t.classList.remove('active')});
+  el.classList.add('active');
+  if(tab==='following'){
+    showFollowingView();
+  } else {
+    closeFollowing();
+    if(tab==='trending'){
+      var trending=DATA.slice().sort(function(a,b){return b.match-a.match});
+      render(trending);
+    } else {
+      render(filteredData);
+    }
+  }
+}
+
+// ── SAVED VIEW ────────────────────────────────────────────────────────────────
+function updateSavedBadge(){
+  var count=Object.keys(saved).filter(function(k){return saved[k]}).length;
+  var badge=document.getElementById('savedBadge');
+  if(!badge){
+    var nav=document.getElementById('nav-saved');
+    if(nav&&count>0){var b=document.createElement('div');b.className='ni-badge';b.id='savedBadge';b.textContent=count;nav.appendChild(b);}
+  } else {
+    if(count>0)badge.textContent=count;else badge.remove();
+  }
+}
+
+function showSaved(){
+  // move saved view into phone
+  var sv=document.getElementById('savedView');
+  document.getElementById('phone').appendChild(sv);
+  sv.classList.add('open');
+  updateSavedList();
+  setNav('nav-saved');
+}
+function closeSaved(){
+  document.getElementById('savedView').classList.remove('open');
+  setNav('nav-home');
+}
+function updateSavedList(){
+  var list=document.getElementById('savedList');
+  var savedIds=Object.keys(saved).filter(function(k){return saved[k]}).map(Number);
+  document.getElementById('savedCount').textContent=savedIds.length+' episode'+(savedIds.length!==1?'s':'')+' saved';
+  if(savedIds.length===0){
+    list.innerHTML='<div class="saved-empty"><div class="saved-empty-icon">🔖</div><div class="saved-empty-txt">No saved episodes yet.<br>Tap the bookmark icon on any card.</div></div>';
+    return;
+  }
+  list.innerHTML=savedIds.map(function(id){
+    var c=DATA.find(function(x){return x.id===id});
+    if(!c)return '';
+    return '<div class="saved-item">'
+      +'<div class="saved-logo" style="background:'+c.logoBg+';color:white">'+c.init+'</div>'
+      +'<div class="saved-info">'
+      +'<div class="saved-show">'+c.show+'</div>'
+      +'<div class="saved-ep">'+c.ep+'</div>'
+      +'<div class="saved-match">'+c.match+'% match</div>'
+      +'</div>'
+      +'<div class="unsave-btn" onclick="doSave('+id+');updateSavedList()">✕</div>'
+      +'</div>';
+  }).join('');
+}
+
+// ── FOLLOWING VIEW ────────────────────────────────────────────────────────────
+function updateFollowingBadge(){
+  var count=Object.keys(followed).filter(function(k){return followed[k]}).length;
+  document.getElementById('followingCount').textContent=count+' show'+(count!==1?'s':'');
+}
+function showFollowingView(){
+  var fv=document.getElementById('followingView');
+  document.getElementById('phone').appendChild(fv);
+  fv.classList.add('open');
+  renderFollowing();
+}
+function closeFollowing(){
+  document.getElementById('followingView').classList.remove('open');
+}
+function renderFollowing(){
+  var list=document.getElementById('followingList');
+  var followedIds=Object.keys(followed).filter(function(k){return followed[k]}).map(Number);
+  document.getElementById('followingCount').textContent=followedIds.length+' show'+(followedIds.length!==1?'s':'');
+  if(followedIds.length===0){
+    list.innerHTML='<div class="saved-empty"><div class="saved-empty-icon">📻</div><div class="saved-empty-txt">You\u2019re not following any shows yet.<br>Tap \u201c+ Follow\u201d on any card.</div></div>';
+    return;
+  }
+  list.innerHTML=followedIds.map(function(id){
+    var c=DATA.find(function(x){return x.id===id});
+    if(!c)return '';
+    return '<div class="following-item">'
+      +'<div class="following-logo" style="background:'+c.logoBg+';color:white">'+c.init+'</div>'
+      +'<div class="following-info">'
+      +'<div class="following-show">'+c.show+'</div>'
+      +'<div class="following-sub">'+c.city+' · '+c.szLbl+'</div>'
+      +'</div>'
+      +'<button class="unfollow-btn" onclick="doFollow('+id+');renderFollowing()">Unfollow</button>'
+      +'</div>';
+  }).join('');
+}
+
+function showHome(){
+  closeSaved();closeFollowing();
+  document.querySelectorAll('.nav-tab').forEach(function(t,i){t.classList.toggle('active',i===0)});
+  render(filteredData);
+  setNav('nav-home');
+}
+function showProfile(){
+  showToast('Profile settings coming soon');
+  setNav('nav-profile');
+}
+function setNav(active){
+  ['nav-home','nav-search','nav-saved','nav-profile'].forEach(function(id){
+    var el=document.getElementById(id);
+    if(el)el.classList.toggle('on',id===active);
+  });
+}
+
+// ── TOAST ─────────────────────────────────────────────────────────────────────
+var tTimer;
+function showToast(msg,green){
+  var t=document.getElementById('toast');
+  t.innerHTML=msg;
+  t.className='toast on'+(green?' green':'');
+  clearTimeout(tTimer);
+  tTimer=setTimeout(function(){t.className='toast'},2400);
+}
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+render(DATA);
+</script>
+</body>
+</html>
