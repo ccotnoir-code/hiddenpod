@@ -2,13 +2,13 @@
 
 const RSS_FEEDS = {
   1:  'https://feeds.acast.com/public/shows/lawfare',
-  2:  'https://feeds.buzzsprout.com/1906302.rss',
+  2:  'https://feeds.acast.com/public/shows/all-politics-is-local',
   3:  'https://podcasts.files.bbci.co.uk/p02nq0gn.rss',
   4:  'https://feeds.buzzsprout.com/1879213.rss',
-  5:  'https://feeds.simplecast.com/0yJSBwD4',
+  5:  'https://feeds.simplecast.com/l2i9YnTd',
   6:  'https://feeds.buzzsprout.com/1056213.rss',
   7:  'https://feeds.acast.com/public/shows/in-the-dark',
-  8:  'https://feeds.wnyc.org/radiolab',
+  8:  'https://feeds.simplecast.com/EmVW7VGp',
   9:  'https://feeds.buzzsprout.com/1538936.rss',
   10: 'https://feeds.simplecast.com/E9S5H3FM',
   11: 'https://feeds.publicradio.org/public_feeds/reveal/rss/rss',

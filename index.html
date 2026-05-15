@@ -565,7 +565,12 @@ function startAudio(id, url) {
 
   var btn = document.getElementById('pb' + id);
 
+  var canplayTimer = setTimeout(function() {
+    if (playingId === id) handleAudioError(id, 'Stream unavailable');
+  }, 10000);
+
   audioEl.oncanplay = function() {
+    clearTimeout(canplayTimer);
     if (playingId !== id) return;
     audioEl.play().then(function() {
       if (btn) btn.innerHTML = pauseIco();
