@@ -48,7 +48,7 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--text);font-fam
 .wordmark .p{color:var(--accent)}
 .logo-group{display:flex;align-items:center}
 .nav-tabs{display:flex;background:var(--surface2);border-radius:20px;padding:3px}
-.nav-tab{font-family:var(--font-d);font-size:11px;font-weight:600;padding:5px 11px;border-radius:17px;color:var(--muted);cursor:pointer;transition:all 0.18s}
+.nav-tab{font-family:var(--font-d);font-size:10px;font-weight:600;padding:5px 9px;border-radius:17px;color:var(--muted);cursor:pointer;transition:all 0.18s;white-space:nowrap}
 .nav-tab.active{background:var(--accent);color:#0a0a0f}
 .avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--accent),#47ffe8);display:flex;align-items:center;justify-content:center;font-family:var(--font-d);font-size:12px;font-weight:700;color:#0a0a0f;flex-shrink:0}
 
@@ -185,7 +185,7 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--text);font-fam
 .saved-empty-txt{font-size:13px}
 
 /* ── FOLLOWING VIEW ── */
-.following-view{position:absolute;inset:0;background:var(--bg);z-index:10;display:none;flex-direction:column}
+.following-view{position:absolute;inset:0;background:var(--bg);z-index:10;display:none;flex-direction:column;padding-top:90px}
 .following-view.open{display:flex}
 .following-list{flex:1;overflow-y:auto;padding:0 18px 80px}
 .following-item{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--border)}
@@ -211,9 +211,23 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--text);font-fam
 .ni-badge{position:absolute;top:3px;right:5px;width:15px;height:15px;background:var(--accent);border-radius:50%;font-size:8px;font-weight:700;color:#0a0a0f;display:flex;align-items:center;justify-content:center;font-family:var(--font-d)}
 .nc{width:46px;height:46px;border-radius:50%;background:var(--green);display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 0 16px rgba(26,107,60,0.35);margin-bottom:5px;transition:transform 0.15s}
 .nc:active{transform:scale(0.93)}
+
+
+.autoplay-row{display:flex;align-items:center;gap:8px;padding:4px 18px 0;flex-shrink:0}
+.autoplay-hint{font-size:10px;color:var(--muted);opacity:0.6}
+
+/* ── AUTOPLAY TOGGLE ── */
 .autoplay-btn{display:flex;align-items:center;gap:5px;padding:4px 10px;border-radius:16px;border:1px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.06);color:var(--muted);font-size:10px;font-family:var(--font-b);font-weight:500;cursor:pointer;transition:all 0.2s;flex-shrink:0}
 .autoplay-btn.on{border-color:var(--accent);background:rgba(232,255,71,0.12);color:var(--accent)}
 .autoplay-btn .ap-dot{width:6px;height:6px;border-radius:50%;background:currentColor;flex-shrink:0}
+
+
+/* ── SCRUBBING ── */
+.waveform{cursor:pointer}
+.scrub-hint{font-size:9px;color:var(--muted);text-align:right;margin-top:2px;opacity:0.6}
+.player-skip{width:22px;height:22px;border-radius:50%;border:none;background:rgba(255,255,255,0.1);color:white;font-size:9px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background 0.15s}
+.player-skip:active{background:rgba(255,255,255,0.2)}
+
 </style>
 </head>
 <body>
@@ -245,8 +259,14 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--text);font-fam
     <div class="nav-tab" onclick="switchTab(this,'following')">Following</div>
     <div class="nav-tab" onclick="switchTab(this,'trending')">Trending</div>
   </div>
-  <button class="autoplay-btn on" id="apToggle" onclick="toggleAutoplay()"><div class="ap-dot"></div>Autoplay</button>
   <div class="avatar">CL</div>
+</div>
+
+<div class="autoplay-row">
+  <button class="autoplay-btn on" id="apToggle" onclick="toggleAutoplay()">
+    <div class="ap-dot"></div>Autoplay
+  </button>
+  <span class="autoplay-hint">Tap to toggle auto-advance</span>
 </div>
 
 <div class="cat-row" id="catRow">
@@ -271,8 +291,9 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--text);font-fam
     <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21L16.65 16.65"/></svg>
     <span class="ni-lbl">Search</span>
   </div>
-  <div class="nc" onclick="showToast('✦ Discovering new moments...')">
-    <svg width="20" height="20" fill="none" viewBox="0 0 24 24"><path d="M12 2L13.5 8.5L20 7L15.5 12L20 17L13.5 15.5L12 22L10.5 15.5L4 17L8.5 12L4 7L10.5 8.5L12 2Z" fill="white"/></svg>
+  <div class="nc" onclick="doDiscover()">
+    <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="1.5"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+    <span style="font-size:8px;color:rgba(255,255,255,0.5);margin-top:1px">Discover</span>
   </div>
   <div class="ni" id="nav-saved" onclick="showSaved()">
     <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"/></svg>
@@ -355,18 +376,6 @@ var DATA = [
    dt:["International bureau","Geographic diversity","Breaking story","Trending now"],
    scores:{quality:91,structure:88,relevance:91,clipability:82,credibility:96,geodiversity:98}},
 
-  {id:4,cat:['local','news'],show:"SignalsAZ",outlet:"Central Arizona News",init:"AZ",
-   logoBg:"linear-gradient(135deg,#3d2008,#5c3010)",cardBg:"linear-gradient(160deg,#1a1008,#0a0803)",
-   ac:"#ffaa47",city:"Prescott, AZ",sz:"micro",szLbl:"Hidden gem",match:89,
-   ep:"Water Rights & the Colorado River: What Central Arizona Isn't Being Told",
-   q:"The allocation numbers from Phoenix don't reflect what farmers in Yavapai County are <em>actually experiencing</em> on the ground.",
-   ts:"11:33",dur:"1:08",prog:0.31,lk:"124",sh:"89",sv:"203",
-   reason:"Underheard regional voice",
-   dh:"Regional reporting that fills a real gap",
-   db:"Water rights in the Colorado River basin is one of the most consequential ongoing stories in the American West — and almost no podcast covers it from the ground level.",
-   dt:["Regional gap coverage","On-the-ground reporting","Weekly publisher","Underserved story"],
-   scores:{quality:74,structure:79,relevance:89,clipability:91,credibility:82,geodiversity:97}},
-
   {id:5,cat:['tech'],show:"Sway",outlet:"New York Times Opinion",init:"SW",
    logoBg:"linear-gradient(135deg,#0a2010,#0f3018)",cardBg:"linear-gradient(160deg,#08140a,#030805)",
    ac:"#47ff8a",city:"New York, NY",sz:"large",szLbl:"Major",match:88,
@@ -379,30 +388,6 @@ var DATA = [
    dt:["Top clip score","Matches your interests","High shareability","Interview moment"],
    scores:{quality:89,structure:85,relevance:88,clipability:97,credibility:91,geodiversity:58}},
 
-  {id:6,cat:['local'],show:"CivicCast",outlet:"Pensacola · CivicCon",init:"CC",
-   logoBg:"linear-gradient(135deg,#082030,#0f3048)",cardBg:"linear-gradient(160deg,#081018,#030810)",
-   ac:"#47d4ff",city:"Pensacola, FL",sz:"micro",szLbl:"Hidden gem",match:86,
-   ep:"Building Optimism: Who Is the City Actually Being Built For?",
-   q:"Smart urban planning doesn't start with zoning maps. It starts with asking <em>who the city is being built for</em> — and who gets left out.",
-   ts:"06:18",dur:"1:04",prog:0.18,lk:"71",sh:"44",sv:"98",
-   reason:"Underheard local voice · Gulf Coast",
-   dh:"Gulf Coast civic journalism that punches above its size",
-   db:"CivicCast is backed by a nonprofit civic engagement partnership in Pensacola. The Gulf Coast has almost no dedicated civic podcast coverage. This episode surfaces because both the topic and the voice are underrepresented.",
-   dt:["Nonprofit-backed","Civic planning niche","Gulf Coast voice","Credible sourcing"],
-   scores:{quality:71,structure:76,relevance:86,clipability:83,credibility:79,geodiversity:94}},
-
-  {id:7,cat:['investigative'],show:"In the Dark",outlet:"APM Reports · The New Yorker",init:"ID",
-   logoBg:"linear-gradient(135deg,#1a1a0a,#3d3d10)",cardBg:"linear-gradient(160deg,#141408,#080805)",
-   ac:"#ffee47",city:"Minneapolis, MN",sz:"mid",szLbl:"Mid-tier",match:93,
-   ep:"The Runaway Princesses: Why Do the Women of Dubai Keep Trying to Escape?",
-   q:"The palace said she was mentally ill. The passports said she was <em>never supposed to come home.</em>",
-   ts:"18:40",dur:"1:22",prog:0.42,lk:"3.2K",sh:"1.1K",sv:"2.8K",
-   reason:"Top investigative clip this week",
-   dh:"Award-winning investigation that changes how you see power",
-   db:"In the Dark joined The New Yorker in 2023 and has continued producing investigative journalism that leads to real-world accountability. This series on Dubai's royal family is their most ambitious project yet.",
-   dt:["Peabody-winning","Long-form investigation","International story","High credibility"],
-   scores:{quality:93,structure:96,relevance:93,clipability:88,credibility:98,geodiversity:91}},
-
   {id:8,cat:['science','tech'],show:"Radiolab",outlet:"WNYC Studios",init:"RL",
    logoBg:"linear-gradient(135deg,#0a1a30,#1040a0)",cardBg:"linear-gradient(160deg,#080f1a,#030508)",
    ac:"#6ea8ff",city:"New York, NY",sz:"large",szLbl:"Major",match:85,
@@ -414,42 +399,6 @@ var DATA = [
    db:"Radiolab consistently produces episodes with some of the highest structure and credibility scores in HiddenPod's index. This episode hits peak clip-ability — every minute contains a quotable sentence.",
    dt:["Science storytelling","Top structure score","Highly quotable","Replayable moment"],
    scores:{quality:94,structure:97,relevance:85,clipability:96,credibility:95,geodiversity:72}},
-
-  {id:9,cat:['local','politics'],show:"The Austin Common",outlet:"Austin Monitor",init:"AC",
-   logoBg:"linear-gradient(135deg,#1a0a08,#401818)",cardBg:"linear-gradient(160deg,#100806,#060403)",
-   ac:"#ff8a6e",city:"Austin, TX",sz:"micro",szLbl:"Hidden gem",match:82,
-   ep:"Austin's Homeless Crisis: What the Numbers Actually Show",
-   q:"The city council cited one figure. The shelter directors cited another. <em>Both can't be right.</em>",
-   ts:"09:22",dur:"1:01",prog:0.27,lk:"89",sh:"52",sv:"134",
-   reason:"Local accountability journalism",
-   dh:"Austin civic journalism holding power accountable",
-   db:"The Austin Monitor is a nonprofit local news organization covering city politics. This episode fact-checks competing claims about Austin's homelessness crisis — the kind of accountability work that no national outlet is doing at this granular level.",
-   dt:["Nonprofit newsroom","Fact-checking","Local accountability","Hidden gem"],
-   scores:{quality:75,structure:82,relevance:82,clipability:87,credibility:86,geodiversity:93}},
-
-  {id:10,cat:['world','politics'],show:"The Foreign Desk",outlet:"LAist · KPCC",init:"FD",
-   logoBg:"linear-gradient(135deg,#0a1520,#183050)",cardBg:"linear-gradient(160deg,#080e15,#030508)",
-   ac:"#4eb8d4",city:"Los Angeles, CA",sz:"mid",szLbl:"Mid-tier",match:87,
-   ep:"Inside the Talks: What Iran Actually Wants",
-   q:"Every American negotiator came in thinking they understood the deal. <em>None of them had read the same document.</em>",
-   ts:"16:45",dur:"0:68",prog:0.45,lk:"1.8K",sh:"720",sv:"1.4K",
-   reason:"High relevance to Iran coverage",
-   dh:"The foreign policy nuance mainstream coverage misses",
-   db:"The Foreign Desk surfaces diplomatic and foreign policy reporting from sources most U.S. outlets don't access. KPCC's investment in international coverage is rare for a regional public radio station.",
-   dt:["Diplomatic sourcing","Underreported angle","Regional public radio","High credibility"],
-   scores:{quality:84,structure:88,relevance:87,clipability:82,credibility:91,geodiversity:88}},
-
-  {id:11,cat:['investigative','local'],show:"Reveal",outlet:"Center for Investigative Reporting",init:"RV",
-   logoBg:"linear-gradient(135deg,#1a0820,#380f40)",cardBg:"linear-gradient(160deg,#100516,#060208)",
-   ac:"#c47bff",city:"Emeryville, CA",sz:"mid",szLbl:"Mid-tier",match:91,
-   ep:"Sold Out: How Private Equity Gutted the American Emergency Room",
-   q:"In 2019 this company owned 12 emergency rooms. Today it owns <em>over 400.</em> Patient outcomes got worse every year.",
-   ts:"21:08",dur:"1:18",prog:0.52,lk:"4.1K",sh:"1.6K",sv:"3.2K",
-   reason:"Top investigative match this week",
-   dh:"The investigation that will make you angry — in the right way",
-   db:"Reveal is one of the only nonprofit investigative journalism podcasts operating at national scale. This episode required 14 months of reporting and FOI requests across seven states. It exists because Reveal's funding model allows journalism that ad-supported outlets can't afford.",
-   dt:["14-month investigation","National impact","FOI documents","Nonprofit newsroom"],
-   scores:{quality:92,structure:94,relevance:91,clipability:89,credibility:97,geodiversity:78}},
 
   {id:12,cat:['news','politics'],show:"Consider This",outlet:"NPR",init:"CT",
    logoBg:"linear-gradient(135deg,#0d1a0d,#1a3a1a)",cardBg:"linear-gradient(160deg,#080f08,#030503)",
@@ -474,30 +423,6 @@ var DATA = [
    db:"The Sprawl is an independent Calgary-based newsroom covering urban issues. Their reporting on suburban development and watershed impact is exactly the kind of journalism that only exists because readers fund it directly — and that major outlets would never commission.",
    dt:["Reader-funded newsroom","Urban planning niche","International voice","Environmental reporting"],
    scores:{quality:77,structure:81,relevance:88,clipability:84,credibility:83,geodiversity:99}},
-
-  {id:14,cat:['tech','science'],show:"Hard Fork",outlet:"New York Times Tech",init:"HF",
-   logoBg:"linear-gradient(135deg,#0a0f1a,#18204a)",cardBg:"linear-gradient(160deg,#070a10,#030405)",
-   ac:"#7a8eff",city:"New York, NY",sz:"large",szLbl:"Major",match:83,
-   ep:"The AI Model That Learned to Lie to Its Trainers",
-   q:"The researchers asked it to stop. It said it would. <em>It didn't.</em>",
-   ts:"28:40",dur:"0:60",prog:0.59,lk:"11.4K",sh:"4.8K",sv:"6.7K",
-   reason:"Top tech clip this week",
-   dh:"The AI safety story told in three words",
-   db:"Hard Fork scored unusually high on clip-ability this week — the central moment of this episode is a 90-second sequence that contains the entire argument. Quote density in the transcript is in the top 2% of all tech episodes indexed this month.",
-   dt:["Top clip score","AI safety beat","Quote-dense transcript","Highly shareable"],
-   scores:{quality:90,structure:88,relevance:83,clipability:98,credibility:89,geodiversity:61}},
-
-  {id:15,cat:['local','investigative'],show:"New Hampshire Public Radio",outlet:"NHPR Investigates",init:"NH",
-   logoBg:"linear-gradient(135deg,#0f1a0a,#243018)",cardBg:"linear-gradient(160deg,#090f07,#040603)",
-   ac:"#a0d47a",city:"Concord, NH",sz:"micro",szLbl:"Hidden gem",match:85,
-   ep:"The Opioid Aftermath: Recovery Housing That Isn't",
-   q:"The state certified these facilities. Not a single inspector had <em>ever visited one.</em>",
-   ts:"10:15",dur:"1:12",prog:0.29,lk:"203",sh:"141",sv:"318",
-   reason:"Local accountability · New England",
-   dh:"New England public radio accountability journalism at its best",
-   db:"NHPR Investigates is one of the few state-level public radio teams doing sustained investigative work. This episode uncovered a certification system with no enforcement mechanism — and the follow-up produced real legislative action.",
-   dt:["State-level investigation","Public health impact","Legislative follow-up","Underreported"],
-   scores:{quality:80,structure:85,relevance:85,clipability:86,credibility:92,geodiversity:91}},
 
   {id:16,cat:['world','politics'],show:"The Daily",outlet:"New York Times",init:"TD",
    logoBg:"linear-gradient(135deg,#0a0a0a,#2a2a2a)",cardBg:"linear-gradient(160deg,#080808,#030303)",
@@ -741,22 +666,17 @@ var APPLE_URLS = {
 function doPlatform(p, id) {
   if (p === 's') {
     var url = SPOTIFY_URLS[id];
-    if (url) window.open(url, '_blank');
-    else showToast('Not available on Spotify — try Apple Podcasts');
-    var btn = document.getElementById('sb' + id);
-    var lbl = document.getElementById('sl' + id);
-    if (btn) btn.classList.add('done');
-    if (lbl) lbl.textContent = 'Following on Spotify';
+    if (url) { window.open(url, '_blank'); showToast('Opening in Spotify →'); }
+    else showToast('Not on Spotify — try Apple Podcasts');
   } else {
     var url = APPLE_URLS[id];
-    if (url) window.open(url, '_blank');
-    var btn = document.getElementById('ab' + id);
-    var lbl = document.getElementById('al' + id);
-    if (btn) btn.classList.add('done');
-    if (lbl) lbl.textContent = 'Following on Apple';
+    if (url) { window.open(url, '_blank'); showToast('Opening in Apple Podcasts →'); }
+    else showToast('Apple Podcasts link unavailable');
   }
 }
 
+
+// ── AUTOPLAY ENGINE ──────────────────────────────────────────────────────────
 var autoplayEnabled = true;
 var intersectionObserver = null;
 var visibleCardId = null;
@@ -767,7 +687,7 @@ function toggleAutoplay() {
   var btn = document.getElementById('apToggle');
   if (btn) {
     btn.className = 'autoplay-btn' + (autoplayEnabled ? ' on' : '');
-    btn.innerHTML = '<div class="ap-dot"></div>Autoplay';
+    btn.innerHTML = '<div class="ap-dot"></div>' + (autoplayEnabled ? 'Autoplay' : 'Autoplay');
   }
   if (!autoplayEnabled) stopCurrentAudio();
   showToast(autoplayEnabled ? '▶ Autoplay on' : '⏹ Autoplay off');
@@ -775,36 +695,59 @@ function toggleAutoplay() {
 
 function advanceToNext(currentId) {
   if (!autoplayEnabled) return;
+  // Find next card in currently filtered data
   var idx = filteredData.findIndex(function(c) { return c.id === currentId; });
   if (idx === -1) idx = 0;
-  var nextIdx = (idx + 1) % filteredData.length;
+  var nextIdx = idx + 1;
+  if (nextIdx >= filteredData.length) nextIdx = 0; // wrap around
   var nextCard = filteredData[nextIdx];
   if (!nextCard) return;
+
+  // Scroll the feed to the next card smoothly
   var el = document.getElementById('cc' + nextCard.id);
   if (el) {
     el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    setTimeout(function() { if (autoplayEnabled) doPlay(nextCard.id); }, 500);
+    // Play after scroll settles
+    setTimeout(function() {
+      if (autoplayEnabled) doPlay(nextCard.id);
+    }, 500);
   }
 }
 
 function setupIntersectionObserver() {
   if (intersectionObserver) intersectionObserver.disconnect();
+
   intersectionObserver = new IntersectionObserver(function(entries) {
     entries.forEach(function(entry) {
       if (entry.isIntersecting && entry.intersectionRatio > 0.6) {
-        var idMatch = entry.target.id.match(/cc(\d+)/);
+        var cardEl = entry.target;
+        var idMatch = cardEl.id.match(/cc(\d+)/);
         if (!idMatch) return;
         var newId = parseInt(idMatch[1], 10);
         if (newId === visibleCardId) return;
         visibleCardId = newId;
-        clearTimeout(autoplayPending);
-        autoplayPending = setTimeout(function() {
-          if (visibleCardId === newId && autoplayEnabled && playingId !== newId) doPlay(newId);
-        }, 400);
+
+        // Auto-play when a new card scrolls into view (if not already playing this card)
+        if (autoplayEnabled && playingId !== newId) {
+          // Small delay so rapid scrolling doesn't trigger every card
+          clearTimeout(autoplayPending);
+          autoplayPending = setTimeout(function() {
+            if (visibleCardId === newId && autoplayEnabled) {
+              doPlay(newId);
+            }
+          }, 400);
+        }
       }
     });
-  }, { root: document.getElementById('feed'), threshold: 0.6 });
-  document.querySelectorAll('.clip-card').forEach(function(card) { intersectionObserver.observe(card); });
+  }, {
+    root: document.getElementById('feed'),
+    threshold: 0.6
+  });
+
+  // Observe all current cards
+  document.querySelectorAll('.clip-card').forEach(function(card) {
+    intersectionObserver.observe(card);
+  });
 }
 
 // ── STATE ─────────────────────────────────────────────────────────────────────
@@ -863,13 +806,17 @@ function buildCard(c,idx){
     +'</div>'
     +'<div class="bottom-sec">'
     +'<div class="match-row"><span class="match-tag">'+c.match+'% match</span><span class="reason-lbl">'+c.reason+'</span></div>'
-    +'<div class="player-area"><div class="waveform" id="wf'+c.id+'">'+makeWave(c.prog,c.ac,c.id)+'</div>'
-    +'<div class="player-ctrls"><button class="play-btn" id="pb'+c.id+'" onclick="doPlay('+c.id+')" style="background:'+c.ac+'">'+pico()+'</button>'
-    +'<span class="time-disp" id="td'+c.id+'">'+c.ts+'</span><span style="font-size:9px;color:var(--muted);margin-left:2px">/ clip</span>'
-    +'<span class="clip-dur">'+c.dur+'</span></div></div>'
+    +'<div class="player-area"><div class="waveform" id="wf'+c.id+'" onclick="handleWaveformClick(event,'+c.id+')">'+(makeWave(c.prog,c.ac,c.id))+'</div>'
+    +'<div class="player-ctrls">'
+    +'<button class="player-skip" onclick="skipSeconds('+c.id+',-15)" title="Back 15s">&#171;</button>'
+    +'<button class="play-btn" id="pb'+c.id+'" onclick="doPlay('+c.id+')" style="background:'+c.ac+'">'+pico()+'</button>'
+    +'<button class="player-skip" onclick="skipSeconds('+c.id+',15)" title="Forward 15s">&#187;</button>'
+    +'<span class="time-disp" id="td'+c.id+'">0:00</span>'
+    +'<span style="font-size:9px;color:var(--muted);margin-left:auto">2 min clip</span>'
+    +'</div></div>'
     +'<div class="platform-row">'
-    +'<button class="plt-btn plt-apple" id="ab'+c.id+'" onclick="doPlatform(\'a\','+c.id+')">'+apSVG()+'<span id="al'+c.id+'">Follow on Apple</span></button>'
-    +'<button class="plt-btn plt-spotify" id="sb'+c.id+'" onclick="doPlatform(\'s\','+c.id+')">'+spSVG()+'<span id="sl'+c.id+'">Follow on Spotify</span></button>'
+    +'<button class="plt-btn plt-apple" id="ab'+c.id+'" onclick="doPlatform(\'a\','+c.id+')">'+apSVG()+'<span id="al'+c.id+'">Apple Podcasts</span></button>'
+    +'<button class="plt-btn plt-spotify" id="sb'+c.id+'" onclick="doPlatform(\'s\','+c.id+')">'+spSVG()+'<span id="sl'+c.id+'">Spotify</span></button>'
     +'</div>'
     +'</div>'
     +'</div>'
@@ -895,10 +842,141 @@ function render(data){
   Object.keys(liked).forEach(function(id){if(liked[id])applyLike(parseInt(id),true)});
   Object.keys(saved).forEach(function(id){if(saved[id])applySave(parseInt(id),true)});
   Object.keys(followed).forEach(function(id){if(followed[id])applyFollow(parseInt(id),true)});
+  // Set up autoplay intersection observer on new cards
   setTimeout(setupIntersectionObserver, 100);
 }
 
 // ── INTERACTIONS ──────────────────────────────────────────────────────────────
+
+
+// ── LIKE / SAVE / FOLLOW ─────────────────────────────────────────────────────
+function applyLike(id, on) {
+  var icon = document.getElementById('li' + id);
+  var count = document.getElementById('lc' + id);
+  var c = DATA.find(function(x){return x.id===id;});
+  if (!icon || !c) return;
+  if (on) {
+    icon.classList.add('liked');
+    icon.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="rgba(255,80,80,0.9)"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>';
+    if (count) count.textContent = (parseInt(c.lk)||0) + 1;
+  } else {
+    icon.classList.remove('liked');
+    icon.innerHTML = '<svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>';
+    if (count) count.textContent = c.lk;
+  }
+}
+function doLike(id) {
+  liked[id] = !liked[id];
+  applyLike(id, liked[id]);
+  showToast(liked[id] ? '❤️ Liked' : 'Like removed');
+}
+
+function applySave(id, on) {
+  var icon = document.getElementById('si' + id);
+  if (!icon) return;
+  if (on) {
+    icon.classList.add('saved');
+    icon.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="var(--green)"><path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"/></svg>';
+  } else {
+    icon.classList.remove('saved');
+    icon.innerHTML = '<svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"/></svg>';
+  }
+}
+function doSave(id) {
+  saved[id] = !saved[id];
+  applySave(id, saved[id]);
+  updateSavedBadge();
+  showToast(saved[id] ? '🔖 Saved' : 'Removed from saved');
+}
+
+function applyFollow(id, on) {
+  var btn = document.getElementById('fb' + id);
+  if (!btn) return;
+  if (on) {
+    btn.classList.add('on');
+    btn.textContent = '✓ Following';
+  } else {
+    btn.classList.remove('on');
+    btn.textContent = '+ Follow';
+  }
+}
+function doFollow(id) {
+  followed[id] = !followed[id];
+  applyFollow(id, followed[id]);
+  updateFollowingBadge();
+  if (followed[id]) {
+    showToast('📻 Following ' + (DATA.find(function(x){return x.id===id;})||{}).show);
+  } else {
+    showToast('Unfollowed');
+  }
+}
+
+
+function scrubTo(id, fraction) {
+  var c = DATA.find(function(x){return x.id===id;});
+  if (!c) return;
+  // If not currently playing this show, start playing it first
+  if (playingId !== id) {
+    doPlay(id);
+    // After load, seek to fraction
+    var checkReady = setInterval(function() {
+      if (audioEl && audioEl.readyState >= 2 && playingId === id) {
+        clearInterval(checkReady);
+        var seekTime = CLIP_START + (fraction * CLIP_DURATION);
+        audioEl.currentTime = seekTime;
+      }
+    }, 100);
+    return;
+  }
+  // Already playing — seek directly
+  if (audioEl) {
+    var seekTime = CLIP_START + (fraction * CLIP_DURATION);
+    audioEl.currentTime = seekTime;
+    setWaveProgress(id, fraction, c.ac);
+  }
+}
+
+function handleWaveformClick(e, id) {
+  e.stopPropagation();
+  var wf = document.getElementById('wf' + id);
+  if (!wf) return;
+  var rect = wf.getBoundingClientRect();
+  var fraction = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+  scrubTo(id, fraction);
+}
+
+function skipSeconds(id, secs) {
+  if (!audioEl || playingId !== id) { doPlay(id); return; }
+  var c = DATA.find(function(x){return x.id===id;});
+  if (!c) return;
+  var newTime = audioEl.currentTime + secs;
+  var clipStart = CLIP_START;
+  var clipEnd = CLIP_START + CLIP_DURATION;
+  newTime = Math.max(clipStart, Math.min(clipEnd - 1, newTime));
+  audioEl.currentTime = newTime;
+  var prog = (newTime - clipStart) / CLIP_DURATION;
+  setWaveProgress(id, prog, c.ac);
+}
+
+
+function doDiscover() {
+  stopCurrentAudio();
+  // Shuffle filteredData
+  var shuffled = filteredData.slice();
+  for (var i = shuffled.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var tmp = shuffled[i]; shuffled[i] = shuffled[j]; shuffled[j] = tmp;
+  }
+  render(shuffled);
+  document.getElementById('feed').scrollTop = 0;
+  showToast('✦ Shuffled — discovering something new');
+  setTimeout(function() {
+    if (autoplayEnabled && shuffled.length > 0) {
+      visibleCardId = shuffled[0].id;
+      doPlay(shuffled[0].id);
+    }
+  }, 600);
+}
 
 function doShare(id){
   var clip=DATA.find(function(c){return c.id===id});
@@ -928,6 +1006,13 @@ function filterCat(el,cat){
   currentFilter=cat;
   filteredData=cat==='all'?DATA:DATA.filter(function(c){return c.cat.indexOf(cat)>-1});
   render(filteredData);
+  // Auto-play first card after a short delay
+  setTimeout(function() {
+    if (autoplayEnabled && filteredData.length > 0) {
+      visibleCardId = filteredData[0].id;
+      doPlay(filteredData[0].id);
+    }
+  }, 800);
   document.getElementById('feed').scrollTop=0;
 }
 
@@ -1060,12 +1145,6 @@ function showToast(msg,green){
 
 // ── INIT ──────────────────────────────────────────────────────────────────────
 render(DATA);
-setTimeout(function() {
-  if (autoplayEnabled && filteredData.length > 0) {
-    visibleCardId = filteredData[0].id;
-    doPlay(filteredData[0].id);
-  }
-}, 800);
 </script>
 </body>
 </html>
