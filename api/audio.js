@@ -1,20 +1,11 @@
 // RSS feeds for all 16 shows
 const RSS_FEEDS = {
   1:  'https://feeds.acast.com/public/shows/lawfare',
-  2:  'https://feeds.buzzsprout.com/1906302.rss',
   3:  'https://podcasts.files.bbci.co.uk/p02nq0gn.rss',
-  4:  'https://feeds.buzzsprout.com/1879213.rss',
-  5:  'https://feeds.simplecast.com/uP-3JNpd',
-  6:  'https://feeds.buzzsprout.com/1056213.rss',
-  7:  'https://podcasts.files.bbci.co.uk/b006qykl.rss',
-  8:  'https://feeds.simplecast.com/EmVW7VGp',
-  9:  'https://feeds.buzzsprout.com/1538936.rss',
-  10: 'https://feeds.simplecast.com/E9S5H3FM',
-  11: 'https://feeds.publicradio.org/public_feeds/reveal/rss/rss',
-  12: 'https://feeds.npr.org/510289/podcast.xml',
+  5:  'https://podcasts.files.bbci.co.uk/b006qnmr.rss',
+  7:  'https://feeds.simplecast.com/l2i9YnTd',
+  12: 'https://feeds.simplecast.com/82FI35Px',
   13: 'https://feeds.buzzsprout.com/208666.rss',
-  14: 'https://feeds.simplecast.com/0yJSBwD4',
-  15: 'https://feeds.feedburner.com/nhpr-document',
   16: 'https://feeds.simplecast.com/54nAGcIl',
 };
 
