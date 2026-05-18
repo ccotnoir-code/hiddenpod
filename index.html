@@ -448,17 +448,17 @@ var DATA = [
    dt:["Nonprofit-backed","Civic planning niche","Gulf Coast voice","Credible sourcing"],
    scores:{quality:71,structure:76,relevance:86,clipability:83,credibility:79,geodiversity:94}},
 
-  {id:7,cat:['investigative'],show:"In the Dark",outlet:"APM Reports · The New Yorker",init:"ID",
-   logoBg:"linear-gradient(135deg,#1a1a0a,#3d3d10)",cardBg:"linear-gradient(160deg,#141408,#080805)",
-   ac:"#ffee47",city:"Minneapolis, MN",sz:"mid",szLbl:"Mid-tier",match:93,
-   ep:"The Runaway Princesses: Why Do the Women of Dubai Keep Trying to Escape?",
-   q:"The palace said she was mentally ill. The passports said she was <em>never supposed to come home.</em>",
-   ts:"18:40",dur:"1:22",prog:0.42,lk:"3.2K",sh:"1.1K",sv:"2.8K",
-   reason:"Top investigative clip this week",
-   dh:"Award-winning investigation that changes how you see power",
-   db:"In the Dark joined The New Yorker in 2023 and has continued producing investigative journalism that leads to real-world accountability. This series on Dubai's royal family is their most ambitious project yet.",
-   dt:["Peabody-winning","Long-form investigation","International story","High credibility"],
-   scores:{quality:93,structure:96,relevance:93,clipability:88,credibility:98,geodiversity:91}},
+  {id:7,cat:['science','world'],show:"In Our Time",outlet:"BBC Radio 4",init:"IoT",
+   logoBg:"linear-gradient(135deg,#0d1a2d,#1a1008)",cardBg:"linear-gradient(160deg,#080f1a,#030405)",
+   ac:"#ff9a6b",city:"London, UK",sz:"large",szLbl:"Major",match:93,
+   ep:"The Periodic Table",
+   q:"Mendeleev didn't just organize the elements. He predicted the ones <em>we hadn't found yet.</em>",
+   ts:"08:15",dur:"1:04",prog:0.22,lk:"6.8K",sh:"2.1K",sv:"4.5K",
+   reason:"Top science clip this week",
+   dh:"BBC science storytelling that rewards the full listen",
+   db:"In Our Time has been running since 1998 and is BBC Radio 4's most downloaded program. This episode scored in the top 5% for credibility and structure — a 45-minute panel with three leading scientists that distills a century of chemistry into quotable moments.",
+   dt:["BBC legacy","Expert panel","High credibility","Science history"],
+   scores:{quality:94,structure:97,relevance:93,clipability:85,credibility:98,geodiversity:89}},
 
   {id:8,cat:['science','tech'],show:"Radiolab",outlet:"WNYC Studios",init:"RL",
    logoBg:"linear-gradient(135deg,#0a1a30,#1040a0)",cardBg:"linear-gradient(160deg,#080f1a,#030508)",
@@ -508,17 +508,17 @@ var DATA = [
    dt:["14-month investigation","National impact","FOI documents","Nonprofit newsroom"],
    scores:{quality:92,structure:94,relevance:91,clipability:89,credibility:97,geodiversity:78}},
 
-  {id:12,cat:['news','politics'],show:"Consider This",outlet:"NPR",init:"CT",
-   logoBg:"linear-gradient(135deg,#0d1a0d,#1a3a1a)",cardBg:"linear-gradient(160deg,#080f08,#030503)",
-   ac:"#7DCF9E",city:"Washington, DC",sz:"large",szLbl:"Major",match:84,
-   ep:"The Border Deal That Almost Was — And Why It Failed",
-   q:"The votes were there. The White House knew the votes were there. <em>The deal died anyway.</em>",
-   ts:"12:33",dur:"0:55",prog:0.35,lk:"22.1K",sh:"7.8K",sv:"12.3K",
-   reason:"Trending in Politics",
-   dh:"The political story with the clearest clip moment this week",
-   db:"Consider This consistently produces some of the most clip-able moments in NPR's catalog. This episode scored unusually high on clip-ability because the key quote — the entire story — is contained in 45 seconds.",
-   dt:["Top NPR clip score","Political accountability","Widely shared","Trending now"],
-   scores:{quality:88,structure:86,relevance:84,clipability:95,credibility:93,geodiversity:65}},
+  {id:12,cat:['news','politics'],show:"Planet Money",outlet:"NPR",init:"PM",
+   logoBg:"linear-gradient(135deg,#0d1a10,#163028)",cardBg:"linear-gradient(160deg,#060f08,#020503)",
+   ac:"#5ed4a0",city:"Washington, DC",sz:"large",szLbl:"Major",match:84,
+   ep:"The Shrinkflation Spiral",
+   q:"The bag says 11.5 ounces. It used to say 14. <em>Your money bought less — and you didn't notice.</em>",
+   ts:"14:22",dur:"0:52",prog:0.36,lk:"21.4K",sh:"7.3K",sv:"11.8K",
+   reason:"Trending in Economics",
+   dh:"The economics story with the clearest clip moment this week",
+   db:"Planet Money makes economic forces visceral — this episode on shrinkflation scored in the top 8% for clip-ability, with a central moment that compresses the entire argument into under a minute. One of their most-shared episodes this month.",
+   dt:["Consumer economics","Trending story","Top clip score","NPR flagship"],
+   scores:{quality:87,structure:89,relevance:84,clipability:93,credibility:91,geodiversity:64}},
 
   {id:13,cat:['local','science'],show:"The Sprawl",outlet:"Canadaland · Calgary",init:"SP",
    logoBg:"linear-gradient(135deg,#081820,#104038)",cardBg:"linear-gradient(160deg,#060e14,#030608)",
@@ -577,7 +577,8 @@ var audioLoading = {};    // showId -> true while fetching
 var playingId = null;
 var playTimer = null;
 var CLIP_START = 20 * 60; // start at 20 min mark
-var CLIP_DURATION = 120;  // play 2 minutes
+var CLIP_DURATION = 30;   // play 30 seconds
+var clipStartTime = 0;    // tracks where current clip began (for scrubber)
 
 function makeWave(prog, ac, cid) {
   var bars = 32;
@@ -713,12 +714,25 @@ function startAudio(id, url) {
   };
 
   audioEl.load();
+
+  // Pre-cache next card so autoplay starts instantly
+  var nextIdx = filteredData.findIndex(function(c){return c.id===id;});
+  if (nextIdx >= 0 && nextIdx < filteredData.length - 1) {
+    var nextId = filteredData[nextIdx + 1].id;
+    if (!audioCache[nextId]) {
+      fetch('/api/audio?show=' + nextId)
+        .then(function(r){return r.json();})
+        .then(function(d){if(d.url) audioCache[nextId]=d.url;})
+        .catch(function(){});
+    }
+  }
 }
 
 function startPlayTimer(id) {
   var c = DATA.find(function(x){return x.id===id;});
   if (!c) return;
   var startTime = audioEl.currentTime;
+  clipStartTime = startTime;
   var clipEnd = startTime + CLIP_DURATION;
 
   playTimer = setInterval(function() {
@@ -747,6 +761,15 @@ function startPlayTimer(id) {
   }, 250);
 }
 
+function seekAudio(e, id) {
+  if (playingId !== id || !audioEl) return;
+  var wf = document.getElementById('wf' + id);
+  if (!wf) return;
+  var rect = wf.getBoundingClientRect();
+  var frac = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+  audioEl.currentTime = clipStartTime + frac * CLIP_DURATION;
+}
+
 function handleAudioError(id, msg) {
   if (playingId === id) {
     var btn = document.getElementById('pb' + id);
@@ -764,12 +787,12 @@ var SPOTIFY_URLS = {
   4: null,
   5: 'https://open.spotify.com/show/5JZsS7vi4ijNKveG7Ob1V9',
   6: null,
-  7: 'https://open.spotify.com/show/1aFyRYDJ1pHEaPMnZAGaOr',
+  7: 'https://open.spotify.com/show/2YGOvj2NfNpomkKhLCWmEX',
   8: 'https://open.spotify.com/show/2hmkzUtix0qTqvtpPcMzEL',
   9: null,
   10: null,
   11: 'https://open.spotify.com/show/51CN011CgUdG7EUfm7cXF7',
-  12: 'https://open.spotify.com/show/3Z6JdCS2d0eFEpXHKI6WqH',
+  12: 'https://open.spotify.com/show/4FYpq3lSeQMAhqNI6N2zn1',
   13: 'https://open.spotify.com/show/2Q02ecA0U7V4JUD7P9RTtI',
   14: 'https://open.spotify.com/show/44fllCS2FTFr2x2kjP9xeT',
   15: null,
@@ -782,12 +805,12 @@ var APPLE_URLS = {
   4: 'https://podcasts.apple.com/us/podcast/id1496978793',
   5: 'https://podcasts.apple.com/us/podcast/id1528096109',
   6: 'https://podcasts.apple.com/us/podcast/id1439338282',
-  7: 'https://podcasts.apple.com/us/podcast/id1045640083',
+  7: 'https://podcasts.apple.com/us/podcast/id73330437',
   8: 'https://podcasts.apple.com/us/podcast/id73329404',
   9: 'https://podcasts.apple.com/us/podcast/id1505467474',
   10: 'https://podcasts.apple.com/us/podcast/id1375138139',
   11: 'https://podcasts.apple.com/us/podcast/id357288339',
-  12: 'https://podcasts.apple.com/us/podcast/id1355212895',
+  12: 'https://podcasts.apple.com/us/podcast/id290783428',
   13: 'https://podcasts.apple.com/us/podcast/id1282163395',
   14: 'https://podcasts.apple.com/us/podcast/id1528075510',
   15: 'https://podcasts.apple.com/us/podcast/id1489367372',
@@ -862,7 +885,7 @@ function buildCard(c,idx){
     +'</div>'
     +'<div class="bottom-sec">'
     +'<div class="match-row"><span class="match-tag">'+c.match+'% match</span><span class="reason-lbl">'+c.reason+'</span></div>'
-    +'<div class="player-area"><div class="waveform" id="wf'+c.id+'">'+makeWave(c.prog,c.ac,c.id)+'</div>'
+    +'<div class="player-area"><div class="waveform" id="wf'+c.id+'" onclick="seekAudio(event,'+c.id+')">'+makeWave(c.prog,c.ac,c.id)+'</div>'
     +'<div class="player-ctrls"><button class="play-btn" id="pb'+c.id+'" onclick="doPlay('+c.id+')" style="background:'+c.ac+'">'+pico()+'</button>'
     +'<span class="time-disp" id="td'+c.id+'">'+c.ts+'</span><span style="font-size:9px;color:var(--muted);margin-left:2px">/ clip</span>'
     +'<span class="clip-dur">'+c.dur+'</span></div></div>'
@@ -1056,7 +1079,9 @@ function scrollToNextCard(currentId){
     var nextCard=document.getElementById('cc'+next.id);
     if(nextCard){
       nextCard.scrollIntoView({behavior:'smooth'});
-      setTimeout(function(){doPlay(next.id)},600);
+      // If URL already cached, play quickly; otherwise allow time for scroll + fetch
+      var delay=audioCache[next.id]?150:700;
+      setTimeout(function(){doPlay(next.id);},delay);
     }
   }
 }

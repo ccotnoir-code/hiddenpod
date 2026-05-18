@@ -6,12 +6,12 @@ const RSS_FEEDS = {
   4:  'https://feeds.buzzsprout.com/1879213.rss',
   5:  'https://feeds.simplecast.com/uP-3JNpd',
   6:  'https://feeds.buzzsprout.com/1056213.rss',
-  7:  'https://feeds.acast.com/public/shows/in-the-dark',
-  8:  'https://feeds.wnyc.org/radiolab',
+  7:  'https://podcasts.files.bbci.co.uk/b006qykl.rss',
+  8:  'https://feeds.simplecast.com/EmVW7VGp',
   9:  'https://feeds.buzzsprout.com/1538936.rss',
   10: 'https://feeds.simplecast.com/E9S5H3FM',
   11: 'https://feeds.publicradio.org/public_feeds/reveal/rss/rss',
-  12: 'https://feeds.npr.org/910369609/podcast.xml',
+  12: 'https://feeds.npr.org/510289/podcast.xml',
   13: 'https://feeds.buzzsprout.com/208666.rss',
   14: 'https://feeds.simplecast.com/0yJSBwD4',
   15: 'https://feeds.feedburner.com/nhpr-document',
@@ -53,7 +53,7 @@ async function getAudioUrl(showId) {
     if (!match) match = text.match(/<media:content[^>]+url='([^']+)'/i);
     if (!match) return null;
 
-    const url = match[1];
+    const url = match[1].replace(/&amp;/g, '&');
     cache[showId] = { url, ts: now };
     return url;
 
