@@ -1,5 +1,3 @@
-const fetch = require('node-fetch');
-
 // RSS feeds for all 16 shows
 const RSS_FEEDS = {
   1:  'https://feeds.acast.com/public/shows/lawfare',
@@ -34,13 +32,16 @@ async function getAudioUrl(showId) {
   if (!feedUrl) return null;
 
   try {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 12000);
     const res = await fetch(feedUrl, {
       headers: {
         'User-Agent': 'HiddenPod/1.0 (podcast discovery prototype)',
         'Accept': 'application/rss+xml, application/xml, text/xml, */*'
       },
-      timeout: 12000
+      signal: controller.signal
     });
+    clearTimeout(timer);
 
     if (!res.ok) return null;
     const text = await res.text();

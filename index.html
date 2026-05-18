@@ -340,7 +340,12 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--text);font-fam
   <div class="discover-backdrop" onclick="closeDiscoverSheet()"></div>
   <div class="discover-panel">
     <div class="discover-handle"></div>
-    <div class="discover-title">Discovery Mode</div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:3px">
+      <div class="discover-title" style="margin-bottom:0">Discovery Mode</div>
+      <div onclick="closeDiscoverSheet()" style="width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0">
+        <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </div>
+    </div>
     <div class="discover-sub">Choose how the algorithm surfaces episodes for you</div>
     <div class="discover-option active" data-mode="default" onclick="selectDiscoverMode('default')">
       <div class="d-radio"><div class="d-dot"></div></div>
