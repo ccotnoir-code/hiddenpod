@@ -472,7 +472,7 @@ var audioCache = {};      // showId -> mp3 url
 var audioLoading = {};    // showId -> true while fetching
 var playingId = null;
 var playTimer = null;
-var CLIP_START = 0; // clips start from beginning of episode
+var CLIP_START = 5 * 60; // skip ads — start at 5 min mark
 var CLIP_DURATION = 30;   // play 30 seconds
 var clipStartTime = 0;    // tracks where current clip began (for scrubber)
 
@@ -590,17 +590,17 @@ function startAudio(id, url) {
   }
 
   audioEl.src = url;
-  audioEl.currentTime = CLIP_START;
 
   var btn = document.getElementById('pb' + id);
 
   audioEl.oncanplay = function() {
     if (playingId !== id) return;
+    audioEl.oncanplay = null; // fire once only
+    audioEl.currentTime = CLIP_START; // seek after load() reset
     audioEl.play().then(function() {
       if (btn) btn.innerHTML = pauseIco();
       startPlayTimer(id);
     }).catch(function(e) {
-      // Some browsers need user gesture — show a "tap to play" state
       if (btn) btn.innerHTML = pico();
       showToast('Tap play to start audio');
     });
@@ -628,13 +628,12 @@ function startAudio(id, url) {
 function startPlayTimer(id) {
   var c = DATA.find(function(x){return x.id===id;});
   if (!c) return;
-  var startTime = audioEl.currentTime;
-  clipStartTime = startTime;
-  var clipEnd = startTime + CLIP_DURATION;
+  clipStartTime = CLIP_START;
+  var clipEnd = CLIP_START + CLIP_DURATION;
 
   playTimer = setInterval(function() {
     if (!audioEl || playingId !== id) { clearInterval(playTimer); return; }
-    var elapsed = audioEl.currentTime - startTime;
+    var elapsed = audioEl.currentTime - CLIP_START;
     if (elapsed < 0) elapsed = 0;
 
     // Update time display
