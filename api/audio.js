@@ -1,79 +1,76 @@
-// Vercel serverless function — Node 18+ native fetch, no dependencies needed
+const fetch = require('node-fetch');
 
+// RSS feeds for all 16 shows
 const RSS_FEEDS = {
   1:  'https://feeds.acast.com/public/shows/lawfare',
-  2:  'https://feeds.acast.com/public/shows/all-politics-is-local',
+  2:  'https://feeds.buzzsprout.com/1906302.rss',
   3:  'https://podcasts.files.bbci.co.uk/p02nq0gn.rss',
   4:  'https://feeds.buzzsprout.com/1879213.rss',
-  5:  'https://feeds.simplecast.com/l2i9YnTd',
+  5:  'https://feeds.simplecast.com/uP-3JNpd',
   6:  'https://feeds.buzzsprout.com/1056213.rss',
   7:  'https://feeds.acast.com/public/shows/in-the-dark',
-  8:  'https://feeds.simplecast.com/EmVW7VGp',
+  8:  'https://feeds.wnyc.org/radiolab',
   9:  'https://feeds.buzzsprout.com/1538936.rss',
   10: 'https://feeds.simplecast.com/E9S5H3FM',
   11: 'https://feeds.publicradio.org/public_feeds/reveal/rss/rss',
-  12: 'https://feeds.npr.org/510355/podcast.xml',
+  12: 'https://feeds.npr.org/910369609/podcast.xml',
   13: 'https://feeds.buzzsprout.com/208666.rss',
   14: 'https://feeds.simplecast.com/0yJSBwD4',
   15: 'https://feeds.feedburner.com/nhpr-document',
-  16: 'https://feeds.simplecast.com/Sl5CSM3S',
+  16: 'https://feeds.simplecast.com/54nAGcIl',
 };
 
+// Cache to avoid refetching on every request
 const cache = {};
-const CACHE_MS = 60 * 60 * 1000;
+const CACHE_TTL = 3600 * 1000; // 1 hour
 
 async function getAudioUrl(showId) {
   const now = Date.now();
-  if (cache[showId] && (now - cache[showId].ts) < CACHE_MS) {
+  if (cache[showId] && (now - cache[showId].ts) < CACHE_TTL) {
     return cache[showId].url;
   }
 
   const feedUrl = RSS_FEEDS[showId];
-  if (!feedUrl) throw new Error('Unknown show');
+  if (!feedUrl) return null;
 
-  const res = await fetch(feedUrl, {
-    headers: {
-      'User-Agent': 'Mozilla/5.0 (compatible; HiddenPod/1.0; +https://hiddenpod.vercel.app)',
-      'Accept': 'application/rss+xml, application/xml, text/xml, */*',
-    },
-    redirect: 'follow',
-    signal: AbortSignal.timeout(10000),
-  });
+  try {
+    const res = await fetch(feedUrl, {
+      headers: {
+        'User-Agent': 'HiddenPod/1.0 (podcast discovery prototype)',
+        'Accept': 'application/rss+xml, application/xml, text/xml, */*'
+      },
+      timeout: 12000
+    });
 
-  if (!res.ok) throw new Error(`Feed returned ${res.status}`);
+    if (!res.ok) return null;
+    const text = await res.text();
 
-  const text = await res.text();
-  let url = null;
+    // Extract first enclosure URL from RSS (handle both quote styles and media:content)
+    let match = text.match(/<enclosure[^>]+url="([^"]+)"/i);
+    if (!match) match = text.match(/<enclosure[^>]+url='([^']+)'/i);
+    if (!match) match = text.match(/<media:content[^>]+url="([^"]+)"/i);
+    if (!match) match = text.match(/<media:content[^>]+url='([^']+)'/i);
+    if (!match) return null;
 
-  const m1 = text.match(/<enclosure[^>]+url="([^"]+\.mp3[^"]*)"/i);
-  if (m1) url = m1[1];
+    const url = match[1];
+    cache[showId] = { url, ts: now };
+    return url;
 
-  if (!url) {
-    const m2 = text.match(/<enclosure[^>]+url='([^']+\.mp3[^']*)'/i);
-    if (m2) url = m2[1];
+  } catch (e) {
+    console.error(`Feed fetch error for show ${showId}:`, e.message);
+    return null;
   }
-  if (!url) {
-    const m3 = text.match(/<media:content[^>]+url="([^"]+\.mp3[^"]*)"/i);
-    if (m3) url = m3[1];
-  }
-  if (!url) {
-    const m4 = text.match(/<enclosure[^>]+url="([^"]+)"/i);
-    if (m4) url = m4[1];
-  }
-
-  if (!url) throw new Error('No audio URL in feed');
-
-  url = url.replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>');
-  cache[showId] = { url, ts: now };
-  return url;
 }
 
 module.exports = async (req, res) => {
+  // CORS headers — allow any origin for prototype
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
-  res.setHeader('Cache-Control', 'public, s-maxage=3600');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
-  if (req.method === 'OPTIONS') return res.status(200).end();
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
 
   const showId = parseInt(req.query.show, 10);
   if (!showId || showId < 1 || showId > 16) {
@@ -81,10 +78,12 @@ module.exports = async (req, res) => {
   }
 
   try {
-    const url = await getAudioUrl(showId);
-    return res.status(200).json({ url });
+    const audioUrl = await getAudioUrl(showId);
+    if (!audioUrl) {
+      return res.status(404).json({ error: 'Audio URL not found' });
+    }
+    return res.status(200).json({ url: audioUrl });
   } catch (e) {
-    console.error('Show ' + showId + ' error:', e.message);
-    return res.status(502).json({ error: e.message || 'Feed unavailable' });
+    return res.status(500).json({ error: 'Server error' });
   }
 };
