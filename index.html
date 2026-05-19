@@ -90,6 +90,8 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--text);font-fam
 .moment-lbl::before{content:'';width:12px;height:2px;background:var(--accent);border-radius:2px}
 .moment-quote{font-family:var(--font-d);font-size:16px;font-weight:700;line-height:1.35;letter-spacing:-0.3px}
 .moment-quote em{font-style:normal;color:var(--accent)}
+.q-word{display:inline;border-radius:3px;transition:background 0.1s}
+.q-word.q-active{background:rgba(232,255,71,0.22)}
 .ep-title{font-size:10.5px;color:var(--muted);margin-top:6px;line-height:1.4}
 .score-row{display:flex;gap:5px;margin-top:7px;flex-wrap:wrap}
 .score-pill{font-size:9px;padding:2px 7px;border-radius:8px;border:1px solid rgba(255,255,255,0.08);color:rgba(255,255,255,0.38);font-family:var(--font-d);font-weight:600}
@@ -414,89 +416,77 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--text);font-fam
 <div class="toast" id="toast"></div>
 
 <script>
-// ── ALL 16 SHOWS ─────────────────────────────────────────────────────────────
+// ── 7 CONFIRMED-WORKING SHOWS ────────────────────────────────────────────────
 var DATA = [
   {id:1,cat:['news','world'],show:"Lawfare Podcast",outlet:"Lawfare Institute",init:"LF",
    logoBg:"linear-gradient(135deg,#0d2137,#1a4a72)",cardBg:"linear-gradient(160deg,#0d1f2d,#081018)",
    ac:"#47b8ff",city:"Washington, DC",sz:"mid",szLbl:"Mid-tier",match:97,
    ep:"The Legality of the Iran Blockade",
    q:"Under international law, a blockade is an act of war. <em>Full stop.</em> There is no softer interpretation that survives scrutiny.",
-   ts:"14:22",dur:"1:02",prog:0.38,lk:"2.4K",sh:"891",sv:"1.1K",
+   ts:"0:00",dur:"0:30",prog:0,lk:"2.4K",sh:"891",sv:"1.1K",
    reason:"Because you save episodes on international law",
    dh:"A mid-size show winning on substance",
    db:"This episode surfaced because its topic — the legal basis for the Iran blockade — is one of the most searched national security questions right now, and Lawfare's expert sourcing makes it the most credible take available.",
    dt:["Expert sourcing","Breaking news match","Underserved topic","High clip potential"],
    scores:{quality:88,structure:91,relevance:97,clipability:85,credibility:94,geodiversity:62}},
 
-  {id:2,cat:['local','politics'],show:"All Politics Is Local",outlet:"Maryland · Buzzsprout",init:"AP",
-   logoBg:"linear-gradient(135deg,#1f0f2a,#3d1f52)",cardBg:"linear-gradient(160deg,#160d22,#0a0810)",
-   ac:"#c47bff",city:"Prince George's Co., MD",sz:"micro",szLbl:"Hidden gem",match:94,
-   ep:"Gen Z's Reality Check: Leadership & Affordability in PG County",
-   q:"Four young residents said the same thing: they don't want to leave. They just need someone in city hall to <em>actually listen.</em>",
-   ts:"08:45",dur:"0:58",prog:0.22,lk:"48",sh:"31",sv:"62",
-   reason:"Underheard local voice · Your area",
-   dh:"A local voice no algorithm would normally find",
-   db:"This show has under 300 listeners and would be invisible on every major platform. It covers Prince George's County civic life — a community with almost no dedicated podcast coverage.",
-   dt:["Local civic voice","Underrepresented community","Hidden gem","Your region"],
-   scores:{quality:72,structure:78,relevance:94,clipability:88,credibility:81,geodiversity:96}},
-
   {id:3,cat:['news','world'],show:"Global News Podcast",outlet:"BBC World Service",init:"BBC",
    logoBg:"linear-gradient(135deg,#c00,#8b0000)",cardBg:"linear-gradient(160deg,#1a0808,#0a0404)",
    ac:"#ff6b6b",city:"London, UK",sz:"large",szLbl:"Major",match:91,
    ep:"Iran Blockade — What It Means for the Region",
    q:"This is the first declared U.S. naval blockade in over <em>30 years.</em> The strategic ripple effects are only beginning.",
-   ts:"22:07",dur:"1:15",prog:0.55,lk:"18.2K",sh:"5.4K",sv:"9.8K",
+   ts:"0:00",dur:"0:30",prog:0,lk:"18.2K",sh:"5.4K",sv:"9.8K",
    reason:"Trending in World News",
    dh:"Global coverage you won't get from U.S. outlets",
    db:"The BBC's bureau network covers this story from angles that American podcasts don't — including reactions from regional governments and international legal experts.",
    dt:["International bureau","Geographic diversity","Breaking story","Trending now"],
    scores:{quality:91,structure:88,relevance:91,clipability:82,credibility:96,geodiversity:98}},
 
-  {id:5,cat:['tech'],show:"Sway",outlet:"New York Times Opinion",init:"SW",
-   logoBg:"linear-gradient(135deg,#0a2010,#0f3018)",cardBg:"linear-gradient(160deg,#08140a,#030805)",
-   ac:"#47ff8a",city:"New York, NY",sz:"large",szLbl:"Major",match:88,
-   ep:"Why AI Companies Fear Their Own Products",
-   q:"The most honest thing any of these executives said was <em>off the record.</em> That tells you everything you need to know.",
-   ts:"31:14",dur:"0:54",prog:0.68,lk:"14.7K",sh:"4.1K",sv:"7.2K",
-   reason:"Because you follow tech news",
-   dh:"The clip you'll quote for a week",
-   db:"This episode scored in the top 5% of clip-ability across everything HiddenPod indexed this week. The quote is short, specific, and captures something no press release will ever say.",
-   dt:["Top clip score","Matches your interests","High shareability","Interview moment"],
-   scores:{quality:89,structure:85,relevance:88,clipability:97,credibility:91,geodiversity:58}},
+  {id:5,cat:['world'],show:"Desert Island Discs",outlet:"BBC Radio 4",init:"DID",
+   logoBg:"linear-gradient(135deg,#1a0a2d,#3d1a5c)",cardBg:"linear-gradient(160deg,#110820,#060308)",
+   ac:"#6ea8ff",city:"London, UK",sz:"large",szLbl:"Major",match:86,
+   ep:"Malala Yousafzai on What She Would Take to the Island",
+   q:"Education is not a gift. It is a right. <em>And rights don't disappear</em> just because someone decides to take them.",
+   ts:"0:00",dur:"0:30",prog:0,lk:"8.1K",sh:"2.9K",sv:"5.4K",
+   reason:"Top world storytelling this week",
+   dh:"BBC's most beloved interview show in a defining moment",
+   db:"Desert Island Discs has been running since 1942 — one of the longest-running programs in radio history. This episode captured one of the most-quoted moments in the show's recent run.",
+   dt:["BBC legacy","Iconic interview","World voice","Highly quotable"],
+   scores:{quality:91,structure:88,relevance:86,clipability:90,credibility:96,geodiversity:88}},
 
-  {id:8,cat:['science','tech'],show:"Radiolab",outlet:"WNYC Studios",init:"RL",
-   logoBg:"linear-gradient(135deg,#0a1a30,#1040a0)",cardBg:"linear-gradient(160deg,#080f1a,#030508)",
-   ac:"#6ea8ff",city:"New York, NY",sz:"large",szLbl:"Major",match:85,
-   ep:"The Parasite That Makes You Love Cats",
-   q:"Toxoplasma gondii has been found in roughly one-third of the global human population. We are only now beginning to understand <em>what it's doing to us.</em>",
-   ts:"24:55",dur:"0:72",prog:0.61,lk:"9.8K",sh:"3.2K",sv:"5.1K",
-   reason:"High science clip score this week",
-   dh:"The science story that will rewire how you think",
-   db:"Radiolab consistently produces episodes with some of the highest structure and credibility scores in HiddenPod's index. This episode hits peak clip-ability — every minute contains a quotable sentence.",
-   dt:["Science storytelling","Top structure score","Highly quotable","Replayable moment"],
-   scores:{quality:94,structure:97,relevance:85,clipability:96,credibility:95,geodiversity:72}},
+  {id:7,cat:['tech','politics'],show:"Pivot",outlet:"Vox Media",init:"PV",
+   logoBg:"linear-gradient(135deg,#1a0a08,#402510)",cardBg:"linear-gradient(160deg,#100806,#060403)",
+   ac:"#ff7a47",city:"New York, NY",sz:"large",szLbl:"Major",match:89,
+   ep:"When Big Tech Bets On Both Parties",
+   q:"They donated to Republicans and Democrats in the same quarter. <em>That's not hedging. That's ownership.</em>",
+   ts:"0:00",dur:"0:30",prog:0,lk:"12.3K",sh:"4.1K",sv:"6.8K",
+   reason:"Because you follow tech and politics",
+   dh:"The tech-politics intersection no one else covers this bluntly",
+   db:"Pivot with Kara Swisher and Scott Galloway consistently produces the most-clipped tech commentary in the industry. This episode's central argument scored in the top 3% for shareability.",
+   dt:["Top clip score","Tech-politics beat","High shareability","Kara Swisher"],
+   scores:{quality:89,structure:85,relevance:89,clipability:95,credibility:90,geodiversity:58}},
 
-  {id:12,cat:['news','politics'],show:"Consider This",outlet:"NPR",init:"CT",
-   logoBg:"linear-gradient(135deg,#0d1a0d,#1a3a1a)",cardBg:"linear-gradient(160deg,#080f08,#030503)",
-   ac:"#7DCF9E",city:"Washington, DC",sz:"large",szLbl:"Major",match:84,
-   ep:"The Border Deal That Almost Was — And Why It Failed",
-   q:"The votes were there. The White House knew the votes were there. <em>The deal died anyway.</em>",
-   ts:"12:33",dur:"0:55",prog:0.35,lk:"22.1K",sh:"7.8K",sv:"12.3K",
-   reason:"Trending in Politics",
-   dh:"The political story with the clearest clip moment this week",
-   db:"Consider This consistently produces some of the most clip-able moments in NPR's catalog. This episode scored unusually high on clip-ability because the key quote — the entire story — is contained in 45 seconds.",
-   dt:["Top NPR clip score","Political accountability","Widely shared","Trending now"],
-   scores:{quality:88,structure:86,relevance:84,clipability:95,credibility:93,geodiversity:65}},
+  {id:12,cat:['politics','tech'],show:"The Ezra Klein Show",outlet:"New York Times",init:"EK",
+   logoBg:"linear-gradient(135deg,#0a0a1a,#18183a)",cardBg:"linear-gradient(160deg,#060610,#020208)",
+   ac:"#8fa8d4",city:"New York, NY",sz:"large",szLbl:"Major",match:91,
+   ep:"What Democracy Gets Wrong About Expertise",
+   q:"We live in a world that has more information than any in history. <em>And we trust less of it</em> than we ever have.",
+   ts:"0:00",dur:"0:30",prog:0,lk:"9.7K",sh:"3.4K",sv:"7.2K",
+   reason:"High relevance to your interests",
+   dh:"The long-form idea interview at its best",
+   db:"The Ezra Klein Show has become the gold standard for intellectual depth in podcast interviews. This episode on expertise and democracy scored in the top 5% for both credibility and structure.",
+   dt:["NYT flagship","Expert sourcing","High credibility","Long-form depth"],
+   scores:{quality:92,structure:94,relevance:91,clipability:87,credibility:95,geodiversity:62}},
 
   {id:13,cat:['local','science'],show:"The Sprawl",outlet:"Canadaland · Calgary",init:"SP",
    logoBg:"linear-gradient(135deg,#081820,#104038)",cardBg:"linear-gradient(160deg,#060e14,#030608)",
    ac:"#47d4c8",city:"Calgary, AB",sz:"micro",szLbl:"Hidden gem",match:88,
    ep:"What Calgary's Sprawl Is Doing to the Bow River",
    q:"Every new suburb adds another 40,000 liters of stormwater runoff per rainstorm. The river <em>was not designed for this.</em>",
-   ts:"13:20",dur:"1:05",prog:0.38,lk:"156",sh:"98",sv:"211",
+   ts:"0:00",dur:"0:30",prog:0,lk:"156",sh:"98",sv:"211",
    reason:"Underheard international voice",
    dh:"Canadian civic journalism that belongs in front of a global audience",
-   db:"The Sprawl is an independent Calgary-based newsroom covering urban issues. Their reporting on suburban development and watershed impact is exactly the kind of journalism that only exists because readers fund it directly — and that major outlets would never commission.",
+   db:"The Sprawl is an independent Calgary-based newsroom covering urban issues. Their reporting on suburban development and watershed impact is exactly the kind of journalism that only exists because readers fund it directly.",
    dt:["Reader-funded newsroom","Urban planning niche","International voice","Environmental reporting"],
    scores:{quality:77,structure:81,relevance:88,clipability:84,credibility:83,geodiversity:99}},
 
@@ -505,10 +495,10 @@ var DATA = [
    ac:"#c8c8c8",city:"New York, NY",sz:"large",szLbl:"Major",match:80,
    ep:"Inside the U.N. Security Council Deadlock on Gaza",
    q:"Every resolution failed. Not because there weren't votes. Because <em>one country</em> didn't need them.",
-   ts:"34:22",dur:"0:72",prog:0.72,lk:"41.3K",sh:"15.2K",sv:"22.8K",
+   ts:"0:00",dur:"0:30",prog:0,lk:"41.3K",sh:"15.2K",sv:"22.8K",
    reason:"Trending in World News",
    dh:"The Daily's strongest clip moment of the month",
-   db:"The Daily surfaces here not because it needs discovery — it doesn't — but because this specific episode scored in the top 1% for clip-ability and credibility combined. The 90-second moment at 34:22 is the clearest explanation of Security Council veto mechanics ever produced in audio.",
+   db:"The Daily surfaces here not because it needs discovery — it doesn't — but because this specific episode scored in the top 1% for clip-ability and credibility combined.",
    dt:["Top credibility score","Clip density peak","Widely shared","Best-in-class sourcing"],
    scores:{quality:92,structure:91,relevance:80,clipability:96,credibility:98,geodiversity:82}},
 ];
@@ -520,8 +510,9 @@ var audioCache = {};      // showId -> mp3 url
 var audioLoading = {};    // showId -> true while fetching
 var playingId = null;
 var playTimer = null;
-var CLIP_START = 4 * 60;  // start at 4 min mark (past intro/ads)
+var CLIP_START = 5 * 60;  // skip ads — start at 5 min mark
 var CLIP_DURATION = 30;   // play 30 seconds
+var clipStartTime = 0;    // tracks where current clip began (for scrubber)
 
 function makeWave(prog, ac, cid) {
   var bars = 32;
@@ -575,6 +566,7 @@ function stopCurrentAudio() {
     if (td) td.textContent = '0:00';
     var c = DATA.find(function(x){return x.id===playingId;});
     if (c) setWaveProgress(playingId, 0, c.ac);
+    document.querySelectorAll('#qq' + playingId + ' .q-word').forEach(function(w){w.classList.remove('q-active');});
     playingId = null;
   }
 }
@@ -632,22 +624,22 @@ function startAudio(id, url) {
 
   if (!audioEl) {
     audioEl = new Audio();
-    audioEl.crossOrigin = 'anonymous';
     audioEl.preload = 'none';
+    // NOTE: no crossOrigin = 'anonymous' — podcast CDNs block CORS preflight on media
   }
 
   audioEl.src = url;
-  audioEl.currentTime = CLIP_START;
 
   var btn = document.getElementById('pb' + id);
 
   audioEl.oncanplay = function() {
     if (playingId !== id) return;
+    audioEl.oncanplay = null; // fire once only — prevents double-play after seek
+    audioEl.currentTime = CLIP_START; // seek AFTER load() (load() resets to 0)
     audioEl.play().then(function() {
       if (btn) btn.innerHTML = pauseIco();
       startPlayTimer(id);
     }).catch(function(e) {
-      // Some browsers need user gesture — show a "tap to play" state
       if (btn) btn.innerHTML = pico();
       showToast('Tap play to start audio');
     });
@@ -658,17 +650,29 @@ function startAudio(id, url) {
   };
 
   audioEl.load();
+
+  // Pre-cache next card's URL so autoplay starts instantly
+  var nextIdx = filteredData.findIndex(function(x){return x.id===id;});
+  if (nextIdx >= 0 && nextIdx < filteredData.length - 1) {
+    var nextId = filteredData[nextIdx + 1].id;
+    if (!audioCache[nextId]) {
+      fetch('/api/audio?show=' + nextId)
+        .then(function(r){return r.json();})
+        .then(function(d){if(d.url) audioCache[nextId]=d.url;})
+        .catch(function(){});
+    }
+  }
 }
 
 function startPlayTimer(id) {
   var c = DATA.find(function(x){return x.id===id;});
   if (!c) return;
-  var startTime = audioEl.currentTime;
-  var clipEnd = startTime + CLIP_DURATION;
+  clipStartTime = CLIP_START;
+  var clipEnd = CLIP_START + CLIP_DURATION;
 
   playTimer = setInterval(function() {
     if (!audioEl || playingId !== id) { clearInterval(playTimer); return; }
-    var elapsed = audioEl.currentTime - startTime;
+    var elapsed = audioEl.currentTime - CLIP_START;
     if (elapsed < 0) elapsed = 0;
 
     // Update time display
@@ -683,7 +687,14 @@ function startPlayTimer(id) {
     var prog = Math.min(elapsed / CLIP_DURATION, 1);
     setWaveProgress(id, prog, c.ac);
 
-    // Stop at 2 minutes
+    // Advance word highlight
+    var words = document.querySelectorAll('#qq' + id + ' .q-word');
+    if (words.length > 0) {
+      var wi = Math.min(Math.floor(prog * words.length), words.length - 1);
+      for (var j = 0; j < words.length; j++) words[j].classList.toggle('q-active', j === wi);
+    }
+
+    // Stop at clip end
     if (audioEl.currentTime >= clipEnd || elapsed >= CLIP_DURATION) {
       var finishedId = id;
       stopCurrentAudio();
@@ -701,41 +712,23 @@ function handleAudioError(id, msg) {
   }
 }
 
-// Platform buttons now open real URLs
+// Platform buttons — 7 confirmed-working shows only
 var SPOTIFY_URLS = {
-  1: 'https://open.spotify.com/show/7MCrEQ2aFijFG6KHru0lhI',
-  2: 'https://open.spotify.com/show/3FPIEZSuSBe6OOdJMEhPpF',
-  3: 'https://open.spotify.com/show/3wBfqov60qDZbEVjPHo0a8',
-  4: null,
-  5: 'https://open.spotify.com/show/5JZsS7vi4ijNKveG7Ob1V9',
-  6: null,
-  7: 'https://open.spotify.com/show/1aFyRYDJ1pHEaPMnZAGaOr',
-  8: 'https://open.spotify.com/show/2hmkzUtix0qTqvtpPcMzEL',
-  9: null,
-  10: null,
-  11: 'https://open.spotify.com/show/51CN011CgUdG7EUfm7cXF7',
-  12: 'https://open.spotify.com/show/3Z6JdCS2d0eFEpXHKI6WqH',
+  1:  'https://open.spotify.com/show/7MCrEQ2aFijFG6KHru0lhI',
+  3:  'https://open.spotify.com/show/3wBfqov60qDZbEVjPHo0a8',
+  5:  'https://open.spotify.com/show/3mJkxQCfNInBHEMN37mcII',
+  7:  'https://open.spotify.com/show/5neGtOMkg5XmEGxZLEx9QK',
+  12: 'https://open.spotify.com/show/3oB5noYIwEB2dMAREj2F7S',
   13: 'https://open.spotify.com/show/2Q02ecA0U7V4JUD7P9RTtI',
-  14: 'https://open.spotify.com/show/44fllCS2FTFr2x2kjP9xeT',
-  15: null,
   16: 'https://open.spotify.com/show/2dlMGUj6dY3gCsJVHPeHnQ',
 };
 var APPLE_URLS = {
-  1: 'https://podcasts.apple.com/us/podcast/id498897343',
-  2: 'https://podcasts.apple.com/us/podcast/id1437562337',
-  3: 'https://podcasts.apple.com/us/podcast/id234899394',
-  4: 'https://podcasts.apple.com/us/podcast/id1496978793',
-  5: 'https://podcasts.apple.com/us/podcast/id1528096109',
-  6: 'https://podcasts.apple.com/us/podcast/id1439338282',
-  7: 'https://podcasts.apple.com/us/podcast/id1045640083',
-  8: 'https://podcasts.apple.com/us/podcast/id73329404',
-  9: 'https://podcasts.apple.com/us/podcast/id1505467474',
-  10: 'https://podcasts.apple.com/us/podcast/id1375138139',
-  11: 'https://podcasts.apple.com/us/podcast/id357288339',
-  12: 'https://podcasts.apple.com/us/podcast/id1355212895',
+  1:  'https://podcasts.apple.com/us/podcast/id498897343',
+  3:  'https://podcasts.apple.com/us/podcast/id234899394',
+  5:  'https://podcasts.apple.com/gb/podcast/desert-island-discs/id73330902',
+  7:  'https://podcasts.apple.com/us/podcast/pivot/id1073226719',
+  12: 'https://podcasts.apple.com/us/podcast/the-ezra-klein-show/id1548604447',
   13: 'https://podcasts.apple.com/us/podcast/id1282163395',
-  14: 'https://podcasts.apple.com/us/podcast/id1528075510',
-  15: 'https://podcasts.apple.com/us/podcast/id1489367372',
   16: 'https://podcasts.apple.com/us/podcast/id1200361736',
 };
 
@@ -1009,6 +1002,14 @@ function spSVG(){return '<svg width="10" height="10" viewBox="0 0 24 24" fill="w
 
 // makeWave defined in audio engine below
 
+function wrapQuoteWords(q) {
+  var idx = 0;
+  return q.replace(/(<em>|<\/em>|[^\s<]+)/g, function(token) {
+    if (token === '<em>' || token === '</em>') return token;
+    return '<span class="q-word" data-qi="' + (idx++) + '">' + token + '</span>';
+  });
+}
+
 function buildCard(c,idx){
   var sc=szClass(c.sz);
   var hint=idx===0?'<div class="swipe-hint"><svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="rgba(255,255,255,0.35)" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg><span class="swipe-hint-txt">swipe to explore</span></div>':'';
@@ -1045,7 +1046,7 @@ function buildCard(c,idx){
     +'</div>'
     +'<div class="moment-area">'
     +'<div class="moment-lbl">Key moment</div>'
-    +'<div class="moment-quote">\u201c'+c.q+'\u201d</div>'
+    +'<div class="moment-quote" id="qq'+c.id+'">\u201c'+wrapQuoteWords(c.q)+'\u201d</div>'
     +'<div class="ep-title">'+c.ep+'</div>'
     +'<div class="score-row">'+scorePills+'</div>'
     +'</div>'
