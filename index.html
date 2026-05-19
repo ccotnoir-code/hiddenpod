@@ -286,7 +286,7 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--text);font-fam
 .pref-skip{background:none;border:none;color:rgba(255,255,255,0.3);font-size:13px;cursor:pointer;padding:12px;font-family:var(--font-b)}
 
 /* ── PROFILE VIEW ── */
-.profile-view{position:absolute;inset:0;background:var(--bg);z-index:10;display:none;flex-direction:column;padding-top:90px;overflow-y:auto}
+.profile-view{position:absolute;inset:0;background:var(--bg);z-index:10;display:none;flex-direction:column;padding-top:90px;overflow-y:auto;-webkit-overflow-scrolling:touch}
 .profile-view.open{display:flex}
 .profile-header{display:flex;flex-direction:column;align-items:center;padding:24px 24px 20px}
 .profile-avatar-lg{width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--accent),#47ffe8);display:flex;align-items:center;justify-content:center;font-family:var(--font-d);font-size:26px;font-weight:700;color:#0a0a0f;margin-bottom:12px}
@@ -361,7 +361,7 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--text);font-fam
 .creator-skip{background:none;border:none;color:rgba(255,255,255,0.3);font-size:13px;cursor:pointer;padding:8px;font-family:var(--font-b)}
 
 /* ── CREATOR DASHBOARD ── */
-.creator-dash{position:absolute;inset:0;background:var(--bg);z-index:10;display:none;flex-direction:column;overflow-y:auto}
+.creator-dash{position:absolute;inset:0;background:var(--bg);z-index:10;display:none;flex-direction:column;overflow-y:auto;-webkit-overflow-scrolling:touch}
 .creator-dash.open{display:flex}
 .dash-top{padding:52px 20px 14px;flex-shrink:0}
 .creator-show-row{display:flex;align-items:center;gap:12px;margin-bottom:14px}
@@ -944,7 +944,7 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--text);font-fam
   </div>
   <!-- Footer -->
   <div class="dash-footer">
-    <button class="dash-ftr-btn" onclick="switchToListenerView()">Switch to Listener View</button>
+    <button onclick="switchToListenerView()" style="width:calc(100% - 0px);padding:14px;border-radius:12px;border:1.5px solid var(--green);background:transparent;color:var(--green);font-size:14px;font-weight:600;cursor:pointer;font-family:var(--font-b);display:block;text-align:center;transition:opacity 0.15s" onmousedown="this.style.opacity='0.8'" onmouseup="this.style.opacity='1'">Switch to Listener View</button>
     <button class="dash-ftr-btn danger" onclick="doSignOut()">Sign Out</button>
   </div>
 </div>
@@ -1556,12 +1556,17 @@ function showCreatorDashboard() {
     if (dlBtn) dlBtn.style.display = 'none';
   }
   // Update avatar — blue-green gradient for creator
+  var creatorInitials = currentUser ? currentUser.name.split(' ').map(function(w){return w[0];}).join('').slice(0,2).toUpperCase() : 'CR';
   var av = document.getElementById('topAvatar');
   if (av) {
-    var initials = currentUser ? currentUser.name.split(' ').map(function(w){return w[0];}).join('').slice(0,2).toUpperCase() : 'CR';
-    av.textContent = initials;
+    av.textContent = creatorInitials;
     av.style.background = 'linear-gradient(135deg,#47ffe8,#47a8ff)';
     av.style.color = '#0a0a0f';
+  }
+  // Update bottom nav profile icon with creator initials (blue-green)
+  var navProfile = document.getElementById('nav-profile');
+  if (navProfile) {
+    navProfile.innerHTML = '<div style="width:24px;height:24px;border-radius:50%;background:linear-gradient(135deg,#47ffe8,#47a8ff);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#0a0a0f;font-family:var(--font-d)">' + creatorInitials + '</div><span class="ni-lbl">Profile</span>';
   }
   // Show creator badge in wordmark
   var badge = document.getElementById('creatorBadge');
@@ -1588,7 +1593,7 @@ function openDownloadSheet() {
 }
 
 function switchToListenerView() {
-  document.getElementById('creatorDash').classList.remove('open');
+  closeAllOverlays();
   setNav('nav-home');
   showToast('Switched to listener view');
 }
@@ -1666,6 +1671,12 @@ function finishOnboarding() {
     if (autoplayOn && filteredData.length > 0) doPlay(filteredData[0].id);
   }, 600);
 
+  // Update bottom nav profile icon with initials
+  var navProfile = document.getElementById('nav-profile');
+  if (navProfile) {
+    navProfile.innerHTML = '<div style="width:24px;height:24px;border-radius:50%;background:linear-gradient(135deg,var(--accent),#47ffe8);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#0a0a0f;font-family:var(--font-d)">' + initials + '</div><span class="ni-lbl">Profile</span>';
+  }
+
   showToast('Welcome to HiddenPod ✦', true);
 }
 
@@ -1727,11 +1738,12 @@ function doSignOut() {
   }
   var badge = document.getElementById('creatorBadge');
   if (badge) badge.style.display = 'none';
-  if (wasCreator) {
-    document.getElementById('creatorDash').classList.remove('open');
-  } else {
-    closeProfile();
+  // Reset bottom nav profile icon to generic person outline
+  var navProfile = document.getElementById('nav-profile');
+  if (navProfile) {
+    navProfile.innerHTML = '<svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2M12 11a4 4 0 100-8 4 4 0 000 8z"/></svg><span class="ni-lbl">Profile</span>';
   }
+  closeAllOverlays();
   stopCurrentAudio();
   toggleEmailForm(false);
   toggleCreatorEmailForm(false);
@@ -1906,7 +1918,7 @@ function updateSavedBadge(){
 }
 
 function showSaved(){
-  // move saved view into phone
+  closeAllOverlays();
   var sv=document.getElementById('savedView');
   document.getElementById('phone').appendChild(sv);
   sv.classList.add('open');
@@ -1976,8 +1988,17 @@ function renderFollowing(){
   }).join('');
 }
 
+function closeAllOverlays() {
+  // Close every overlay/view that might be sitting on top of the feed
+  document.getElementById('savedView').classList.remove('open');
+  document.getElementById('followingView').classList.remove('open');
+  document.getElementById('profileView').classList.remove('open');
+  document.getElementById('creatorDash').classList.remove('open');
+  document.getElementById('discoverSheet').classList.remove('open');
+}
+
 function showHome(){
-  closeSaved();closeFollowing();
+  closeAllOverlays();
   switchView('foryou');
   render(filteredData);
   setNav('nav-home');
