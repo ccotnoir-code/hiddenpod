@@ -22,21 +22,49 @@
 }
 html,body{width:100%;height:100%;background:var(--bg);color:var(--text);font-family:var(--font-b);overflow:hidden;user-select:none}
 
-/* ── PHONE SHELL ── */
-.wrap{display:flex;align-items:center;justify-content:center;min-height:100vh;background:#05050a}
-.phone{width:390px;height:844px;background:var(--bg);border-radius:48px;box-shadow:0 0 0 10px #1a1a22,0 0 0 12px #252530,0 40px 80px rgba(0,0,0,0.8);overflow:hidden;position:relative;display:flex;flex-direction:column}
-.phone::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:120px;height:34px;background:var(--bg);border-radius:0 0 20px 20px;z-index:100}
-@media(max-width:430px){
-  .wrap{min-height:unset;background:var(--bg)}
-  .phone{width:100vw;height:100dvh;border-radius:0;box-shadow:none}
-  .phone::before{display:none}
-  .status-bar{display:none}
-}
+/* ── FULL SCREEN SHELL ── */
+.wrap{background:var(--bg)}
+.phone{width:100vw;height:100dvh;background:var(--bg);border-radius:0;overflow:hidden;position:relative;display:flex;flex-direction:column}
+.phone::before{display:none}
+.status-bar{display:none}
 
 /* ── STATUS BAR ── */
 .status-bar{height:44px;display:flex;align-items:flex-start;padding:12px 28px 0;justify-content:space-between;flex-shrink:0;z-index:50}
 .status-time{font-family:var(--font-d);font-size:15px;font-weight:600}
 .status-icons{display:flex;gap:6px;align-items:center}
+
+/* ── VIEW TABS ── */
+.view-tabs{display:flex;gap:7px;padding:6px 18px 0;flex-shrink:0}
+.view-tab{font-family:var(--font-d);font-size:11px;font-weight:700;padding:5px 14px;border-radius:20px;border:1px solid var(--border);color:var(--muted);white-space:nowrap;cursor:pointer;flex-shrink:0;background:transparent;transition:all 0.18s}
+.view-tab.active{background:var(--accent);border-color:var(--accent);color:#0a0a0f}
+
+/* ── AUTOPLAY TOGGLE ── */
+.autoplay-btn{display:flex;align-items:center;gap:5px;padding:4px 10px 4px 8px;border-radius:20px;border:1px solid var(--border);background:transparent;cursor:pointer;transition:all 0.18s;font-family:var(--font-d);font-size:10px;font-weight:600;color:var(--muted)}
+.autoplay-btn.on{background:rgba(232,255,71,0.1);border-color:rgba(232,255,71,0.4);color:var(--accent)}
+.ap-track{width:24px;height:13px;border-radius:7px;background:rgba(255,255,255,0.12);position:relative;transition:background 0.18s;flex-shrink:0}
+.autoplay-btn.on .ap-track{background:var(--accent)}
+.ap-thumb{width:9px;height:9px;border-radius:50%;background:rgba(255,255,255,0.4);position:absolute;top:2px;left:2px;transition:all 0.18s}
+.autoplay-btn.on .ap-thumb{background:#0a0a0f;left:13px}
+
+/* ── DISCOVER SHEET ── */
+.discover-sheet{position:absolute;inset:0;z-index:30;display:flex;flex-direction:column;justify-content:flex-end;pointer-events:none;opacity:0;transition:opacity 0.22s}
+.discover-sheet.open{opacity:1;pointer-events:all}
+.discover-backdrop{position:absolute;inset:0;background:rgba(0,0,0,0.7);backdrop-filter:blur(4px)}
+.discover-panel{position:relative;z-index:2;background:#13131c;border-top:1px solid rgba(255,255,255,0.1);border-radius:20px 20px 0 0;padding:16px 18px 28px}
+.discover-handle{width:30px;height:3px;background:rgba(255,255,255,0.15);border-radius:2px;margin:0 auto 14px}
+.discover-title{font-family:var(--font-d);font-size:15px;font-weight:800;margin-bottom:3px}
+.discover-sub{font-size:11px;color:var(--muted);margin-bottom:14px}
+.discover-option{display:flex;align-items:flex-start;gap:11px;padding:10px 12px;border-radius:12px;cursor:pointer;transition:background 0.15s;margin-bottom:3px}
+.discover-option:hover,.discover-option.active{background:rgba(255,255,255,0.05)}
+.d-radio{width:16px;height:16px;border-radius:50%;border:2px solid rgba(255,255,255,0.2);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:border-color 0.15s;margin-top:1px}
+.discover-option.active .d-radio{border-color:var(--accent)}
+.d-dot{width:8px;height:8px;border-radius:50%;background:var(--accent);opacity:0;transition:opacity 0.15s}
+.discover-option.active .d-dot{opacity:1}
+.d-text{}
+.d-name{font-family:var(--font-d);font-size:12px;font-weight:700}
+.d-desc{font-size:10.5px;color:var(--muted);margin-top:1px}
+.discover-apply{width:100%;margin-top:10px;padding:11px;border-radius:12px;border:none;background:var(--accent);color:#0a0a0f;font-family:var(--font-d);font-size:13px;font-weight:700;cursor:pointer;transition:opacity 0.15s}
+.discover-apply:active{opacity:0.8}
 
 /* ── TOP NAV ── */
 .top-nav{padding:6px 18px 0;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;z-index:50}
@@ -48,7 +76,7 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--text);font-fam
 .wordmark .p{color:var(--accent)}
 .logo-group{display:flex;align-items:center}
 .nav-tabs{display:flex;background:var(--surface2);border-radius:20px;padding:3px}
-.nav-tab{font-family:var(--font-d);font-size:10px;font-weight:600;padding:5px 9px;border-radius:17px;color:var(--muted);cursor:pointer;transition:all 0.18s;white-space:nowrap}
+.nav-tab{font-family:var(--font-d);font-size:11px;font-weight:600;padding:5px 11px;border-radius:17px;color:var(--muted);cursor:pointer;transition:all 0.18s}
 .nav-tab.active{background:var(--accent);color:#0a0a0f}
 .avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--accent),#47ffe8);display:flex;align-items:center;justify-content:center;font-family:var(--font-d);font-size:12px;font-weight:700;color:#0a0a0f;flex-shrink:0}
 
@@ -90,8 +118,6 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--text);font-fam
 .moment-lbl::before{content:'';width:12px;height:2px;background:var(--accent);border-radius:2px}
 .moment-quote{font-family:var(--font-d);font-size:16px;font-weight:700;line-height:1.35;letter-spacing:-0.3px}
 .moment-quote em{font-style:normal;color:var(--accent)}
-.q-word{display:inline;border-radius:3px;transition:background 0.1s}
-.q-word.q-active{background:rgba(232,255,71,0.22)}
 .ep-title{font-size:10.5px;color:var(--muted);margin-top:6px;line-height:1.4}
 .score-row{display:flex;gap:5px;margin-top:7px;flex-wrap:wrap}
 .score-pill{font-size:9px;padding:2px 7px;border-radius:8px;border:1px solid rgba(255,255,255,0.08);color:rgba(255,255,255,0.38);font-family:var(--font-d);font-weight:600}
@@ -187,7 +213,7 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--text);font-fam
 .saved-empty-txt{font-size:13px}
 
 /* ── FOLLOWING VIEW ── */
-.following-view{position:absolute;inset:0;background:var(--bg);z-index:10;display:none;flex-direction:column;padding-top:90px}
+.following-view{position:absolute;inset:0;background:var(--bg);z-index:10;display:none;flex-direction:column}
 .following-view.open{display:flex}
 .following-list{flex:1;overflow-y:auto;padding:0 18px 80px}
 .following-item{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--border)}
@@ -214,110 +240,13 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--text);font-fam
 .nc{width:46px;height:46px;border-radius:50%;background:var(--green);display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 0 16px rgba(26,107,60,0.35);margin-bottom:5px;transition:transform 0.15s}
 .nc:active{transform:scale(0.93)}
 
-
-.autoplay-row{display:flex;align-items:center;gap:8px;padding:4px 18px 0;flex-shrink:0}
-.autoplay-hint{font-size:10px;color:var(--muted);opacity:0.6}
-
-/* ── AUTOPLAY TOGGLE ── */
-.autoplay-btn{display:flex;align-items:center;gap:5px;padding:4px 10px;border-radius:16px;border:1px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.06);color:var(--muted);font-size:10px;font-family:var(--font-b);font-weight:500;cursor:pointer;transition:all 0.2s;flex-shrink:0}
-.autoplay-btn.on{border-color:var(--accent);background:rgba(232,255,71,0.12);color:var(--accent)}
-.autoplay-btn .ap-dot{width:6px;height:6px;border-radius:50%;background:currentColor;flex-shrink:0}
-
-
-/* ── SCRUBBING ── */
-.waveform{cursor:pointer}
-.scrub-hint{font-size:9px;color:var(--muted);text-align:right;margin-top:2px;opacity:0.6}
-.player-skip{width:22px;height:22px;border-radius:50%;border:none;background:rgba(255,255,255,0.1);color:white;font-size:9px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background 0.15s}
-.player-skip:active{background:rgba(255,255,255,0.2)}
-
-
-/* ── ONBOARDING ── */
-.onboard-wrap{position:fixed;inset:0;z-index:200;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding-bottom:48px;transition:opacity 0.4s,transform 0.4s}
-.onboard-wrap.hidden{opacity:0;pointer-events:none;transform:translateY(40px)}
-.onboard-bg{position:absolute;inset:0;background:linear-gradient(170deg,#0a1a0a 0%,#0a0f0a 60%,#091409 100%);z-index:0}
-.onboard-glow{position:absolute;top:30%;left:50%;transform:translate(-50%,-50%);width:320px;height:320px;background:radial-gradient(circle,rgba(26,107,60,0.25) 0%,transparent 70%);z-index:0;pointer-events:none}
-.onboard-content{position:relative;z-index:1;width:100%;max-width:390px;padding:0 28px;display:flex;flex-direction:column;align-items:center}
-
-/* splash screen */
-.onboard-logo{display:flex;align-items:baseline;margin-bottom:10px}
-.onboard-logo .h{font-size:42px;font-weight:400;color:rgba(255,255,255,0.5);font-family:var(--font-d);letter-spacing:-1px}
-.onboard-logo .p{font-size:42px;font-weight:700;color:var(--accent);font-family:var(--font-d);letter-spacing:-1px}
-.onboard-tagline{font-size:15px;color:rgba(255,255,255,0.45);text-align:center;line-height:1.5;margin-bottom:48px;max-width:260px}
-
-/* auth buttons */
-.auth-btn{width:100%;display:flex;align-items:center;gap:12px;padding:14px 20px;border-radius:14px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);color:white;font-size:15px;font-weight:500;cursor:pointer;margin-bottom:10px;transition:background 0.15s,border-color 0.15s;text-align:left;font-family:var(--font-b)}
-.auth-btn:active{background:rgba(255,255,255,0.1)}
-.auth-btn.google{border-color:rgba(66,133,244,0.3);background:rgba(66,133,244,0.08)}
-.auth-btn.apple{border-color:rgba(255,255,255,0.15);background:rgba(255,255,255,0.06)}
-.auth-btn.spotify{border-color:rgba(29,185,84,0.3);background:rgba(29,185,84,0.08)}
-.auth-btn.email{border-color:rgba(255,255,255,0.08);background:transparent;color:rgba(255,255,255,0.5);justify-content:center;font-size:13px;margin-top:4px}
-.auth-btn svg{flex-shrink:0}
-.auth-divider{display:flex;align-items:center;gap:10px;width:100%;margin:6px 0 10px}
-.auth-divider-line{flex:1;height:1px;background:rgba(255,255,255,0.08)}
-.auth-divider-text{font-size:11px;color:rgba(255,255,255,0.3)}
-.auth-terms{font-size:10px;color:rgba(255,255,255,0.25);text-align:center;margin-top:16px;line-height:1.5;max-width:280px}
-.auth-terms a{color:rgba(255,255,255,0.4)}
-
-/* email form */
-.email-form{width:100%;display:none;flex-direction:column;gap:10px}
-.email-form.visible{display:flex}
-.auth-input{width:100%;padding:14px 16px;border-radius:12px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.05);color:white;font-size:15px;font-family:var(--font-b);outline:none;-webkit-appearance:none}
-.auth-input:focus{border-color:var(--green)}
-.auth-input::placeholder{color:rgba(255,255,255,0.25)}
-.auth-submit{width:100%;padding:15px;border-radius:14px;border:none;background:var(--green);color:white;font-size:15px;font-weight:700;cursor:pointer;font-family:var(--font-b);transition:opacity 0.15s}
-.auth-submit:active{opacity:0.85}
-.auth-back{background:none;border:none;color:rgba(255,255,255,0.4);font-size:13px;cursor:pointer;padding:8px;font-family:var(--font-b);margin-top:4px}
-
-/* preference screen */
-.pref-screen{display:none;width:100%;flex-direction:column;align-items:center}
-.pref-screen.visible{display:flex}
-.pref-title{font-size:24px;font-weight:700;color:white;text-align:center;margin-bottom:6px;font-family:var(--font-d)}
-.pref-sub{font-size:14px;color:rgba(255,255,255,0.45);text-align:center;margin-bottom:28px}
-.pref-grid{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:32px;width:100%}
-.pref-pill{padding:10px 18px;border-radius:24px;border:1.5px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.04);color:rgba(255,255,255,0.6);font-size:14px;font-weight:500;cursor:pointer;transition:all 0.15s;font-family:var(--font-b);display:flex;align-items:center;gap:6px}
-.pref-pill.on{border-color:var(--accent);background:rgba(232,255,71,0.1);color:var(--accent)}
-.pref-pill:active{transform:scale(0.96)}
-.pref-cta{width:100%;padding:15px;border-radius:14px;border:none;background:var(--green);color:white;font-size:15px;font-weight:700;cursor:pointer;font-family:var(--font-b)}
-.pref-skip{background:none;border:none;color:rgba(255,255,255,0.3);font-size:13px;cursor:pointer;padding:12px;font-family:var(--font-b)}
-
-/* profile view */
-.profile-view{position:absolute;inset:0;background:var(--bg);z-index:10;display:none;flex-direction:column;padding-top:90px;overflow-y:auto}
-.profile-view.open{display:flex}
-.profile-header{display:flex;flex-direction:column;align-items:center;padding:24px 24px 20px}
-.profile-avatar-lg{width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--accent),#47ffe8);display:flex;align-items:center;justify-content:center;font-family:var(--font-d);font-size:26px;font-weight:700;color:#0a0a0f;margin-bottom:12px}
-.profile-name{font-size:20px;font-weight:700;color:white;font-family:var(--font-d)}
-.profile-email{font-size:13px;color:rgba(255,255,255,0.4);margin-top:2px}
-.profile-stats{display:flex;gap:0;width:100%;border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin:16px 0}
-.profile-stat{flex:1;padding:14px 8px;text-align:center;border-right:1px solid var(--border)}
-.profile-stat:last-child{border-right:none}
-.profile-stat-n{font-size:22px;font-weight:700;color:var(--accent);font-family:var(--font-d)}
-.profile-stat-l{font-size:10px;color:rgba(255,255,255,0.4);margin-top:2px;letter-spacing:0.5px}
-.profile-section{padding:0 20px}
-.profile-section-title{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,0.3);margin:16px 0 8px}
-.profile-row{display:flex;align-items:center;padding:13px 0;border-bottom:0.5px solid rgba(255,255,255,0.06);cursor:pointer}
-.profile-row:last-child{border-bottom:none}
-.profile-row:active{opacity:0.7}
-.profile-row-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-right:12px}
-.profile-row-label{flex:1;font-size:14px;color:rgba(255,255,255,0.8)}
-.profile-row-value{font-size:12px;color:rgba(255,255,255,0.3)}
-.profile-row-chevron{color:rgba(255,255,255,0.2);font-size:14px;margin-left:8px}
-.profile-close{position:absolute;top:16px;right:16px;width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,0.08);border:none;color:white;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px}
-.pref-chips-row{display:flex;flex-wrap:wrap;gap:6px}
-.pref-chip-sm{padding:4px 10px;border-radius:12px;background:rgba(232,255,71,0.1);border:1px solid rgba(232,255,71,0.25);color:var(--accent);font-size:11px}
-.signout-btn{width:calc(100% - 40px);margin:20px;padding:14px;border-radius:12px;border:1px solid rgba(255,80,80,0.2);background:rgba(255,80,80,0.06);color:rgba(255,100,100,0.8);font-size:14px;font-weight:600;cursor:pointer;font-family:var(--font-b)}
-
+/* ── WORD HIGHLIGHT ── */
+.q-word{display:inline;border-radius:3px;transition:background 0.1s}
+.q-word.q-active{background:rgba(232,255,71,0.22)}
 </style>
 </head>
 <body>
 <div class="wrap"><div class="phone" id="phone">
-
-<div class="status-bar">
-  <span class="status-time">9:41</span>
-  <div class="status-icons">
-    <svg width="16" height="12" viewBox="0 0 16 12" fill="white"><rect x="0" y="4" width="3" height="8" rx="1"/><rect x="4.5" y="2.5" width="3" height="9.5" rx="1"/><rect x="9" y="0.5" width="3" height="11.5" rx="1"/><rect x="13.5" y="0" width="2.5" height="12" rx="1" opacity="0.3"/></svg>
-    <svg width="25" height="12" viewBox="0 0 25 12" fill="none"><rect x="0.5" y="0.5" width="21" height="11" rx="3.5" stroke="white" stroke-opacity="0.35"/><rect x="2" y="2" width="16" height="8" rx="2" fill="white"/></svg>
-  </div>
-</div>
 
 <div class="top-nav">
   <div class="logo-group">
@@ -332,19 +261,17 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--text);font-fam
     </div>
     <div class="wordmark"><span class="h">hidden</span><span class="p">pod</span></div>
   </div>
-  <div class="nav-tabs">
-    <div class="nav-tab active" onclick="switchTab(this,'foryou')">For you</div>
-    <div class="nav-tab" onclick="switchTab(this,'following')">Following</div>
-    <div class="nav-tab" onclick="switchTab(this,'trending')">Trending</div>
+  <div class="autoplay-btn" id="autoplayBtn" onclick="toggleAutoplay()">
+    <div class="ap-track"><div class="ap-thumb"></div></div>
+    Autoplay
   </div>
-  <div class="avatar" id="topAvatar" onclick="showProfile()" style="cursor:pointer">?</div>
+  <div class="avatar">CL</div>
 </div>
 
-<div class="autoplay-row">
-  <button class="autoplay-btn on" id="apToggle" onclick="toggleAutoplay()">
-    <div class="ap-dot"></div>Autoplay
-  </button>
-  <span class="autoplay-hint">Tap to toggle auto-advance</span>
+<div class="view-tabs">
+  <div class="view-tab active" id="vt-foryou" onclick="switchView('foryou')">For You</div>
+  <div class="view-tab" id="vt-following" onclick="switchView('following')">Following</div>
+  <div class="view-tab" id="vt-trending" onclick="switchView('trending')">Trending</div>
 </div>
 
 <div class="cat-row" id="catRow">
@@ -369,9 +296,8 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--text);font-fam
     <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21L16.65 16.65"/></svg>
     <span class="ni-lbl">Search</span>
   </div>
-  <div class="nc" onclick="doDiscover()">
-    <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="1.5"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
-    <span style="font-size:8px;color:rgba(255,255,255,0.5);margin-top:1px">Discover</span>
+  <div class="nc" onclick="openDiscoverSheet()">
+    <svg width="20" height="20" fill="none" viewBox="0 0 24 24"><path d="M12 2L13.5 8.5L20 7L15.5 12L20 17L13.5 15.5L12 22L10.5 15.5L4 17L8.5 12L4 7L10.5 8.5L12 2Z" fill="white"/></svg>
   </div>
   <div class="ni" id="nav-saved" onclick="showSaved()">
     <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"/></svg>
@@ -411,6 +337,42 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--text);font-fam
     </div>
   </div>
   <div class="following-list" id="followingList"></div>
+</div>
+
+<!-- DISCOVER SHEET -->
+<div class="discover-sheet" id="discoverSheet">
+  <div class="discover-backdrop" onclick="closeDiscoverSheet()"></div>
+  <div class="discover-panel">
+    <div class="discover-handle"></div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:3px">
+      <div class="discover-title" style="margin-bottom:0">Discovery Mode</div>
+      <div onclick="closeDiscoverSheet()" style="width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0">
+        <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </div>
+    </div>
+    <div class="discover-sub">Choose how the algorithm surfaces episodes for you</div>
+    <div class="discover-option active" data-mode="default" onclick="selectDiscoverMode('default')">
+      <div class="d-radio"><div class="d-dot"></div></div>
+      <div class="d-text"><div class="d-name">Default Mix</div><div class="d-desc">Balanced across credibility, relevance, and uniqueness</div></div>
+    </div>
+    <div class="discover-option" data-mode="credibility" onclick="selectDiscoverMode('credibility')">
+      <div class="d-radio"><div class="d-dot"></div></div>
+      <div class="d-text"><div class="d-name">Credibility Focus</div><div class="d-desc">Prioritize expert-sourced, high-verification shows</div></div>
+    </div>
+    <div class="discover-option" data-mode="hidden" onclick="selectDiscoverMode('hidden')">
+      <div class="d-radio"><div class="d-dot"></div></div>
+      <div class="d-text"><div class="d-name">Hidden Gems Only</div><div class="d-desc">Surface micro and underheard podcasts no algorithm finds</div></div>
+    </div>
+    <div class="discover-option" data-mode="trending" onclick="selectDiscoverMode('trending')">
+      <div class="d-radio"><div class="d-dot"></div></div>
+      <div class="d-text"><div class="d-name">Trending Now</div><div class="d-desc">What's resonating most with listeners this week</div></div>
+    </div>
+    <div class="discover-option" data-mode="local" onclick="selectDiscoverMode('local')">
+      <div class="d-radio"><div class="d-dot"></div></div>
+      <div class="d-text"><div class="d-name">Local Focus</div><div class="d-desc">Amplify voices and reporting from your region</div></div>
+    </div>
+    <button class="discover-apply" onclick="applyDiscoverMode()">Apply Mode</button>
+  </div>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -510,7 +472,7 @@ var audioCache = {};      // showId -> mp3 url
 var audioLoading = {};    // showId -> true while fetching
 var playingId = null;
 var playTimer = null;
-var CLIP_START = 5 * 60;  // skip ads — start at 5 min mark
+var CLIP_START = 5 * 60; // skip ads — start at 5 min mark
 var CLIP_DURATION = 30;   // play 30 seconds
 var clipStartTime = 0;    // tracks where current clip began (for scrubber)
 
@@ -625,7 +587,6 @@ function startAudio(id, url) {
   if (!audioEl) {
     audioEl = new Audio();
     audioEl.preload = 'none';
-    // NOTE: no crossOrigin = 'anonymous' — podcast CDNs block CORS preflight on media
   }
 
   audioEl.src = url;
@@ -634,8 +595,8 @@ function startAudio(id, url) {
 
   audioEl.oncanplay = function() {
     if (playingId !== id) return;
-    audioEl.oncanplay = null; // fire once only — prevents double-play after seek
-    audioEl.currentTime = CLIP_START; // seek AFTER load() (load() resets to 0)
+    audioEl.oncanplay = null; // fire once only
+    audioEl.currentTime = CLIP_START; // seek after load() reset
     audioEl.play().then(function() {
       if (btn) btn.innerHTML = pauseIco();
       startPlayTimer(id);
@@ -651,8 +612,8 @@ function startAudio(id, url) {
 
   audioEl.load();
 
-  // Pre-cache next card's URL so autoplay starts instantly
-  var nextIdx = filteredData.findIndex(function(x){return x.id===id;});
+  // Pre-cache next card so autoplay starts instantly
+  var nextIdx = filteredData.findIndex(function(c){return c.id===id;});
   if (nextIdx >= 0 && nextIdx < filteredData.length - 1) {
     var nextId = filteredData[nextIdx + 1].id;
     if (!audioCache[nextId]) {
@@ -696,11 +657,20 @@ function startPlayTimer(id) {
 
     // Stop at clip end
     if (audioEl.currentTime >= clipEnd || elapsed >= CLIP_DURATION) {
-      var finishedId = id;
+      var wasAutoplay=autoplayOn;
       stopCurrentAudio();
-      advanceToNext(finishedId);
+      if(wasAutoplay) setTimeout(function(){scrollToNextCard(id)},300);
     }
   }, 250);
+}
+
+function seekAudio(e, id) {
+  if (playingId !== id || !audioEl) return;
+  var wf = document.getElementById('wf' + id);
+  if (!wf) return;
+  var rect = wf.getBoundingClientRect();
+  var frac = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+  audioEl.currentTime = clipStartTime + frac * CLIP_DURATION;
 }
 
 function handleAudioError(id, msg) {
@@ -712,7 +682,7 @@ function handleAudioError(id, msg) {
   }
 }
 
-// Platform buttons — 7 confirmed-working shows only
+// Platform buttons now open real URLs
 var SPOTIFY_URLS = {
   1:  'https://open.spotify.com/show/7MCrEQ2aFijFG6KHru0lhI',
   3:  'https://open.spotify.com/show/3wBfqov60qDZbEVjPHo0a8',
@@ -735,257 +705,13 @@ var APPLE_URLS = {
 function doPlatform(p, id) {
   if (p === 's') {
     var url = SPOTIFY_URLS[id];
-    if (url) { window.open(url, '_blank'); showToast('Opening in Spotify →'); }
+    if (url) { window.open(url, '_blank'); showToast('Opening Spotify — follow the show there', true); }
     else showToast('Not on Spotify — try Apple Podcasts');
   } else {
     var url = APPLE_URLS[id];
-    if (url) { window.open(url, '_blank'); showToast('Opening in Apple Podcasts →'); }
-    else showToast('Apple Podcasts link unavailable');
+    if (url) { window.open(url, '_blank'); showToast('Opening Apple Podcasts — follow the show there', true); }
+    else showToast('Not available on Apple Podcasts');
   }
-}
-
-
-// ── AUTOPLAY ENGINE ──────────────────────────────────────────────────────────
-var autoplayEnabled = true;
-var intersectionObserver = null;
-var visibleCardId = null;
-var autoplayPending = false;
-
-function toggleAutoplay() {
-  autoplayEnabled = !autoplayEnabled;
-  var btn = document.getElementById('apToggle');
-  if (btn) {
-    btn.className = 'autoplay-btn' + (autoplayEnabled ? ' on' : '');
-    btn.innerHTML = '<div class="ap-dot"></div>' + (autoplayEnabled ? 'Autoplay' : 'Autoplay');
-  }
-  if (!autoplayEnabled) stopCurrentAudio();
-  showToast(autoplayEnabled ? '▶ Autoplay on' : '⏹ Autoplay off');
-}
-
-function advanceToNext(currentId) {
-  if (!autoplayEnabled) return;
-  // Find next card in currently filtered data
-  var idx = filteredData.findIndex(function(c) { return c.id === currentId; });
-  if (idx === -1) idx = 0;
-  var nextIdx = idx + 1;
-  if (nextIdx >= filteredData.length) nextIdx = 0; // wrap around
-  var nextCard = filteredData[nextIdx];
-  if (!nextCard) return;
-
-  // Scroll the feed to the next card smoothly
-  var el = document.getElementById('cc' + nextCard.id);
-  if (el) {
-    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    // Play after scroll settles
-    setTimeout(function() {
-      if (autoplayEnabled) doPlay(nextCard.id);
-    }, 500);
-  }
-}
-
-function setupIntersectionObserver() {
-  if (intersectionObserver) intersectionObserver.disconnect();
-
-  intersectionObserver = new IntersectionObserver(function(entries) {
-    entries.forEach(function(entry) {
-      if (entry.isIntersecting && entry.intersectionRatio > 0.6) {
-        var cardEl = entry.target;
-        var idMatch = cardEl.id.match(/cc(\d+)/);
-        if (!idMatch) return;
-        var newId = parseInt(idMatch[1], 10);
-        if (newId === visibleCardId) return;
-        visibleCardId = newId;
-
-        // Auto-play when a new card scrolls into view (if not already playing this card)
-        if (autoplayEnabled && playingId !== newId) {
-          // Small delay so rapid scrolling doesn't trigger every card
-          clearTimeout(autoplayPending);
-          autoplayPending = setTimeout(function() {
-            if (visibleCardId === newId && autoplayEnabled) {
-              doPlay(newId);
-            }
-          }, 400);
-        }
-      }
-    });
-  }, {
-    root: document.getElementById('feed'),
-    threshold: 0.6
-  });
-
-  // Observe all current cards
-  document.querySelectorAll('.clip-card').forEach(function(card) {
-    intersectionObserver.observe(card);
-  });
-}
-
-
-// ── ONBOARDING & AUTH ────────────────────────────────────────────────────────
-var currentUser = null;
-var userPrefs = [];
-
-function doSSO(provider) {
-  // Simulate SSO — in production this would open an OAuth flow
-  var names = {google: 'Google User', apple: 'Apple User', spotify: 'Spotify Listener'};
-  var emails = {google: 'user@gmail.com', apple: 'user@icloud.com', spotify: 'user@spotify.com'};
-  currentUser = { name: names[provider], email: emails[provider], provider: provider };
-  showPrefScreen();
-}
-
-function toggleEmailForm(show) {
-  var form = document.getElementById('emailForm');
-  var btn = document.getElementById('emailToggleBtn');
-  form.className = 'email-form' + (show ? ' visible' : '');
-  if (btn) btn.style.display = show ? 'none' : '';
-  if (show) document.getElementById('emailInput').focus();
-}
-
-function doEmailAuth() {
-  var email = document.getElementById('emailInput').value.trim();
-  var pw = document.getElementById('pwInput').value;
-  if (!email || !pw) { showToast('Please enter email and password'); return; }
-  if (!email.includes('@')) { showToast('Please enter a valid email'); return; }
-  currentUser = {
-    name: email.split('@')[0].charAt(0).toUpperCase() + email.split('@')[0].slice(1),
-    email: email,
-    provider: 'email'
-  };
-  showPrefScreen();
-}
-
-function showPrefScreen() {
-  document.getElementById('authScreen').style.display = 'none';
-  document.getElementById('prefScreen').className = 'pref-screen visible';
-}
-
-function togglePref(el, pref) {
-  el.classList.toggle('on');
-  if (el.classList.contains('on')) {
-    if (!userPrefs.includes(pref)) userPrefs.push(pref);
-  } else {
-    userPrefs = userPrefs.filter(function(p) { return p !== pref; });
-  }
-}
-
-function finishOnboarding() {
-  // Dismiss onboard screen
-  var wrap = document.getElementById('onboardWrap');
-  wrap.classList.add('hidden');
-  setTimeout(function() { wrap.style.display = 'none'; }, 400);
-
-  // Update avatar with initials
-  var initials = currentUser ? currentUser.name.split(' ').map(function(w){return w[0];}).join('').slice(0,2).toUpperCase() : '?';
-  var av = document.getElementById('topAvatar');
-  if (av) av.textContent = initials;
-
-  // Update profile view
-  updateProfileView();
-
-  // Apply preference filter if any selected
-  if (userPrefs.length > 0) {
-    var firstPref = userPrefs[0];
-    var matchPill = document.querySelector('.cat-pill[onclick*="' + firstPref + '"]');
-    if (matchPill) filterCat(matchPill, firstPref);
-  }
-
-  // Start autoplay after brief delay
-  setTimeout(function() {
-    if (autoplayEnabled && filteredData.length > 0) {
-      visibleCardId = filteredData[0].id;
-      doPlay(filteredData[0].id);
-    }
-  }, 600);
-
-  showToast('Welcome to HiddenPod ✦', true);
-}
-
-function updateProfileView() {
-  if (!currentUser) return;
-  document.getElementById('profileName').textContent = currentUser.name;
-  document.getElementById('profileEmail').textContent = currentUser.email;
-  var initials = currentUser.name.split(' ').map(function(w){return w[0];}).join('').slice(0,2).toUpperCase();
-  document.getElementById('profileAvatarLg').textContent = initials;
-
-  // Show preference chips
-  var container = document.getElementById('profilePrefs');
-  if (userPrefs.length === 0) {
-    container.innerHTML = '<span style="font-size:12px;color:rgba(255,255,255,0.3)">None selected — tap Topic preferences to add</span>';
-  } else {
-    container.innerHTML = userPrefs.map(function(p){
-      return '<div class="pref-chip-sm">' + p + '</div>';
-    }).join('');
-  }
-
-  // Update pref count
-  var pc = document.getElementById('prefCount');
-  if (pc) pc.textContent = userPrefs.length + ' selected';
-
-  // Update stats
-  updateProfileStats();
-}
-
-function updateProfileStats() {
-  var followCount = Object.keys(followed).filter(function(k){return followed[k];}).length;
-  var saveCount = Object.keys(saved).filter(function(k){return saved[k];}).length;
-  var likeCount = Object.keys(liked).filter(function(k){return liked[k];}).length;
-  var fs = document.getElementById('statFollowing'); if(fs) fs.textContent = followCount;
-  var ss = document.getElementById('statSaved'); if(ss) ss.textContent = saveCount;
-  var ls = document.getElementById('statLiked'); if(ls) ls.textContent = likeCount;
-}
-
-function showProfile() {
-  if (!currentUser) {
-    // Not logged in — show onboard
-    var wrap = document.getElementById('onboardWrap');
-    wrap.style.display = 'flex';
-    wrap.classList.remove('hidden');
-    return;
-  }
-  updateProfileView();
-  var pv = document.getElementById('profileView');
-  pv.classList.add('open');
-  setNav('nav-profile');
-}
-
-function closeProfile() {
-  document.getElementById('profileView').classList.remove('open');
-  setNav('nav-home');
-}
-
-function showPrefEdit() {
-  closeProfile();
-  // Re-show pref screen as an edit
-  var wrap = document.getElementById('onboardWrap');
-  wrap.style.display = 'flex';
-  wrap.classList.remove('hidden');
-  document.getElementById('authScreen').style.display = 'none';
-  document.getElementById('prefScreen').className = 'pref-screen visible';
-  // Re-highlight already selected prefs
-  document.querySelectorAll('.pref-pill').forEach(function(pill) {
-    var pref = pill.getAttribute('onclick').match(/'([^']+)'\)/);
-    if (pref && userPrefs.includes(pref[1])) {
-      pill.classList.add('on');
-    }
-  });
-}
-
-function doSignOut() {
-  currentUser = null;
-  userPrefs = [];
-  followed = {}; saved = {}; liked = {};
-  // Reset avatar
-  var av = document.getElementById('topAvatar');
-  if (av) av.textContent = '?';
-  closeProfile();
-  stopCurrentAudio();
-  // Show onboard again
-  var wrap = document.getElementById('onboardWrap');
-  wrap.style.display = 'flex';
-  wrap.classList.remove('hidden');
-  document.getElementById('authScreen').style.display = '';
-  document.getElementById('prefScreen').className = 'pref-screen';
-  toggleEmailForm(false);
-  showToast('Signed out');
 }
 
 // ── STATE ─────────────────────────────────────────────────────────────────────
@@ -1052,17 +778,13 @@ function buildCard(c,idx){
     +'</div>'
     +'<div class="bottom-sec">'
     +'<div class="match-row"><span class="match-tag">'+c.match+'% match</span><span class="reason-lbl">'+c.reason+'</span></div>'
-    +'<div class="player-area"><div class="waveform" id="wf'+c.id+'" onclick="handleWaveformClick(event,'+c.id+')">'+(makeWave(c.prog,c.ac,c.id))+'</div>'
-    +'<div class="player-ctrls">'
-    +'<button class="player-skip" onclick="skipSeconds('+c.id+',-15)" title="Back 15s">&#171;</button>'
-    +'<button class="play-btn" id="pb'+c.id+'" onclick="doPlay('+c.id+')" style="background:'+c.ac+'">'+pico()+'</button>'
-    +'<button class="player-skip" onclick="skipSeconds('+c.id+',15)" title="Forward 15s">&#187;</button>'
-    +'<span class="time-disp" id="td'+c.id+'">0:00</span>'
-    +'<span style="font-size:9px;color:var(--muted);margin-left:auto">30s clip</span>'
-    +'</div></div>'
+    +'<div class="player-area"><div class="waveform" id="wf'+c.id+'" onclick="seekAudio(event,'+c.id+')">'+makeWave(c.prog,c.ac,c.id)+'</div>'
+    +'<div class="player-ctrls"><button class="play-btn" id="pb'+c.id+'" onclick="doPlay('+c.id+')" style="background:'+c.ac+'">'+pico()+'</button>'
+    +'<span class="time-disp" id="td'+c.id+'">'+c.ts+'</span><span style="font-size:9px;color:var(--muted);margin-left:2px">/ clip</span>'
+    +'<span class="clip-dur">'+c.dur+'</span></div></div>'
     +'<div class="platform-row">'
-    +'<button class="plt-btn plt-apple" id="ab'+c.id+'" onclick="doPlatform(\'a\','+c.id+')">'+apSVG()+'<span id="al'+c.id+'">Apple Podcasts</span></button>'
-    +'<button class="plt-btn plt-spotify" id="sb'+c.id+'" onclick="doPlatform(\'s\','+c.id+')">'+spSVG()+'<span id="sl'+c.id+'">Spotify</span></button>'
+    +'<button class="plt-btn plt-apple" id="ab'+c.id+'" onclick="doPlatform(\'a\','+c.id+')">'+apSVG()+'<span id="al'+c.id+'">Open in Apple</span></button>'
+    +'<button class="plt-btn plt-spotify" id="sb'+c.id+'" onclick="doPlatform(\'s\','+c.id+')">'+spSVG()+'<span id="sl'+c.id+'">Open in Spotify</span></button>'
     +'</div>'
     +'</div>'
     +'</div>'
@@ -1088,141 +810,11 @@ function render(data){
   Object.keys(liked).forEach(function(id){if(liked[id])applyLike(parseInt(id),true)});
   Object.keys(saved).forEach(function(id){if(saved[id])applySave(parseInt(id),true)});
   Object.keys(followed).forEach(function(id){if(followed[id])applyFollow(parseInt(id),true)});
-  // Set up autoplay intersection observer on new cards
-  setTimeout(setupIntersectionObserver, 100);
+  
+  
 }
 
 // ── INTERACTIONS ──────────────────────────────────────────────────────────────
-
-
-// ── LIKE / SAVE / FOLLOW ─────────────────────────────────────────────────────
-function applyLike(id, on) {
-  var icon = document.getElementById('li' + id);
-  var count = document.getElementById('lc' + id);
-  var c = DATA.find(function(x){return x.id===id;});
-  if (!icon || !c) return;
-  if (on) {
-    icon.classList.add('liked');
-    icon.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="rgba(255,80,80,0.9)"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>';
-    if (count) count.textContent = (parseInt(c.lk)||0) + 1;
-  } else {
-    icon.classList.remove('liked');
-    icon.innerHTML = '<svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>';
-    if (count) count.textContent = c.lk;
-  }
-}
-function doLike(id) {
-  liked[id] = !liked[id];
-  applyLike(id, liked[id]);
-  showToast(liked[id] ? '❤️ Liked' : 'Like removed');
-}
-
-function applySave(id, on) {
-  var icon = document.getElementById('si' + id);
-  if (!icon) return;
-  if (on) {
-    icon.classList.add('saved');
-    icon.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="var(--green)"><path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"/></svg>';
-  } else {
-    icon.classList.remove('saved');
-    icon.innerHTML = '<svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"/></svg>';
-  }
-}
-function doSave(id) {
-  saved[id] = !saved[id];
-  applySave(id, saved[id]);
-  updateSavedBadge();
-  showToast(saved[id] ? '🔖 Saved' : 'Removed from saved');
-}
-
-function applyFollow(id, on) {
-  var btn = document.getElementById('fb' + id);
-  if (!btn) return;
-  if (on) {
-    btn.classList.add('on');
-    btn.textContent = '✓ Following';
-  } else {
-    btn.classList.remove('on');
-    btn.textContent = '+ Follow';
-  }
-}
-function doFollow(id) {
-  followed[id] = !followed[id];
-  applyFollow(id, followed[id]);
-  updateFollowingBadge();
-  if (followed[id]) {
-    showToast('📻 Following ' + (DATA.find(function(x){return x.id===id;})||{}).show);
-  } else {
-    showToast('Unfollowed');
-  }
-}
-
-
-function scrubTo(id, fraction) {
-  var c = DATA.find(function(x){return x.id===id;});
-  if (!c) return;
-  // If not currently playing this show, start playing it first
-  if (playingId !== id) {
-    doPlay(id);
-    // After load, seek to fraction
-    var checkReady = setInterval(function() {
-      if (audioEl && audioEl.readyState >= 2 && playingId === id) {
-        clearInterval(checkReady);
-        var seekTime = CLIP_START + (fraction * CLIP_DURATION);
-        audioEl.currentTime = seekTime;
-      }
-    }, 100);
-    return;
-  }
-  // Already playing — seek directly
-  if (audioEl) {
-    var seekTime = CLIP_START + (fraction * CLIP_DURATION);
-    audioEl.currentTime = seekTime;
-    setWaveProgress(id, fraction, c.ac);
-  }
-}
-
-function handleWaveformClick(e, id) {
-  e.stopPropagation();
-  var wf = document.getElementById('wf' + id);
-  if (!wf) return;
-  var rect = wf.getBoundingClientRect();
-  var fraction = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
-  scrubTo(id, fraction);
-}
-
-function skipSeconds(id, secs) {
-  if (!audioEl || playingId !== id) { doPlay(id); return; }
-  var c = DATA.find(function(x){return x.id===id;});
-  if (!c) return;
-  var newTime = audioEl.currentTime + secs;
-  var clipStart = CLIP_START;
-  var clipEnd = CLIP_START + CLIP_DURATION;
-  newTime = Math.max(clipStart, Math.min(clipEnd - 1, newTime));
-  audioEl.currentTime = newTime;
-  var prog = (newTime - clipStart) / CLIP_DURATION;
-  setWaveProgress(id, prog, c.ac);
-}
-
-
-function doDiscover() {
-  stopCurrentAudio();
-  // Shuffle filteredData
-  var shuffled = filteredData.slice();
-  for (var i = shuffled.length - 1; i > 0; i--) {
-    var j = Math.floor(Math.random() * (i + 1));
-    var tmp = shuffled[i]; shuffled[i] = shuffled[j]; shuffled[j] = tmp;
-  }
-  render(shuffled);
-  document.getElementById('feed').scrollTop = 0;
-  showToast('✦ Shuffled — discovering something new');
-  setTimeout(function() {
-    if (autoplayEnabled && shuffled.length > 0) {
-      visibleCardId = shuffled[0].id;
-      doPlay(shuffled[0].id);
-    }
-  }, 600);
-}
 
 function doShare(id){
   var clip=DATA.find(function(c){return c.id===id});
@@ -1252,23 +844,20 @@ function filterCat(el,cat){
   currentFilter=cat;
   filteredData=cat==='all'?DATA:DATA.filter(function(c){return c.cat.indexOf(cat)>-1});
   render(filteredData);
-  // Auto-play first card after a short delay
-  setTimeout(function() {
-    if (autoplayEnabled && filteredData.length > 0) {
-      visibleCardId = filteredData[0].id;
-      doPlay(filteredData[0].id);
-    }
-  }, 800);
   document.getElementById('feed').scrollTop=0;
 }
 
-// ── TAB SWITCHING ──────────────────────────────────────────────────────────────
-function switchTab(el,tab){
-  document.querySelectorAll('.nav-tab').forEach(function(t){t.classList.remove('active')});
-  el.classList.add('active');
+// ── VIEW SWITCHING ─────────────────────────────────────────────────────────────
+function switchView(tab){
+  document.querySelectorAll('.view-tab').forEach(function(t){t.classList.remove('active')});
+  var el=document.getElementById('vt-'+tab);
+  if(el)el.classList.add('active');
+  var catRow=document.getElementById('catRow');
   if(tab==='following'){
+    if(catRow)catRow.style.display='none';
     showFollowingView();
   } else {
+    if(catRow)catRow.style.display='';
     closeFollowing();
     if(tab==='trending'){
       var trending=DATA.slice().sort(function(a,b){return b.match-a.match});
@@ -1364,11 +953,61 @@ function renderFollowing(){
 
 function showHome(){
   closeSaved();closeFollowing();
-  document.querySelectorAll('.nav-tab').forEach(function(t,i){t.classList.toggle('active',i===0)});
+  switchView('foryou');
   render(filteredData);
   setNav('nav-home');
 }
-// showProfile now defined in onboarding JS above
+
+// ── AUTOPLAY ──────────────────────────────────────────────────────────────────
+var autoplayOn=false;
+function toggleAutoplay(){
+  autoplayOn=!autoplayOn;
+  document.getElementById('autoplayBtn').classList.toggle('on',autoplayOn);
+  showToast(autoplayOn?'Autoplay on — next card loads automatically':'Autoplay off');
+}
+function scrollToNextCard(currentId){
+  var idx=filteredData.findIndex(function(c){return c.id===currentId});
+  if(idx>=0&&idx<filteredData.length-1){
+    var next=filteredData[idx+1];
+    var nextCard=document.getElementById('cc'+next.id);
+    if(nextCard){
+      nextCard.scrollIntoView({behavior:'smooth'});
+      // If URL already cached, play quickly; otherwise allow time for scroll + fetch
+      var delay=audioCache[next.id]?150:700;
+      setTimeout(function(){doPlay(next.id);},delay);
+    }
+  }
+}
+
+// ── DISCOVER SHEET ────────────────────────────────────────────────────────────
+var currentDiscoverMode='default';
+function openDiscoverSheet(){document.getElementById('discoverSheet').classList.add('open')}
+function closeDiscoverSheet(){document.getElementById('discoverSheet').classList.remove('open')}
+function selectDiscoverMode(id){
+  currentDiscoverMode=id;
+  document.querySelectorAll('.discover-option').forEach(function(el){
+    el.classList.toggle('active',el.dataset.mode===id);
+  });
+}
+function applyDiscoverMode(){
+  closeDiscoverSheet();
+  var mode=currentDiscoverMode;
+  var sorted;
+  if(mode==='credibility') sorted=DATA.slice().sort(function(a,b){return b.scores.credibility-a.scores.credibility});
+  else if(mode==='hidden') sorted=DATA.filter(function(c){return c.sz==='micro'});
+  else if(mode==='trending') sorted=DATA.slice().sort(function(a,b){return b.match-a.match});
+  else if(mode==='local') sorted=DATA.slice().sort(function(a,b){return b.scores.geodiversity-a.scores.geodiversity});
+  else sorted=DATA.slice();
+  filteredData=sorted;
+  switchView('foryou');
+  render(sorted);
+  var names={default:'Default Mix',credibility:'Credibility Focus',hidden:'Hidden Gems',trending:'Trending Now',local:'Local Focus'};
+  showToast('Discovery: '+names[mode],true);
+}
+function showProfile(){
+  showToast('Profile settings coming soon');
+  setNav('nav-profile');
+}
 function setNav(active){
   ['nav-home','nav-search','nav-saved','nav-profile'].forEach(function(id){
     var el=document.getElementById(id);
@@ -1386,8 +1025,35 @@ function showToast(msg,green){
   tTimer=setTimeout(function(){t.className='toast'},2400);
 }
 
+// ── SCROLL AUTOPLAY ───────────────────────────────────────────────────────────
+var _scrollAutoTimer;
+function initFeedAutoplay() {
+  var feed = document.getElementById('feed');
+  if (!feed || feed._apBound) return;
+  feed._apBound = true;
+  feed.addEventListener('scroll', function() {
+    clearTimeout(_scrollAutoTimer);
+    _scrollAutoTimer = setTimeout(function() {
+      if (!autoplayOn) return;
+      var feedRect = feed.getBoundingClientRect();
+      var cards = document.querySelectorAll('.clip-card');
+      var best = null, bestOverlap = 0;
+      cards.forEach(function(card) {
+        var r = card.getBoundingClientRect();
+        var overlap = Math.max(0, Math.min(r.bottom, feedRect.bottom) - Math.max(r.top, feedRect.top));
+        if (overlap > bestOverlap) { bestOverlap = overlap; best = card; }
+      });
+      if (best) {
+        var id = parseInt(best.id.replace('cc', ''), 10);
+        if (id && playingId !== id) doPlay(id);
+      }
+    }, 300);
+  });
+}
+
 // ── INIT ──────────────────────────────────────────────────────────────────────
 render(DATA);
+initFeedAutoplay();
 </script>
 </body>
 </html>
