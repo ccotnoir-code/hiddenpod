@@ -286,7 +286,7 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--text);font-fam
 .pref-skip{background:none;border:none;color:rgba(255,255,255,0.3);font-size:13px;cursor:pointer;padding:12px;font-family:var(--font-b)}
 
 /* ── PROFILE VIEW ── */
-.profile-view{position:absolute;inset:0;background:var(--bg);z-index:10;display:none;flex-direction:column;padding-top:90px;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.profile-view{position:absolute;inset:0;background:var(--bg);z-index:10;display:none;flex-direction:column;padding-top:90px;padding-bottom:100px;overflow-y:auto;-webkit-overflow-scrolling:touch}
 .profile-view.open{display:flex}
 .profile-header{display:flex;flex-direction:column;align-items:center;padding:24px 24px 20px}
 .profile-avatar-lg{width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--accent),#47ffe8);display:flex;align-items:center;justify-content:center;font-family:var(--font-d);font-size:26px;font-weight:700;color:#0a0a0f;margin-bottom:12px}
@@ -361,7 +361,7 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--text);font-fam
 .creator-skip{background:none;border:none;color:rgba(255,255,255,0.3);font-size:13px;cursor:pointer;padding:8px;font-family:var(--font-b)}
 
 /* ── CREATOR DASHBOARD ── */
-.creator-dash{position:absolute;inset:0;background:var(--bg);z-index:10;display:none;flex-direction:column;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.creator-dash{position:absolute;inset:0;background:var(--bg);z-index:10;display:none;flex-direction:column;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:100px}
 .creator-dash.open{display:flex}
 .dash-top{padding:52px 20px 14px;flex-shrink:0}
 .creator-show-row{display:flex;align-items:center;gap:12px;margin-bottom:14px}
@@ -1300,6 +1300,9 @@ var creatorDownloadMode = 'exact'; // 'exact' | 'range'
 var creatorDownloadValue = '';
 var creatorCadence = '';
 var creatorSkippedDetails = false;
+// Aliases used by localStorage save/restore
+var claimedShow = null;      // { name, outlet }
+var creatorDownloads = null; // download value string
 
 var CREATOR_SHOWS = [
   {name:'The Daily',outlet:'New York Times'},
@@ -1571,6 +1574,22 @@ function showCreatorDashboard() {
   // Show creator badge in wordmark
   var badge = document.getElementById('creatorBadge');
   if (badge) badge.style.display = '';
+  // Sync alias vars for storage
+  claimedShow = { name: creatorShowName, outlet: creatorShowOutlet };
+  creatorDownloads = creatorDownloadValue || null;
+  // Persist login state
+  try {
+    localStorage.setItem('hp_user', JSON.stringify({
+      name: currentUser ? currentUser.name : '',
+      email: currentUser ? currentUser.email : '',
+      provider: currentUser ? currentUser.provider : '',
+      mode: 'creator',
+      prefs: userPrefs,
+      claimedShow: claimedShow,
+      downloads: creatorDownloads,
+      cadence: creatorCadence || null
+    }));
+  } catch(e) {}
   // Open dashboard
   var dash = document.getElementById('creatorDash');
   document.getElementById('phone').appendChild(dash);
@@ -1677,6 +1696,20 @@ function finishOnboarding() {
     navProfile.innerHTML = '<div style="width:24px;height:24px;border-radius:50%;background:linear-gradient(135deg,var(--accent),#47ffe8);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#0a0a0f;font-family:var(--font-d)">' + initials + '</div><span class="ni-lbl">Profile</span>';
   }
 
+  // Persist login state
+  try {
+    localStorage.setItem('hp_user', JSON.stringify({
+      name: currentUser.name,
+      email: currentUser.email,
+      provider: currentUser.provider,
+      mode: 'listener',
+      prefs: userPrefs,
+      claimedShow: null,
+      downloads: null,
+      cadence: null
+    }));
+  } catch(e) {}
+
   showToast('Welcome to HiddenPod ✦', true);
 }
 
@@ -1721,6 +1754,7 @@ function showPrefEdit() {
 }
 
 function doSignOut() {
+  try { localStorage.removeItem('hp_user'); } catch(e) {}
   var wasCreator = userMode === 'creator';
   currentUser = null;
   userPrefs = [];
@@ -1729,6 +1763,8 @@ function doSignOut() {
   creatorShowOutlet = '';
   creatorDownloadValue = '';
   creatorCadence = '';
+  claimedShow = null;
+  creatorDownloads = null;
   followed = {}; saved = {}; liked = {};
   var av = document.getElementById('topAvatar');
   if (av) {
@@ -2112,6 +2148,82 @@ function initFeedAutoplay() {
 // ── INIT ──────────────────────────────────────────────────────────────────────
 render(DATA);
 initFeedAutoplay();
+
+// ── RESTORE SESSION FROM LOCALSTORAGE ─────────────────────────────────────────
+(function() {
+  try {
+    var stored = localStorage.getItem('hp_user');
+    if (!stored) return;
+    var u = JSON.parse(stored);
+    if (!u || !u.name || !u.mode) return;
+
+    // Restore state variables
+    currentUser = { name: u.name, email: u.email, provider: u.provider };
+    userMode = u.mode;
+    userPrefs = u.prefs || [];
+    if (u.claimedShow) {
+      claimedShow = u.claimedShow;
+      creatorShowName = u.claimedShow.name || '';
+      creatorShowOutlet = u.claimedShow.outlet || '';
+    }
+    if (u.downloads) { creatorDownloads = u.downloads; creatorDownloadValue = u.downloads; }
+    if (u.cadence)   { creatorCadence = u.cadence; }
+
+    // Hide onboarding immediately
+    var wrap = document.getElementById('onboardWrap');
+    if (wrap) { wrap.style.display = 'none'; wrap.classList.add('hidden'); }
+
+    var initials = currentUser.name.split(' ').map(function(w){return w[0];}).join('').slice(0,2).toUpperCase();
+
+    // Restore UI after a tick (DOM is ready)
+    setTimeout(function() {
+      if (userMode === 'creator') {
+        // Restore creator avatar + badge
+        var av = document.getElementById('topAvatar');
+        if (av) { av.textContent = initials; av.style.background = 'linear-gradient(135deg,#47ffe8,#47a8ff)'; av.style.color = '#0a0a0f'; }
+        var badge = document.getElementById('creatorBadge');
+        if (badge) badge.style.display = '';
+        var navProfile = document.getElementById('nav-profile');
+        if (navProfile) navProfile.innerHTML = '<div style="width:24px;height:24px;border-radius:50%;background:linear-gradient(135deg,#47ffe8,#47a8ff);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#0a0a0f;font-family:var(--font-d)">' + initials + '</div><span class="ni-lbl">Profile</span>';
+        // Reopen dashboard (no welcome toast on restore)
+        var dash = document.getElementById('creatorDash');
+        document.getElementById('phone').appendChild(dash);
+        // Re-populate show name/outlet in dashboard
+        document.getElementById('dashShowInit').textContent = creatorShowName.split(/\s+/).slice(0,2).map(function(w){return w[0];}).join('').toUpperCase() || 'HP';
+        document.getElementById('dashShowName').textContent = creatorShowName || 'Your Show';
+        document.getElementById('dashShowOutlet').textContent = creatorShowOutlet || 'Independent';
+        // Randomize audio quality scores
+        var aqScores = [Math.floor(Math.random()*26)+60, Math.floor(Math.random()*26)+60, Math.floor(Math.random()*26)+60];
+        for (var i = 1; i <= 3; i++) {
+          var bar = document.getElementById('aq'+i); var val = document.getElementById('aqv'+i);
+          if (bar) bar.style.width = aqScores[i-1]+'%';
+          if (val) val.textContent = aqScores[i-1]+'/100';
+        }
+        if (!creatorSkippedDetails && creatorDownloadValue) {
+          var dlBtn = document.getElementById('unlockDlBtn');
+          if (dlBtn) dlBtn.style.display = 'none';
+        }
+        dash.classList.add('open');
+        setNav('nav-profile');
+      } else {
+        // Restore listener avatar
+        var av = document.getElementById('topAvatar');
+        if (av) { av.textContent = initials; av.style.background = 'linear-gradient(135deg,var(--accent),#47ffe8)'; av.style.color = '#0a0a0f'; }
+        var navProfile = document.getElementById('nav-profile');
+        if (navProfile) navProfile.innerHTML = '<div style="width:24px;height:24px;border-radius:50%;background:linear-gradient(135deg,var(--accent),#47ffe8);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#0a0a0f;font-family:var(--font-d)">' + initials + '</div><span class="ni-lbl">Profile</span>';
+        updateProfileView();
+        // Re-apply category filter
+        if (userPrefs.length > 0) {
+          var fp = userPrefs[0];
+          var pill = document.querySelector('.cat-pill[onclick*="' + fp + '"]');
+          if (pill) filterCat(pill, fp);
+        }
+      }
+    }, 100);
+  } catch(e) {
+    try { localStorage.removeItem('hp_user'); } catch(e2) {}
+  }
+})();
 </script>
 </body>
 </html>
