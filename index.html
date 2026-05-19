@@ -243,6 +243,73 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--text);font-fam
 /* ── WORD HIGHLIGHT ── */
 .q-word{display:inline;border-radius:3px;transition:background 0.1s}
 .q-word.q-active{background:rgba(232,255,71,0.22)}
+
+/* ── ONBOARDING ── */
+.onboard-wrap{position:fixed;inset:0;z-index:200;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding-bottom:48px;transition:opacity 0.4s,transform 0.4s}
+.onboard-wrap.hidden{opacity:0;pointer-events:none;transform:translateY(40px)}
+.onboard-bg{position:absolute;inset:0;background:linear-gradient(170deg,#0a1a0a 0%,#0a0f0a 60%,#091409 100%);z-index:0}
+.onboard-glow{position:absolute;top:30%;left:50%;transform:translate(-50%,-50%);width:320px;height:320px;background:radial-gradient(circle,rgba(26,107,60,0.25) 0%,transparent 70%);z-index:0;pointer-events:none}
+.onboard-content{position:relative;z-index:1;width:100%;max-width:390px;padding:0 28px;display:flex;flex-direction:column;align-items:center}
+.onboard-logo{display:flex;align-items:baseline;margin-bottom:10px}
+.onboard-logo .h{font-size:42px;font-weight:400;color:rgba(255,255,255,0.5);font-family:var(--font-d);letter-spacing:-1px}
+.onboard-logo .p{font-size:42px;font-weight:700;color:var(--accent);font-family:var(--font-d);letter-spacing:-1px}
+.onboard-tagline{font-size:15px;color:rgba(255,255,255,0.45);text-align:center;line-height:1.5;margin-bottom:48px;max-width:260px}
+.auth-btn{width:100%;display:flex;align-items:center;gap:12px;padding:14px 20px;border-radius:14px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);color:white;font-size:15px;font-weight:500;cursor:pointer;margin-bottom:10px;transition:background 0.15s,border-color 0.15s;text-align:left;font-family:var(--font-b)}
+.auth-btn:active{background:rgba(255,255,255,0.1)}
+.auth-btn.google{border-color:rgba(66,133,244,0.3);background:rgba(66,133,244,0.08)}
+.auth-btn.apple{border-color:rgba(255,255,255,0.15);background:rgba(255,255,255,0.06)}
+.auth-btn.spotify{border-color:rgba(29,185,84,0.3);background:rgba(29,185,84,0.08)}
+.auth-btn.email{border-color:rgba(255,255,255,0.08);background:transparent;color:rgba(255,255,255,0.5);justify-content:center;font-size:13px;margin-top:4px}
+.auth-btn svg{flex-shrink:0}
+.auth-divider{display:flex;align-items:center;gap:10px;width:100%;margin:6px 0 10px}
+.auth-divider-line{flex:1;height:1px;background:rgba(255,255,255,0.08)}
+.auth-divider-text{font-size:11px;color:rgba(255,255,255,0.3)}
+.auth-terms{font-size:10px;color:rgba(255,255,255,0.25);text-align:center;margin-top:16px;line-height:1.5;max-width:280px}
+.auth-terms a{color:rgba(255,255,255,0.4)}
+.email-form{width:100%;display:none;flex-direction:column;gap:10px}
+.email-form.visible{display:flex}
+.auth-input{width:100%;padding:14px 16px;border-radius:12px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.05);color:white;font-size:15px;font-family:var(--font-b);outline:none;-webkit-appearance:none}
+.auth-input:focus{border-color:var(--green)}
+.auth-input::placeholder{color:rgba(255,255,255,0.25)}
+.auth-submit{width:100%;padding:15px;border-radius:14px;border:none;background:var(--green);color:white;font-size:15px;font-weight:700;cursor:pointer;font-family:var(--font-b);transition:opacity 0.15s}
+.auth-submit:active{opacity:0.85}
+.auth-back{background:none;border:none;color:rgba(255,255,255,0.4);font-size:13px;cursor:pointer;padding:8px;font-family:var(--font-b);margin-top:4px}
+.pref-screen{display:none;width:100%;flex-direction:column;align-items:center}
+.pref-screen.visible{display:flex}
+.pref-title{font-size:24px;font-weight:700;color:white;text-align:center;margin-bottom:6px;font-family:var(--font-d)}
+.pref-sub{font-size:14px;color:rgba(255,255,255,0.45);text-align:center;margin-bottom:28px}
+.pref-grid{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:32px;width:100%}
+.pref-pill{padding:10px 18px;border-radius:24px;border:1.5px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.04);color:rgba(255,255,255,0.6);font-size:14px;font-weight:500;cursor:pointer;transition:all 0.15s;font-family:var(--font-b);display:flex;align-items:center;gap:6px}
+.pref-pill.on{border-color:var(--accent);background:rgba(232,255,71,0.1);color:var(--accent)}
+.pref-pill:active{transform:scale(0.96)}
+.pref-cta{width:100%;padding:15px;border-radius:14px;border:none;background:var(--green);color:white;font-size:15px;font-weight:700;cursor:pointer;font-family:var(--font-b)}
+.pref-skip{background:none;border:none;color:rgba(255,255,255,0.3);font-size:13px;cursor:pointer;padding:12px;font-family:var(--font-b)}
+
+/* ── PROFILE VIEW ── */
+.profile-view{position:absolute;inset:0;background:var(--bg);z-index:10;display:none;flex-direction:column;padding-top:90px;overflow-y:auto}
+.profile-view.open{display:flex}
+.profile-header{display:flex;flex-direction:column;align-items:center;padding:24px 24px 20px}
+.profile-avatar-lg{width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--accent),#47ffe8);display:flex;align-items:center;justify-content:center;font-family:var(--font-d);font-size:26px;font-weight:700;color:#0a0a0f;margin-bottom:12px}
+.profile-name{font-size:20px;font-weight:700;color:white;font-family:var(--font-d)}
+.profile-email{font-size:13px;color:rgba(255,255,255,0.4);margin-top:2px}
+.profile-stats{display:flex;gap:0;width:100%;border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin:16px 0}
+.profile-stat{flex:1;padding:14px 8px;text-align:center;border-right:1px solid var(--border)}
+.profile-stat:last-child{border-right:none}
+.profile-stat-n{font-size:22px;font-weight:700;color:var(--accent);font-family:var(--font-d)}
+.profile-stat-l{font-size:10px;color:rgba(255,255,255,0.4);margin-top:2px;letter-spacing:0.5px}
+.profile-section{padding:0 20px}
+.profile-section-title{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,0.3);margin:16px 0 8px}
+.profile-row{display:flex;align-items:center;padding:13px 0;border-bottom:0.5px solid rgba(255,255,255,0.06);cursor:pointer}
+.profile-row:last-child{border-bottom:none}
+.profile-row:active{opacity:0.7}
+.profile-row-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-right:12px}
+.profile-row-label{flex:1;font-size:14px;color:rgba(255,255,255,0.8)}
+.profile-row-value{font-size:12px;color:rgba(255,255,255,0.3)}
+.profile-row-chevron{color:rgba(255,255,255,0.2);font-size:14px;margin-left:8px}
+.profile-close{position:absolute;top:16px;right:16px;width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,0.08);border:none;color:white;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px}
+.pref-chips-row{display:flex;flex-wrap:wrap;gap:6px}
+.pref-chip-sm{padding:4px 10px;border-radius:12px;background:rgba(232,255,71,0.1);border:1px solid rgba(232,255,71,0.25);color:var(--accent);font-size:11px}
+.signout-btn{width:calc(100% - 40px);margin:20px;padding:14px;border-radius:12px;border:1px solid rgba(255,80,80,0.2);background:rgba(255,80,80,0.06);color:rgba(255,100,100,0.8);font-size:14px;font-weight:600;cursor:pointer;font-family:var(--font-b)}
 </style>
 </head>
 <body>
@@ -265,7 +332,7 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--text);font-fam
     <div class="ap-track"><div class="ap-thumb"></div></div>
     Autoplay
   </div>
-  <div class="avatar">CL</div>
+  <div class="avatar" id="topAvatar" onclick="showProfile()" style="cursor:pointer">?</div>
 </div>
 
 <div class="view-tabs">
@@ -373,6 +440,100 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--text);font-fam
     </div>
     <button class="discover-apply" onclick="applyDiscoverMode()">Apply Mode</button>
   </div>
+</div>
+
+<!-- ONBOARDING FLOW -->
+<div class="onboard-wrap" id="onboardWrap">
+  <div class="onboard-bg"></div>
+  <div class="onboard-glow"></div>
+  <div class="onboard-content">
+    <div class="onboard-logo"><span class="h">hidden</span><span class="p">pod</span></div>
+    <div class="onboard-tagline">Discover the podcasts no algorithm would ever show you.</div>
+    <div id="authScreen" style="width:100%">
+      <button class="auth-btn google" onclick="doSSO('google')">
+        <svg width="20" height="20" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+        Continue with Google
+      </button>
+      <button class="auth-btn apple" onclick="doSSO('apple')">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+        Continue with Apple
+      </button>
+      <button class="auth-btn spotify" onclick="doSSO('spotify')">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
+        Continue with Spotify
+      </button>
+      <div class="auth-divider">
+        <div class="auth-divider-line"></div>
+        <span class="auth-divider-text">or</span>
+        <div class="auth-divider-line"></div>
+      </div>
+      <button class="auth-btn email" id="emailToggleBtn" onclick="toggleEmailForm(true)">Use email &amp; password</button>
+      <div class="email-form" id="emailForm">
+        <input class="auth-input" id="emailInput" type="email" placeholder="Email address" autocomplete="email">
+        <input class="auth-input" id="pwInput" type="password" placeholder="Password" autocomplete="current-password">
+        <button class="auth-submit" onclick="doEmailAuth()">Sign in</button>
+        <button class="auth-back" onclick="toggleEmailForm(false)">← Back</button>
+      </div>
+      <div class="auth-terms">By continuing you agree to our <a href="#">Terms</a> and <a href="#">Privacy Policy</a></div>
+    </div>
+    <div class="pref-screen" id="prefScreen">
+      <div class="pref-title">What do you care about?</div>
+      <div class="pref-sub">Pick topics to personalize your feed</div>
+      <div class="pref-grid">
+        <div class="pref-pill" onclick="togglePref(this,'news')">📰 News</div>
+        <div class="pref-pill" onclick="togglePref(this,'politics')">🏛 Politics</div>
+        <div class="pref-pill" onclick="togglePref(this,'tech')">💻 Tech</div>
+        <div class="pref-pill" onclick="togglePref(this,'science')">🔬 Science</div>
+        <div class="pref-pill" onclick="togglePref(this,'world')">🌍 World</div>
+        <div class="pref-pill" onclick="togglePref(this,'local')">📍 Local</div>
+        <div class="pref-pill" onclick="togglePref(this,'culture')">🎭 Culture</div>
+        <div class="pref-pill" onclick="togglePref(this,'business')">💼 Business</div>
+        <div class="pref-pill" onclick="togglePref(this,'investigative')">🔍 Investigative</div>
+        <div class="pref-pill" onclick="togglePref(this,'health')">❤️ Health</div>
+      </div>
+      <button class="pref-cta" onclick="finishOnboarding()">Start Listening</button>
+      <button class="pref-skip" onclick="finishOnboarding()">Skip for now</button>
+    </div>
+  </div>
+</div>
+
+<!-- PROFILE VIEW -->
+<div class="profile-view" id="profileView">
+  <button class="profile-close" onclick="closeProfile()">✕</button>
+  <div class="profile-header">
+    <div class="profile-avatar-lg" id="profileAvatarLg">?</div>
+    <div class="profile-name" id="profileName">–</div>
+    <div class="profile-email" id="profileEmail">–</div>
+  </div>
+  <div class="profile-stats">
+    <div class="profile-stat"><div class="profile-stat-n" id="statFollowing">0</div><div class="profile-stat-l">FOLLOWING</div></div>
+    <div class="profile-stat"><div class="profile-stat-n" id="statSaved">0</div><div class="profile-stat-l">SAVED</div></div>
+    <div class="profile-stat"><div class="profile-stat-n" id="statLiked">0</div><div class="profile-stat-l">LIKED</div></div>
+  </div>
+  <div class="profile-section">
+    <div class="profile-section-title">Your Interests</div>
+    <div class="pref-chips-row" id="profilePrefs"></div>
+    <div class="profile-row" onclick="showPrefEdit()">
+      <div class="profile-row-icon" style="background:rgba(232,255,71,0.1)"><svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="#E8FF47" stroke-width="2"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></div>
+      <span class="profile-row-label">Topic preferences</span>
+      <span class="profile-row-value" id="prefCount">0 selected</span>
+      <span class="profile-row-chevron">›</span>
+    </div>
+  </div>
+  <div class="profile-section">
+    <div class="profile-section-title">Account</div>
+    <div class="profile-row" onclick="showToast('Notifications coming soon')">
+      <div class="profile-row-icon" style="background:rgba(255,255,255,0.06)"><svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg></div>
+      <span class="profile-row-label">Notifications</span>
+      <span class="profile-row-chevron">›</span>
+    </div>
+    <div class="profile-row" onclick="showToast('Playback settings coming soon')">
+      <div class="profile-row-icon" style="background:rgba(255,255,255,0.06)"><svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 010 14.14M4.93 4.93a10 10 0 000 14.14"/></svg></div>
+      <span class="profile-row-label">Playback</span>
+      <span class="profile-row-chevron">›</span>
+    </div>
+  </div>
+  <button class="signout-btn" onclick="doSignOut()">Sign Out</button>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -714,6 +875,133 @@ function doPlatform(p, id) {
   }
 }
 
+// ── ONBOARDING & AUTH ────────────────────────────────────────────────────────
+var currentUser = null;
+var userPrefs = [];
+
+function doSSO(provider) {
+  var names = {google: 'Google User', apple: 'Apple User', spotify: 'Spotify Listener'};
+  var emails = {google: 'user@gmail.com', apple: 'user@icloud.com', spotify: 'user@spotify.com'};
+  currentUser = { name: names[provider], email: emails[provider], provider: provider };
+  showPrefScreen();
+}
+
+function toggleEmailForm(show) {
+  var form = document.getElementById('emailForm');
+  var btn = document.getElementById('emailToggleBtn');
+  form.className = 'email-form' + (show ? ' visible' : '');
+  if (btn) btn.style.display = show ? 'none' : '';
+  if (show) document.getElementById('emailInput').focus();
+}
+
+function doEmailAuth() {
+  var email = document.getElementById('emailInput').value.trim();
+  var pw = document.getElementById('pwInput').value;
+  if (!email || !pw) { showToast('Please enter email and password'); return; }
+  if (!email.includes('@')) { showToast('Please enter a valid email'); return; }
+  currentUser = {
+    name: email.split('@')[0].charAt(0).toUpperCase() + email.split('@')[0].slice(1),
+    email: email,
+    provider: 'email'
+  };
+  showPrefScreen();
+}
+
+function showPrefScreen() {
+  document.getElementById('authScreen').style.display = 'none';
+  document.getElementById('prefScreen').className = 'pref-screen visible';
+}
+
+function togglePref(el, pref) {
+  el.classList.toggle('on');
+  if (el.classList.contains('on')) {
+    if (!userPrefs.includes(pref)) userPrefs.push(pref);
+  } else {
+    userPrefs = userPrefs.filter(function(p) { return p !== pref; });
+  }
+}
+
+function finishOnboarding() {
+  var wrap = document.getElementById('onboardWrap');
+  wrap.classList.add('hidden');
+  setTimeout(function() { wrap.style.display = 'none'; }, 400);
+
+  var initials = currentUser ? currentUser.name.split(' ').map(function(w){return w[0];}).join('').slice(0,2).toUpperCase() : '?';
+  var av = document.getElementById('topAvatar');
+  if (av) av.textContent = initials;
+
+  updateProfileView();
+
+  if (userPrefs.length > 0) {
+    var firstPref = userPrefs[0];
+    var matchPill = document.querySelector('.cat-pill[onclick*="' + firstPref + '"]');
+    if (matchPill) filterCat(matchPill, firstPref);
+  }
+
+  setTimeout(function() {
+    if (autoplayOn && filteredData.length > 0) doPlay(filteredData[0].id);
+  }, 600);
+
+  showToast('Welcome to HiddenPod ✦', true);
+}
+
+function updateProfileView() {
+  if (!currentUser) return;
+  document.getElementById('profileName').textContent = currentUser.name;
+  document.getElementById('profileEmail').textContent = currentUser.email;
+  var initials = currentUser.name.split(' ').map(function(w){return w[0];}).join('').slice(0,2).toUpperCase();
+  document.getElementById('profileAvatarLg').textContent = initials;
+  var container = document.getElementById('profilePrefs');
+  if (userPrefs.length === 0) {
+    container.innerHTML = '<span style="font-size:12px;color:rgba(255,255,255,0.3)">None selected — tap Topic preferences to add</span>';
+  } else {
+    container.innerHTML = userPrefs.map(function(p){ return '<div class="pref-chip-sm">' + p + '</div>'; }).join('');
+  }
+  var pc = document.getElementById('prefCount');
+  if (pc) pc.textContent = userPrefs.length + ' selected';
+  var followCount = Object.keys(followed).filter(function(k){return followed[k];}).length;
+  var saveCount = Object.keys(saved).filter(function(k){return saved[k];}).length;
+  var likeCount = Object.keys(liked).filter(function(k){return liked[k];}).length;
+  var fs = document.getElementById('statFollowing'); if(fs) fs.textContent = followCount;
+  var ss = document.getElementById('statSaved'); if(ss) ss.textContent = saveCount;
+  var ls = document.getElementById('statLiked'); if(ls) ls.textContent = likeCount;
+}
+
+function closeProfile() {
+  document.getElementById('profileView').classList.remove('open');
+  setNav('nav-home');
+}
+
+function showPrefEdit() {
+  closeProfile();
+  var wrap = document.getElementById('onboardWrap');
+  wrap.style.display = 'flex';
+  wrap.classList.remove('hidden');
+  document.getElementById('authScreen').style.display = 'none';
+  document.getElementById('prefScreen').className = 'pref-screen visible';
+  document.querySelectorAll('.pref-pill').forEach(function(pill) {
+    var m = pill.getAttribute('onclick').match(/'([^']+)'\)/);
+    if (m && userPrefs.includes(m[1])) pill.classList.add('on');
+  });
+}
+
+function doSignOut() {
+  currentUser = null;
+  userPrefs = [];
+  followed = {}; saved = {}; liked = {};
+  var av = document.getElementById('topAvatar');
+  if (av) av.textContent = '?';
+  closeProfile();
+  stopCurrentAudio();
+  var wrap = document.getElementById('onboardWrap');
+  wrap.style.display = 'flex';
+  wrap.classList.remove('hidden');
+  document.getElementById('authScreen').style.display = '';
+  document.getElementById('prefScreen').className = 'pref-screen';
+  toggleEmailForm(false);
+  showToast('Signed out');
+}
+
 // ── STATE ─────────────────────────────────────────────────────────────────────
 var liked={}, saved={}, followed={};
 var currentFilter='all';
@@ -1004,8 +1292,16 @@ function applyDiscoverMode(){
   var names={default:'Default Mix',credibility:'Credibility Focus',hidden:'Hidden Gems',trending:'Trending Now',local:'Local Focus'};
   showToast('Discovery: '+names[mode],true);
 }
-function showProfile(){
-  showToast('Profile settings coming soon');
+// showProfile now defined in onboarding JS above
+function showProfile() {
+  if (!currentUser) {
+    var wrap = document.getElementById('onboardWrap');
+    wrap.style.display = 'flex';
+    wrap.classList.remove('hidden');
+    return;
+  }
+  updateProfileView();
+  document.getElementById('profileView').classList.add('open');
   setNav('nav-profile');
 }
 function setNav(active){
