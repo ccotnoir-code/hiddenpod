@@ -310,6 +310,105 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--text);font-fam
 .pref-chips-row{display:flex;flex-wrap:wrap;gap:6px}
 .pref-chip-sm{padding:4px 10px;border-radius:12px;background:rgba(232,255,71,0.1);border:1px solid rgba(232,255,71,0.25);color:var(--accent);font-size:11px}
 .signout-btn{width:calc(100% - 40px);margin:20px;padding:14px;border-radius:12px;border:1px solid rgba(255,80,80,0.2);background:rgba(255,80,80,0.06);color:rgba(255,100,100,0.8);font-size:14px;font-weight:600;cursor:pointer;font-family:var(--font-b)}
+
+/* ── SPLASH ROLE SELECTION ── */
+@keyframes float-card{0%{opacity:0;transform:translateY(0) rotate(var(--r,0deg))}8%{opacity:0.6}85%{opacity:0.38}100%{opacity:0;transform:translateY(-105vh) rotate(var(--r,0deg))}}
+@keyframes glow-pulse{0%,100%{transform:translate(-50%,-50%) scale(1)}50%{transform:translate(-50%,-50%) scale(1.15)}}
+.onboard-glow.pulse{animation:glow-pulse 4s ease-in-out infinite}
+.splash-cards{position:absolute;top:0;left:0;right:0;bottom:0;overflow:hidden;pointer-events:none;z-index:0}
+.splash-card{position:absolute;bottom:-60px;width:155px;height:44px;border-radius:14px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.09);display:flex;align-items:center;padding:0 12px;font-size:11px;font-weight:600;font-family:var(--font-d);color:rgba(255,255,255,0.36);animation:float-card linear infinite;white-space:nowrap}
+.role-btn{width:100%;padding:16px;border-radius:16px;font-family:var(--font-d);font-size:16px;font-weight:700;cursor:pointer;margin-bottom:12px;transition:opacity 0.15s}
+.role-btn.listener{background:var(--green);color:white;border:none}
+.role-btn.podcaster{background:transparent;border:1.5px solid rgba(255,255,255,0.2);color:rgba(255,255,255,0.7)}
+.role-btn:active{opacity:0.8}
+
+/* ── CREATOR FLOW SCREENS ── */
+.creator-screen{display:none;width:100%;flex-direction:column;align-items:center}
+.creator-screen.visible{display:flex}
+.creator-heading{font-size:24px;font-weight:700;color:white;text-align:center;margin-bottom:8px;font-family:var(--font-d);line-height:1.2}
+.creator-sub{font-size:14px;color:rgba(255,255,255,0.45);text-align:center;margin-bottom:22px;line-height:1.5;max-width:280px}
+.creator-input{width:100%;padding:14px 16px;border-radius:12px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.05);color:white;font-size:15px;font-family:var(--font-b);outline:none;-webkit-appearance:none;margin-bottom:8px}
+.creator-input:focus{border-color:var(--green)}
+.creator-input::placeholder{color:rgba(255,255,255,0.25)}
+.search-wrap{position:relative;width:100%}
+.search-dropdown{position:absolute;top:calc(100% + 2px);left:0;right:0;background:#181822;border:1px solid rgba(255,255,255,0.12);border-radius:12px;overflow:hidden;z-index:10;display:none;box-shadow:0 8px 24px rgba(0,0,0,0.6)}
+.search-dropdown.open{display:block}
+.search-result{padding:11px 14px;cursor:pointer;border-bottom:1px solid rgba(255,255,255,0.06)}
+.search-result:last-child{border-bottom:none}
+.search-result:active{background:rgba(255,255,255,0.08)}
+.search-result-show{font-size:13px;font-weight:600;color:white;font-family:var(--font-d)}
+.search-result-outlet{font-size:11px;color:rgba(255,255,255,0.35);margin-top:1px}
+.creator-cta{width:100%;padding:15px;border-radius:14px;border:none;background:var(--green);color:white;font-size:15px;font-weight:700;cursor:pointer;font-family:var(--font-b);transition:opacity 0.15s;margin-top:4px}
+.creator-cta:active{opacity:0.85}
+.creator-cta:disabled{opacity:0.35;cursor:default}
+.creator-back{background:none;border:none;color:rgba(255,255,255,0.4);font-size:13px;cursor:pointer;padding:10px;font-family:var(--font-b)}
+.verify-form{width:100%;display:flex;flex-direction:column}
+.verify-sent{display:none;flex-direction:column;align-items:center;text-align:center;padding:8px 0}
+.verify-sent.visible{display:flex}
+.tip-wrap{position:relative;display:inline-flex;align-items:center;gap:5px}
+.tip-icon{width:15px;height:15px;border-radius:50%;border:1px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.05);color:rgba(255,255,255,0.4);font-size:8px;display:inline-flex;align-items:center;justify-content:center;font-family:var(--font-d);font-weight:700;flex-shrink:0;cursor:default}
+.tip-box{display:none;position:absolute;bottom:calc(100% + 6px);left:0;background:#1c1c28;border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:8px 10px;font-size:11px;color:rgba(255,255,255,0.7);width:200px;line-height:1.4;z-index:20;pointer-events:none;font-family:var(--font-b)}
+.tip-wrap:hover .tip-box{display:block}
+.about-section{width:100%;margin-bottom:16px}
+.about-label{font-size:11px;font-weight:600;color:rgba(255,255,255,0.45);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:7px}
+.range-pills{display:flex;flex-wrap:wrap;gap:7px}
+.range-pill{padding:7px 13px;border-radius:20px;border:1.5px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.04);color:rgba(255,255,255,0.5);font-size:12px;cursor:pointer;transition:all 0.15s;font-family:var(--font-b)}
+.range-pill.on{border-color:var(--accent);background:rgba(232,255,71,0.1);color:var(--accent)}
+.range-pill:active{transform:scale(0.95)}
+.toggle-input-link{font-size:11px;color:rgba(71,255,232,0.7);cursor:pointer;margin-top:5px;display:inline-block;text-decoration:underline;font-family:var(--font-b)}
+.field-err{font-size:11px;color:rgba(255,100,100,0.8);margin-top:4px;display:none}
+.field-err.show{display:block}
+.creator-skip{background:none;border:none;color:rgba(255,255,255,0.3);font-size:13px;cursor:pointer;padding:8px;font-family:var(--font-b)}
+
+/* ── CREATOR DASHBOARD ── */
+.creator-dash{position:absolute;inset:0;background:var(--bg);z-index:10;display:none;flex-direction:column;overflow-y:auto}
+.creator-dash.open{display:flex}
+.dash-top{padding:52px 20px 14px;flex-shrink:0}
+.creator-show-row{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.creator-show-init{width:46px;height:46px;border-radius:11px;background:linear-gradient(135deg,#0d2a1a,#1a4a2a);border:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;font-family:var(--font-d);font-weight:800;font-size:15px;color:var(--accent);flex-shrink:0}
+.creator-show-name{font-size:16px;font-weight:700;font-family:var(--font-d);line-height:1.2}
+.creator-show-outlet-lbl{font-size:11px;color:rgba(255,255,255,0.38);margin-top:2px}
+.gauge-wrap{display:flex;align-items:center;gap:14px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:16px;padding:14px 16px;margin-bottom:16px}
+.gauge-score-num{font-size:30px;font-weight:800;color:white;font-family:var(--font-d);line-height:1}
+.gauge-denom{font-size:13px;color:rgba(255,255,255,0.35);font-family:var(--font-d)}
+.gauge-meta-label{font-size:10px;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:0.5px;margin-top:2px}
+.gauge-tagline{font-size:12px;color:rgba(255,255,255,0.5);line-height:1.45;margin-top:6px;max-width:160px}
+.dash-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 20px;margin-bottom:16px}
+.dash-stat{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:14px;padding:14px 16px}
+.dash-stat-n{font-size:22px;font-weight:800;font-family:var(--font-d);color:white}
+.dash-stat-l{font-size:10px;color:rgba(255,255,255,0.4);margin-top:2px;text-transform:uppercase;letter-spacing:0.4px}
+.dash-section{padding:0 20px;margin-bottom:16px}
+.dash-sec-title{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:10px}
+.ep-row{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:12px;padding:14px;margin-bottom:8px;cursor:pointer;transition:background 0.15s}
+.ep-row:active{background:rgba(255,255,255,0.05)}
+.ep-row-head{display:flex;align-items:center;justify-content:space-between}
+.ep-row-title{font-size:13px;font-weight:600;font-family:var(--font-d)}
+.ep-row-sub{font-size:11px;color:rgba(255,255,255,0.38);margin-top:2px}
+.ep-chev{font-size:12px;color:rgba(255,255,255,0.25);transition:transform 0.2s;flex-shrink:0}
+.ep-row.open .ep-chev{transform:rotate(90deg)}
+.ep-scores-grid{display:none;grid-template-columns:1fr 1fr;gap:6px;margin-top:12px}
+.ep-row.open .ep-scores-grid{display:grid}
+.ep-score-item{border-radius:8px;padding:8px 10px;position:relative;overflow:hidden}
+.ep-score-item.unlocked{background:rgba(255,255,255,0.05)}
+.ep-score-item.locked{background:rgba(255,255,255,0.03)}
+.ep-score-label{font-size:9px;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:3px}
+.ep-score-bar-bg{height:3px;background:rgba(255,255,255,0.1);border-radius:2px;margin-bottom:3px}
+.ep-score-bar-fill{height:100%;border-radius:2px;background:var(--green)}
+.ep-score-val{font-size:11px;font-weight:700;color:white;font-family:var(--font-d)}
+.score-blurred{filter:blur(3px);pointer-events:none}
+.lock-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+.lock-icon{font-size:14px;opacity:0.5}
+.unlock-cta-box{margin:0 20px 16px;background:rgba(26,107,60,0.07);border:1px solid rgba(26,107,60,0.22);border-radius:16px;padding:16px;text-align:center}
+.unlock-cta-title{font-size:14px;font-weight:700;font-family:var(--font-d);margin-bottom:3px}
+.unlock-cta-sub{font-size:11px;color:rgba(255,255,255,0.4);margin-bottom:12px}
+.unlock-pro-btn{width:100%;padding:12px;border-radius:12px;border:none;background:var(--green);color:white;font-size:14px;font-weight:700;cursor:pointer;font-family:var(--font-b);margin-bottom:8px;transition:opacity 0.15s}
+.unlock-pro-btn:active{opacity:0.85}
+.unlock-dl-btn{width:100%;padding:12px;border-radius:12px;border:1.5px solid rgba(255,255,255,0.15);background:transparent;color:rgba(255,255,255,0.55);font-size:13px;cursor:pointer;font-family:var(--font-b)}
+.creator-badge{display:inline-flex;align-items:center;padding:2px 7px;border-radius:9px;background:rgba(71,255,232,0.12);border:1px solid rgba(71,255,232,0.3);color:#47ffe8;font-size:9px;font-weight:700;font-family:var(--font-d);margin-left:5px;letter-spacing:0.02em;vertical-align:middle}
+.dash-footer{padding:12px 20px 40px;border-top:1px solid rgba(255,255,255,0.06);display:flex;flex-direction:column;gap:8px}
+.dash-ftr-btn{padding:12px;border-radius:12px;border:1px solid rgba(255,255,255,0.1);background:transparent;color:rgba(255,255,255,0.5);font-size:13px;cursor:pointer;font-family:var(--font-b);transition:opacity 0.15s}
+.dash-ftr-btn:active{opacity:0.7}
+.dash-ftr-btn.danger{border-color:rgba(255,80,80,0.2);color:rgba(255,100,100,0.65)}
 </style>
 </head>
 <body>
@@ -326,7 +425,7 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--text);font-fam
         <div class="logo-bar" style="height:8px;background:#9CB89C"></div>
       </div>
     </div>
-    <div class="wordmark"><span class="h">hidden</span><span class="p">pod</span></div>
+    <div class="wordmark"><span class="h">hidden</span><span class="p">pod</span><span class="creator-badge" id="creatorBadge" style="display:none">Creator</span></div>
   </div>
   <div class="autoplay-btn" id="autoplayBtn" onclick="toggleAutoplay()">
     <div class="ap-track"><div class="ap-thumb"></div></div>
@@ -445,11 +544,30 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--text);font-fam
 <!-- ONBOARDING FLOW -->
 <div class="onboard-wrap" id="onboardWrap">
   <div class="onboard-bg"></div>
-  <div class="onboard-glow"></div>
+  <div class="onboard-glow pulse" id="onboardGlow"></div>
+  <!-- Floating episode cards (CSS-only animation) -->
+  <div class="splash-cards">
+    <div class="splash-card" style="left:4%;--r:-3deg;animation-duration:7.5s;animation-delay:0s">📰 The Daily</div>
+    <div class="splash-card" style="left:22%;--r:2deg;animation-duration:9s;animation-delay:1.8s">🎙 Pivot</div>
+    <div class="splash-card" style="left:54%;--r:-2deg;animation-duration:8s;animation-delay:0.4s">🌍 BBC World</div>
+    <div class="splash-card" style="left:38%;--r:3deg;animation-duration:10.5s;animation-delay:2.2s">🔍 Lawfare</div>
+    <div class="splash-card" style="left:65%;--r:-1deg;animation-duration:7.8s;animation-delay:3.1s">🎵 Desert Island</div>
+    <div class="splash-card" style="left:10%;--r:1deg;animation-duration:9.5s;animation-delay:4.2s">💼 Ezra Klein</div>
+    <div class="splash-card" style="left:46%;--r:-3deg;animation-duration:8.5s;animation-delay:2.7s">🏙 The Sprawl</div>
+    <div class="splash-card" style="left:74%;--r:2deg;animation-duration:7.2s;animation-delay:1.1s">📻 Hidden Gems</div>
+  </div>
   <div class="onboard-content">
     <div class="onboard-logo"><span class="h">hidden</span><span class="p">pod</span></div>
-    <div class="onboard-tagline">Discover the podcasts no algorithm would ever show you.</div>
-    <div id="authScreen" style="width:100%">
+
+    <!-- ROLE SELECTION SPLASH -->
+    <div id="roleSplash" style="width:100%;display:flex;flex-direction:column;align-items:center">
+      <div class="onboard-tagline">The episodes worth hearing, finally within reach.</div>
+      <button class="role-btn listener" onclick="selectRole('listener')">I'm a Listener</button>
+      <button class="role-btn podcaster" onclick="selectRole('podcaster')">I'm a Podcaster</button>
+    </div>
+
+    <!-- LISTENER AUTH -->
+    <div id="authScreen" style="width:100%;display:none">
       <button class="auth-btn google" onclick="doSSO('google')">
         <svg width="20" height="20" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
         Continue with Google
@@ -476,6 +594,8 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--text);font-fam
       </div>
       <div class="auth-terms">By continuing you agree to our <a href="#">Terms</a> and <a href="#">Privacy Policy</a></div>
     </div>
+
+    <!-- LISTENER PREFS -->
     <div class="pref-screen" id="prefScreen">
       <div class="pref-title">What do you care about?</div>
       <div class="pref-sub">Pick topics to personalize your feed</div>
@@ -494,6 +614,123 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--text);font-fam
       <button class="pref-cta" onclick="finishOnboarding()">Start Listening</button>
       <button class="pref-skip" onclick="finishOnboarding()">Skip for now</button>
     </div>
+
+    <!-- CREATOR SCREEN 1: AUTH -->
+    <div class="creator-screen" id="creatorAuthScreen">
+      <div class="creator-heading">Join as a Creator.</div>
+      <div class="creator-sub">Claim your show and see how your episodes perform.</div>
+      <button class="auth-btn google" onclick="doCreatorSSO('google')">
+        <svg width="20" height="20" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+        Continue with Google
+      </button>
+      <button class="auth-btn apple" onclick="doCreatorSSO('apple')">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+        Continue with Apple
+      </button>
+      <button class="auth-btn spotify" onclick="doCreatorSSO('spotify')">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
+        Continue with Spotify
+      </button>
+      <div class="auth-divider"><div class="auth-divider-line"></div><span class="auth-divider-text">or</span><div class="auth-divider-line"></div></div>
+      <button class="auth-btn email" id="cEmailToggleBtn" onclick="toggleCreatorEmailForm(true)">Use email &amp; password</button>
+      <div class="email-form" id="cEmailForm">
+        <input class="auth-input" id="cEmailInput" type="email" placeholder="Email address" autocomplete="email">
+        <input class="auth-input" id="cPwInput" type="password" placeholder="Password" autocomplete="current-password">
+        <button class="auth-submit" onclick="doCreatorEmailAuth()">Sign in</button>
+        <button class="auth-back" onclick="toggleCreatorEmailForm(false)">← Back</button>
+      </div>
+      <div class="auth-terms">By continuing you agree to our <a href="#">Terms</a> and <a href="#">Privacy Policy</a></div>
+      <button class="creator-back" onclick="showRoleSplash()">← Back</button>
+    </div>
+
+    <!-- CREATOR SCREEN 2: FIND YOUR SHOW -->
+    <div class="creator-screen" id="creatorSearchScreen">
+      <div class="creator-heading">Find your show.</div>
+      <div class="creator-sub">Search for your podcast to claim it.</div>
+      <div class="search-wrap" style="width:100%;margin-bottom:4px">
+        <input class="creator-input" id="showSearchInput" placeholder="Search by show name..." autocomplete="off"
+          oninput="creatorSearchShows(this.value)" style="margin-bottom:0">
+        <div class="search-dropdown" id="showDropdown"></div>
+      </div>
+      <div class="field-err" id="searchErr">Please select a show from the list.</div>
+      <button class="creator-back" onclick="showCreatorScreen('creatorAuthScreen')" style="margin-top:8px">← Back</button>
+    </div>
+
+    <!-- CREATOR SCREEN 3: VERIFY OWNERSHIP -->
+    <div class="creator-screen" id="creatorVerifyScreen">
+      <div class="creator-heading" id="verifyHeading">Verify you own the show.</div>
+      <div class="creator-sub">We'll send a one-time code to confirm you manage this podcast.</div>
+      <div class="verify-form" id="verifyForm">
+        <input class="creator-input" id="verifyEmailInput" type="email" placeholder="Your email address" autocomplete="email">
+        <div class="field-err" id="verifyErr">Please enter a valid email.</div>
+        <button class="creator-cta" onclick="sendVerification()">Send Verification Email</button>
+      </div>
+      <div class="verify-sent" id="verifySent">
+        <div style="font-size:36px;margin-bottom:12px">📬</div>
+        <div style="font-size:15px;font-weight:600;color:white;font-family:var(--font-d);margin-bottom:8px">Email sent!</div>
+        <div style="font-size:13px;color:rgba(255,255,255,0.5);line-height:1.5;margin-bottom:24px">Verification email sent to <span id="verifyEmailDisplay" style="color:rgba(255,255,255,0.8)"></span></div>
+        <button class="creator-cta" onclick="markVerified()">I've verified — continue →</button>
+      </div>
+      <button class="creator-back" onclick="showCreatorScreen('creatorSearchScreen')" style="margin-top:8px">← Back</button>
+    </div>
+
+    <!-- CREATOR SCREEN 4: ABOUT YOUR SHOW -->
+    <div class="creator-screen" id="creatorAboutScreen">
+      <div class="creator-heading" id="aboutHeading">Tell us about your show.</div>
+      <div class="creator-sub" style="margin-bottom:16px">This helps us surface your episodes to the right listeners.</div>
+      <!-- Downloads section -->
+      <div class="about-section">
+        <div class="about-label">
+          Monthly downloads
+          <div class="tip-wrap">
+            <span class="tip-icon">ⓘ</span>
+            <div class="tip-box">Your average unique downloads per episode in the past 30 days. Check your podcast host's analytics dashboard.</div>
+          </div>
+        </div>
+        <div id="downloadExactWrap">
+          <input class="creator-input" id="downloadExactInput" type="number" min="0" placeholder="e.g. 4500" style="margin-bottom:4px">
+          <div class="toggle-input-link" onclick="toggleDownloadMode()">Use a range instead →</div>
+        </div>
+        <div id="downloadRangeWrap" style="display:none">
+          <div class="range-pills" id="downloadRangePills">
+            <div class="range-pill" onclick="selectRange(this,'Under 100')">Under 100</div>
+            <div class="range-pill" onclick="selectRange(this,'100–500')">100–500</div>
+            <div class="range-pill" onclick="selectRange(this,'500–1,000')">500–1,000</div>
+            <div class="range-pill" onclick="selectRange(this,'1,000–5,000')">1,000–5,000</div>
+            <div class="range-pill" onclick="selectRange(this,'5,000–10,000')">5,000–10,000</div>
+            <div class="range-pill" onclick="selectRange(this,'10,000–25,000')">10,000–25,000</div>
+            <div class="range-pill" onclick="selectRange(this,'25,000–50,000')">25,000–50,000</div>
+            <div class="range-pill" onclick="selectRange(this,'50,000–100,000')">50,000–100,000</div>
+            <div class="range-pill" onclick="selectRange(this,'100,000+')">100,000+</div>
+          </div>
+          <div class="toggle-input-link" onclick="toggleDownloadMode()">← Enter exact number</div>
+        </div>
+        <div class="field-err" id="downloadErr">Please enter your monthly downloads.</div>
+      </div>
+      <!-- Cadence section -->
+      <div class="about-section">
+        <div class="about-label">
+          Publishing cadence
+          <div class="tip-wrap">
+            <span class="tip-icon">ⓘ</span>
+            <div class="tip-box">How often do you typically publish new episodes?</div>
+          </div>
+        </div>
+        <div class="range-pills" id="cadencePills">
+          <div class="range-pill" onclick="selectCadence(this,'daily')">Daily</div>
+          <div class="range-pill" onclick="selectCadence(this,'multiple')">Multiple times/week</div>
+          <div class="range-pill" onclick="selectCadence(this,'weekly')">Weekly</div>
+          <div class="range-pill" onclick="selectCadence(this,'biweekly')">Bi-weekly</div>
+          <div class="range-pill" onclick="selectCadence(this,'monthly')">Monthly</div>
+          <div class="range-pill" onclick="selectCadence(this,'irregular')">Irregular</div>
+        </div>
+        <div class="field-err" id="cadenceErr">Please select a publishing cadence.</div>
+      </div>
+      <button class="creator-cta" onclick="submitShowDetails()">Go to my dashboard →</button>
+      <button class="creator-skip" onclick="submitShowDetails(true)">Skip for now</button>
+      <button class="creator-back" onclick="showCreatorScreen('creatorVerifyScreen')" style="margin-top:4px">← Back</button>
+    </div>
+
   </div>
 </div>
 
@@ -534,6 +771,182 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--text);font-fam
     </div>
   </div>
   <button class="signout-btn" onclick="doSignOut()">Sign Out</button>
+</div>
+
+<!-- CREATOR DASHBOARD -->
+<div class="creator-dash" id="creatorDash">
+  <div class="dash-top">
+    <div class="creator-show-row">
+      <div class="creator-show-init" id="dashShowInit">HP</div>
+      <div>
+        <div class="creator-show-name" id="dashShowName">Your Show</div>
+        <div class="creator-show-outlet-lbl" id="dashShowOutlet">Your Outlet</div>
+      </div>
+    </div>
+    <!-- Circular score gauge -->
+    <div class="gauge-wrap">
+      <svg width="80" height="80" viewBox="0 0 80 80" style="flex-shrink:0">
+        <circle cx="40" cy="40" r="32" fill="none" stroke="rgba(255,255,255,0.07)" stroke-width="7"/>
+        <circle cx="40" cy="40" r="32" fill="none" stroke="#1A6B3C" stroke-width="7"
+          stroke-dasharray="201" stroke-dashoffset="58" stroke-linecap="round"
+          transform="rotate(-90 40 40)"/>
+        <text x="40" y="45" text-anchor="middle" fill="white" font-size="17" font-weight="800" font-family="Syne,sans-serif">71</text>
+      </svg>
+      <div>
+        <div style="display:flex;align-items:baseline;gap:3px">
+          <span class="gauge-score-num">71</span><span class="gauge-denom">/100</span>
+        </div>
+        <div class="gauge-meta-label">Overall Score</div>
+        <div class="gauge-tagline">Strong performance — room to grow on credibility and structure.</div>
+      </div>
+    </div>
+  </div>
+  <!-- Stats grid -->
+  <div class="dash-stats">
+    <div class="dash-stat"><div class="dash-stat-n">1,247</div><div class="dash-stat-l">Plays</div></div>
+    <div class="dash-stat"><div class="dash-stat-n">38</div><div class="dash-stat-l">Likes</div></div>
+    <div class="dash-stat"><div class="dash-stat-n">12</div><div class="dash-stat-l">Follows</div></div>
+    <div class="dash-stat"><div class="dash-stat-n">9</div><div class="dash-stat-l">Subscribers</div></div>
+  </div>
+  <!-- Episode list -->
+  <div class="dash-section">
+    <div class="dash-sec-title">Recent Episodes</div>
+    <!-- EP 1 -->
+    <div class="ep-row" onclick="toggleEpRow(this)">
+      <div class="ep-row-head">
+        <div>
+          <div class="ep-row-title" id="dashEp1Title">Latest Episode</div>
+          <div class="ep-row-sub">Published 2 days ago · 847 plays</div>
+        </div>
+        <span class="ep-chev">›</span>
+      </div>
+      <div class="ep-scores-grid">
+        <div class="ep-score-item unlocked">
+          <div class="ep-score-label">Audio Quality</div>
+          <div class="ep-score-bar-bg"><div class="ep-score-bar-fill" id="aq1" style="width:74%"></div></div>
+          <div class="ep-score-val" id="aqv1">74/100</div>
+        </div>
+        <div class="ep-score-item locked">
+          <div class="score-blurred"><div class="ep-score-label">Structure</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" style="width:68%"></div></div><div class="ep-score-val">68/100</div></div>
+          <div class="lock-overlay"><span class="lock-icon">🔒</span></div>
+        </div>
+        <div class="ep-score-item locked">
+          <div class="score-blurred"><div class="ep-score-label">Credibility</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" style="width:81%"></div></div><div class="ep-score-val">81/100</div></div>
+          <div class="lock-overlay"><span class="lock-icon">🔒</span></div>
+        </div>
+        <div class="ep-score-item locked">
+          <div class="score-blurred"><div class="ep-score-label">Relevance</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" style="width:76%"></div></div><div class="ep-score-val">76/100</div></div>
+          <div class="lock-overlay"><span class="lock-icon">🔒</span></div>
+        </div>
+        <div class="ep-score-item locked">
+          <div class="score-blurred"><div class="ep-score-label">Clipability</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" style="width:63%"></div></div><div class="ep-score-val">63/100</div></div>
+          <div class="lock-overlay"><span class="lock-icon">🔒</span></div>
+        </div>
+        <div class="ep-score-item locked">
+          <div class="score-blurred"><div class="ep-score-label">Geo Diversity</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" style="width:55%"></div></div><div class="ep-score-val">55/100</div></div>
+          <div class="lock-overlay"><span class="lock-icon">🔒</span></div>
+        </div>
+        <div class="ep-score-item locked" style="grid-column:1/-1">
+          <div class="score-blurred"><div class="ep-score-label">Uniqueness</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" style="width:72%"></div></div><div class="ep-score-val">72/100</div></div>
+          <div class="lock-overlay"><span class="lock-icon">🔒</span></div>
+        </div>
+      </div>
+    </div>
+    <!-- EP 2 -->
+    <div class="ep-row" onclick="toggleEpRow(this)">
+      <div class="ep-row-head">
+        <div>
+          <div class="ep-row-title" id="dashEp2Title">Previous Episode</div>
+          <div class="ep-row-sub">Published 9 days ago · 312 plays</div>
+        </div>
+        <span class="ep-chev">›</span>
+      </div>
+      <div class="ep-scores-grid">
+        <div class="ep-score-item unlocked">
+          <div class="ep-score-label">Audio Quality</div>
+          <div class="ep-score-bar-bg"><div class="ep-score-bar-fill" id="aq2" style="width:80%"></div></div>
+          <div class="ep-score-val" id="aqv2">80/100</div>
+        </div>
+        <div class="ep-score-item locked">
+          <div class="score-blurred"><div class="ep-score-label">Structure</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" style="width:71%"></div></div><div class="ep-score-val">71/100</div></div>
+          <div class="lock-overlay"><span class="lock-icon">🔒</span></div>
+        </div>
+        <div class="ep-score-item locked">
+          <div class="score-blurred"><div class="ep-score-label">Credibility</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" style="width:79%"></div></div><div class="ep-score-val">79/100</div></div>
+          <div class="lock-overlay"><span class="lock-icon">🔒</span></div>
+        </div>
+        <div class="ep-score-item locked">
+          <div class="score-blurred"><div class="ep-score-label">Relevance</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" style="width:84%"></div></div><div class="ep-score-val">84/100</div></div>
+          <div class="lock-overlay"><span class="lock-icon">🔒</span></div>
+        </div>
+        <div class="ep-score-item locked">
+          <div class="score-blurred"><div class="ep-score-label">Clipability</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" style="width:67%"></div></div><div class="ep-score-val">67/100</div></div>
+          <div class="lock-overlay"><span class="lock-icon">🔒</span></div>
+        </div>
+        <div class="ep-score-item locked">
+          <div class="score-blurred"><div class="ep-score-label">Geo Diversity</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" style="width:61%"></div></div><div class="ep-score-val">61/100</div></div>
+          <div class="lock-overlay"><span class="lock-icon">🔒</span></div>
+        </div>
+        <div class="ep-score-item locked" style="grid-column:1/-1">
+          <div class="score-blurred"><div class="ep-score-label">Uniqueness</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" style="width:85%"></div></div><div class="ep-score-val">85/100</div></div>
+          <div class="lock-overlay"><span class="lock-icon">🔒</span></div>
+        </div>
+      </div>
+    </div>
+    <!-- EP 3 -->
+    <div class="ep-row" onclick="toggleEpRow(this)">
+      <div class="ep-row-head">
+        <div>
+          <div class="ep-row-title" id="dashEp3Title">Older Episode</div>
+          <div class="ep-row-sub">Published 16 days ago · 88 plays</div>
+        </div>
+        <span class="ep-chev">›</span>
+      </div>
+      <div class="ep-scores-grid">
+        <div class="ep-score-item unlocked">
+          <div class="ep-score-label">Audio Quality</div>
+          <div class="ep-score-bar-bg"><div class="ep-score-bar-fill" id="aq3" style="width:65%"></div></div>
+          <div class="ep-score-val" id="aqv3">65/100</div>
+        </div>
+        <div class="ep-score-item locked">
+          <div class="score-blurred"><div class="ep-score-label">Structure</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" style="width:77%"></div></div><div class="ep-score-val">77/100</div></div>
+          <div class="lock-overlay"><span class="lock-icon">🔒</span></div>
+        </div>
+        <div class="ep-score-item locked">
+          <div class="score-blurred"><div class="ep-score-label">Credibility</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" style="width:62%"></div></div><div class="ep-score-val">62/100</div></div>
+          <div class="lock-overlay"><span class="lock-icon">🔒</span></div>
+        </div>
+        <div class="ep-score-item locked">
+          <div class="score-blurred"><div class="ep-score-label">Relevance</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" style="width:69%"></div></div><div class="ep-score-val">69/100</div></div>
+          <div class="lock-overlay"><span class="lock-icon">🔒</span></div>
+        </div>
+        <div class="ep-score-item locked">
+          <div class="score-blurred"><div class="ep-score-label">Clipability</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" style="width:73%"></div></div><div class="ep-score-val">73/100</div></div>
+          <div class="lock-overlay"><span class="lock-icon">🔒</span></div>
+        </div>
+        <div class="ep-score-item locked">
+          <div class="score-blurred"><div class="ep-score-label">Geo Diversity</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" style="width:58%"></div></div><div class="ep-score-val">58/100</div></div>
+          <div class="lock-overlay"><span class="lock-icon">🔒</span></div>
+        </div>
+        <div class="ep-score-item locked" style="grid-column:1/-1">
+          <div class="score-blurred"><div class="ep-score-label">Uniqueness</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" style="width:66%"></div></div><div class="ep-score-val">66/100</div></div>
+          <div class="lock-overlay"><span class="lock-icon">🔒</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Unlock CTA -->
+  <div class="unlock-cta-box">
+    <div class="unlock-cta-title">Unlock all 7 dimensions</div>
+    <div class="unlock-cta-sub">See the full breakdown — structure, credibility, relevance and more — for every episode.</div>
+    <button class="unlock-pro-btn" onclick="showToast('Upgrade flow coming soon — stay tuned!', true)">Upgrade to Pro — $39/mo</button>
+    <button class="unlock-dl-btn" id="unlockDlBtn" onclick="openDownloadSheet()">Tell us your monthly downloads</button>
+  </div>
+  <!-- Footer -->
+  <div class="dash-footer">
+    <button class="dash-ftr-btn" onclick="switchToListenerView()">Switch to Listener View</button>
+    <button class="dash-ftr-btn danger" onclick="doSignOut()">Sign Out</button>
+  </div>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -878,6 +1291,309 @@ function doPlatform(p, id) {
 // ── ONBOARDING & AUTH ────────────────────────────────────────────────────────
 var currentUser = null;
 var userPrefs = [];
+var userMode = null; // null | 'listener' | 'creator'
+
+// ── CREATOR STATE ─────────────────────────────────────────────────────────────
+var creatorShowName = '';
+var creatorShowOutlet = '';
+var creatorDownloadMode = 'exact'; // 'exact' | 'range'
+var creatorDownloadValue = '';
+var creatorCadence = '';
+var creatorSkippedDetails = false;
+
+var CREATOR_SHOWS = [
+  {name:'The Daily',outlet:'New York Times'},
+  {name:'Serial',outlet:'Serial Productions'},
+  {name:'This American Life',outlet:'WBEZ Chicago'},
+  {name:'Radiolab',outlet:'WNYC Studios'},
+  {name:'99% Invisible',outlet:'Roman Mars'},
+  {name:'Stuff You Should Know',outlet:'iHeartMedia'},
+  {name:'Freakonomics Radio',outlet:'Stitcher'},
+  {name:'Hidden Brain',outlet:'NPR'},
+  {name:'How I Built This',outlet:'NPR'},
+  {name:'Planet Money',outlet:'NPR'},
+  {name:'Conan O\'Brien Needs a Friend',outlet:'Team Coco'},
+  {name:'Crime Junkie',outlet:'audiochuck'},
+  {name:'My Favorite Murder',outlet:'Exactly Right'},
+  {name:'Revisionist History',outlet:'Pushkin Industries'},
+  {name:'Hardcore History',outlet:'Dan Carlin'},
+  {name:'The Tim Ferriss Show',outlet:'Tim Ferriss'},
+  {name:'Lex Fridman Podcast',outlet:'Lex Fridman'},
+  {name:'Huberman Lab',outlet:'Andrew Huberman'},
+  {name:'SmartLess',outlet:'Jason Bateman / Will Arnett'},
+  {name:'Call Her Daddy',outlet:'Alex Cooper'},
+  {name:'Pod Save America',outlet:'Crooked Media'},
+  {name:'Armchair Expert',outlet:'Dax Shepard'},
+  {name:'Stuff You Missed in History Class',outlet:'iHeartMedia'},
+  {name:'Dateline NBC',outlet:'NBC News'},
+  {name:'TED Talks Daily',outlet:'TED'},
+  {name:'The Moth Radio Hour',outlet:'PRX'},
+  {name:'Snap Judgment',outlet:'PRX'},
+  {name:'Lawfare',outlet:'Lawfare Institute'},
+  {name:'The Sprawl',outlet:'Canadaland'},
+  {name:'Pivot',outlet:'Vox Media'},
+];
+
+// ── ROLE SELECTION ────────────────────────────────────────────────────────────
+function showRoleSplash() {
+  var wrap = document.getElementById('onboardWrap');
+  wrap.style.display = 'flex';
+  wrap.classList.remove('hidden');
+  document.getElementById('roleSplash').style.display = 'flex';
+  document.getElementById('authScreen').style.display = 'none';
+  document.getElementById('prefScreen').className = 'pref-screen';
+  ['creatorAuthScreen','creatorSearchScreen','creatorVerifyScreen','creatorAboutScreen'].forEach(function(id){
+    var el = document.getElementById(id);
+    if (el) el.className = 'creator-screen';
+  });
+}
+
+function selectRole(role) {
+  document.getElementById('roleSplash').style.display = 'none';
+  if (role === 'listener') {
+    document.getElementById('authScreen').style.display = '';
+  } else {
+    showCreatorScreen('creatorAuthScreen');
+  }
+}
+
+function showCreatorScreen(screenId) {
+  ['creatorAuthScreen','creatorSearchScreen','creatorVerifyScreen','creatorAboutScreen'].forEach(function(id){
+    var el = document.getElementById(id);
+    if (el) el.className = 'creator-screen' + (id === screenId ? ' visible' : '');
+  });
+  document.getElementById('authScreen').style.display = 'none';
+  document.getElementById('prefScreen').className = 'pref-screen';
+  document.getElementById('roleSplash').style.display = 'none';
+  var wrap = document.getElementById('onboardWrap');
+  wrap.style.display = 'flex';
+  wrap.classList.remove('hidden');
+}
+
+// ── CREATOR AUTH ──────────────────────────────────────────────────────────────
+function doCreatorSSO(provider) {
+  var names = {google:'Google Creator',apple:'Apple Creator',spotify:'Spotify Creator'};
+  var emails = {google:'creator@gmail.com',apple:'creator@icloud.com',spotify:'creator@spotify.com'};
+  currentUser = {name:names[provider],email:emails[provider],provider:provider};
+  showCreatorScreen('creatorSearchScreen');
+}
+
+function toggleCreatorEmailForm(show) {
+  var form = document.getElementById('cEmailForm');
+  var btn = document.getElementById('cEmailToggleBtn');
+  form.className = 'email-form' + (show ? ' visible' : '');
+  if (btn) btn.style.display = show ? 'none' : '';
+  if (show) document.getElementById('cEmailInput').focus();
+}
+
+function doCreatorEmailAuth() {
+  var email = document.getElementById('cEmailInput').value.trim();
+  var pw = document.getElementById('cPwInput').value;
+  if (!email || !pw) { showToast('Please enter email and password'); return; }
+  if (!email.includes('@')) { showToast('Please enter a valid email'); return; }
+  currentUser = {
+    name: email.split('@')[0].charAt(0).toUpperCase() + email.split('@')[0].slice(1),
+    email: email,
+    provider: 'email'
+  };
+  showCreatorScreen('creatorSearchScreen');
+}
+
+// ── CREATOR SHOW SEARCH ───────────────────────────────────────────────────────
+function creatorSearchShows(query) {
+  var dropdown = document.getElementById('showDropdown');
+  creatorShowName = '';
+  creatorShowOutlet = '';
+  if (!query || query.length < 2) {
+    dropdown.innerHTML = '';
+    dropdown.classList.remove('open');
+    return;
+  }
+  var q = query.toLowerCase();
+  var results = CREATOR_SHOWS.filter(function(s){
+    return s.name.toLowerCase().indexOf(q) > -1 || s.outlet.toLowerCase().indexOf(q) > -1;
+  }).slice(0,6);
+  if (results.length === 0) {
+    dropdown.innerHTML = '<div class="search-result" onclick="selectCreatorShow(\''+query.replace(/'/g,"\\'")+"','')\"><div class=\"search-result-show\">&ldquo;"+query+"&rdquo;</div><div class=\"search-result-outlet\">Claim as new show</div></div>";
+    dropdown.classList.add('open');
+    return;
+  }
+  dropdown.innerHTML = results.map(function(s){
+    var safeN = s.name.replace(/'/g,"\\'");
+    var safeO = s.outlet.replace(/'/g,"\\'");
+    return '<div class="search-result" onclick="selectCreatorShow(\''+safeN+'\',\''+safeO+'\')">'
+      +'<div class="search-result-show">'+s.name+'</div>'
+      +'<div class="search-result-outlet">'+s.outlet+'</div>'
+      +'</div>';
+  }).join('');
+  dropdown.classList.add('open');
+}
+
+function selectCreatorShow(name, outlet) {
+  creatorShowName = name;
+  creatorShowOutlet = outlet || 'Independent';
+  document.getElementById('showSearchInput').value = name;
+  document.getElementById('showDropdown').classList.remove('open');
+  document.getElementById('searchErr').className = 'field-err';
+  // Pre-fill verify heading
+  document.getElementById('verifyHeading').textContent = 'Verify you own "' + name + '"';
+  // Pre-fill email in verify screen if available
+  if (currentUser && currentUser.email) {
+    document.getElementById('verifyEmailInput').value = currentUser.email;
+  }
+  // Pre-fill about heading
+  document.getElementById('aboutHeading').textContent = 'Tell us about "' + name + '"';
+  setTimeout(function(){ showCreatorScreen('creatorVerifyScreen'); }, 200);
+}
+
+// ── CREATOR VERIFY ────────────────────────────────────────────────────────────
+function sendVerification() {
+  var emailEl = document.getElementById('verifyEmailInput');
+  var email = emailEl.value.trim();
+  if (!email || !email.includes('@')) {
+    document.getElementById('verifyErr').className = 'field-err show';
+    return;
+  }
+  document.getElementById('verifyErr').className = 'field-err';
+  document.getElementById('verifyEmailDisplay').textContent = email;
+  document.getElementById('verifyForm').style.display = 'none';
+  document.getElementById('verifySent').className = 'verify-sent visible';
+  // Update currentUser email if it changed
+  if (currentUser) currentUser.email = email;
+}
+
+function markVerified() {
+  // Update about heading and advance
+  document.getElementById('aboutHeading').textContent = 'Tell us about "' + creatorShowName + '".';
+  // Pre-fill download toggle state
+  creatorDownloadMode = 'exact';
+  creatorDownloadValue = '';
+  creatorCadence = '';
+  document.getElementById('downloadExactWrap').style.display = '';
+  document.getElementById('downloadRangeWrap').style.display = 'none';
+  document.getElementById('downloadExactInput').value = '';
+  document.querySelectorAll('#downloadRangePills .range-pill').forEach(function(p){ p.classList.remove('on'); });
+  document.querySelectorAll('#cadencePills .range-pill').forEach(function(p){ p.classList.remove('on'); });
+  document.getElementById('downloadErr').className = 'field-err';
+  document.getElementById('cadenceErr').className = 'field-err';
+  // Reset verify screen for future use
+  document.getElementById('verifyForm').style.display = '';
+  document.getElementById('verifySent').className = 'verify-sent';
+  showCreatorScreen('creatorAboutScreen');
+}
+
+// ── CREATOR ABOUT ─────────────────────────────────────────────────────────────
+function toggleDownloadMode() {
+  if (creatorDownloadMode === 'exact') {
+    creatorDownloadMode = 'range';
+    document.getElementById('downloadExactWrap').style.display = 'none';
+    document.getElementById('downloadRangeWrap').style.display = '';
+  } else {
+    creatorDownloadMode = 'exact';
+    document.getElementById('downloadExactWrap').style.display = '';
+    document.getElementById('downloadRangeWrap').style.display = 'none';
+  }
+}
+
+function selectRange(el, value) {
+  document.querySelectorAll('#downloadRangePills .range-pill').forEach(function(p){ p.classList.remove('on'); });
+  el.classList.add('on');
+  creatorDownloadValue = value;
+  document.getElementById('downloadErr').className = 'field-err';
+}
+
+function selectCadence(el, value) {
+  document.querySelectorAll('#cadencePills .range-pill').forEach(function(p){ p.classList.remove('on'); });
+  el.classList.add('on');
+  creatorCadence = value;
+  document.getElementById('cadenceErr').className = 'field-err';
+}
+
+function submitShowDetails(skip) {
+  if (!skip) {
+    var dlOk = false;
+    if (creatorDownloadMode === 'exact') {
+      var v = document.getElementById('downloadExactInput').value.trim();
+      dlOk = v !== '' && !isNaN(parseInt(v));
+      if (dlOk) creatorDownloadValue = v;
+    } else {
+      dlOk = creatorDownloadValue !== '';
+    }
+    if (!dlOk) { document.getElementById('downloadErr').className = 'field-err show'; return; }
+    if (!creatorCadence) { document.getElementById('cadenceErr').className = 'field-err show'; return; }
+  }
+  creatorSkippedDetails = !!skip;
+  showCreatorDashboard();
+}
+
+// ── CREATOR DASHBOARD ─────────────────────────────────────────────────────────
+function showCreatorDashboard() {
+  userMode = 'creator';
+  // Hide onboard wrap
+  var wrap = document.getElementById('onboardWrap');
+  wrap.classList.add('hidden');
+  setTimeout(function(){ wrap.style.display = 'none'; }, 400);
+  // Update dashboard with show info
+  var showInitials = creatorShowName ? creatorShowName.split(/\s+/).slice(0,2).map(function(w){return w[0];}).join('').toUpperCase() : 'HP';
+  document.getElementById('dashShowInit').textContent = showInitials;
+  document.getElementById('dashShowName').textContent = creatorShowName || 'Your Show';
+  document.getElementById('dashShowOutlet').textContent = creatorShowOutlet || 'Independent';
+  // Randomize audio quality scores (60–85)
+  var aqScores = [
+    Math.floor(Math.random()*26)+60,
+    Math.floor(Math.random()*26)+60,
+    Math.floor(Math.random()*26)+60
+  ];
+  for (var i = 1; i <= 3; i++) {
+    var bar = document.getElementById('aq'+i);
+    var val = document.getElementById('aqv'+i);
+    if (bar) bar.style.width = aqScores[i-1]+'%';
+    if (val) val.textContent = aqScores[i-1]+'/100';
+  }
+  // Hide unlock DL button if they already submitted downloads
+  if (!creatorSkippedDetails) {
+    var dlBtn = document.getElementById('unlockDlBtn');
+    if (dlBtn) dlBtn.style.display = 'none';
+  }
+  // Update avatar — blue-green gradient for creator
+  var av = document.getElementById('topAvatar');
+  if (av) {
+    var initials = currentUser ? currentUser.name.split(' ').map(function(w){return w[0];}).join('').slice(0,2).toUpperCase() : 'CR';
+    av.textContent = initials;
+    av.style.background = 'linear-gradient(135deg,#47ffe8,#47a8ff)';
+    av.style.color = '#0a0a0f';
+  }
+  // Show creator badge in wordmark
+  var badge = document.getElementById('creatorBadge');
+  if (badge) badge.style.display = '';
+  // Open dashboard
+  var dash = document.getElementById('creatorDash');
+  document.getElementById('phone').appendChild(dash);
+  dash.classList.add('open');
+  setNav('nav-profile');
+  showToast('Welcome to your creator dashboard ✦', true);
+}
+
+function toggleEpRow(row) {
+  row.classList.toggle('open');
+}
+
+function openDownloadSheet() {
+  // Re-open the about screen to fill in downloads
+  creatorSkippedDetails = false;
+  showCreatorScreen('creatorAboutScreen');
+  var wrap = document.getElementById('onboardWrap');
+  wrap.style.display = 'flex';
+  wrap.classList.remove('hidden');
+}
+
+function switchToListenerView() {
+  document.getElementById('creatorDash').classList.remove('open');
+  setNav('nav-home');
+  showToast('Switched to listener view');
+}
+
+// ── NAV PROFILE CLICK (mode-aware) ────────────────────────────────────────────
 
 function doSSO(provider) {
   var names = {google: 'Google User', apple: 'Apple User', spotify: 'Spotify Listener'};
@@ -922,13 +1638,21 @@ function togglePref(el, pref) {
 }
 
 function finishOnboarding() {
+  userMode = 'listener';
   var wrap = document.getElementById('onboardWrap');
   wrap.classList.add('hidden');
   setTimeout(function() { wrap.style.display = 'none'; }, 400);
 
   var initials = currentUser ? currentUser.name.split(' ').map(function(w){return w[0];}).join('').slice(0,2).toUpperCase() : '?';
   var av = document.getElementById('topAvatar');
-  if (av) av.textContent = initials;
+  if (av) {
+    av.textContent = initials;
+    av.style.background = 'linear-gradient(135deg,var(--accent),#47ffe8)';
+    av.style.color = '#0a0a0f';
+  }
+  // Hide creator badge
+  var badge = document.getElementById('creatorBadge');
+  if (badge) badge.style.display = 'none';
 
   updateProfileView();
 
@@ -986,19 +1710,32 @@ function showPrefEdit() {
 }
 
 function doSignOut() {
+  var wasCreator = userMode === 'creator';
   currentUser = null;
   userPrefs = [];
+  userMode = null;
+  creatorShowName = '';
+  creatorShowOutlet = '';
+  creatorDownloadValue = '';
+  creatorCadence = '';
   followed = {}; saved = {}; liked = {};
   var av = document.getElementById('topAvatar');
-  if (av) av.textContent = '?';
-  closeProfile();
+  if (av) {
+    av.textContent = '?';
+    av.style.background = 'linear-gradient(135deg,var(--accent),#47ffe8)';
+    av.style.color = '#0a0a0f';
+  }
+  var badge = document.getElementById('creatorBadge');
+  if (badge) badge.style.display = 'none';
+  if (wasCreator) {
+    document.getElementById('creatorDash').classList.remove('open');
+  } else {
+    closeProfile();
+  }
   stopCurrentAudio();
-  var wrap = document.getElementById('onboardWrap');
-  wrap.style.display = 'flex';
-  wrap.classList.remove('hidden');
-  document.getElementById('authScreen').style.display = '';
-  document.getElementById('prefScreen').className = 'pref-screen';
   toggleEmailForm(false);
+  toggleCreatorEmailForm(false);
+  showRoleSplash();
   showToast('Signed out');
 }
 
@@ -1292,12 +2029,16 @@ function applyDiscoverMode(){
   var names={default:'Default Mix',credibility:'Credibility Focus',hidden:'Hidden Gems',trending:'Trending Now',local:'Local Focus'};
   showToast('Discovery: '+names[mode],true);
 }
-// showProfile now defined in onboarding JS above
 function showProfile() {
-  if (!currentUser) {
-    var wrap = document.getElementById('onboardWrap');
-    wrap.style.display = 'flex';
-    wrap.classList.remove('hidden');
+  if (!currentUser || !userMode) {
+    showRoleSplash();
+    return;
+  }
+  if (userMode === 'creator') {
+    var dash = document.getElementById('creatorDash');
+    document.getElementById('phone').appendChild(dash);
+    dash.classList.add('open');
+    setNav('nav-profile');
     return;
   }
   updateProfileView();
