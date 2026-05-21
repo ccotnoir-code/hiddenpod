@@ -189,9 +189,9 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--text);font-fam
 .dp-close{width:100%;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.09);background:transparent;color:var(--muted);font-size:11.5px;font-family:var(--font-b);cursor:pointer}
 
 /* ── SWIPE HINT ── */
-.swipe-hint{position:absolute;bottom:86px;left:50%;transform:translateX(-50%);z-index:3;display:flex;flex-direction:column;align-items:center;gap:3px;animation:fup 2s ease infinite;pointer-events:none}
-@keyframes fup{0%,100%{opacity:0.4;transform:translateX(-50%) translateY(0)}50%{opacity:0.8;transform:translateX(-50%) translateY(-5px)}}
-.swipe-hint-txt{font-size:9.5px;color:var(--muted);font-weight:500;letter-spacing:0.05em}
+@keyframes hint-fadein{from{opacity:0}to{opacity:1}}
+@keyframes hint-pulse{0%,100%{opacity:1}50%{opacity:0.6}}
+.swipe-hint-pill{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:4;background:rgba(0,0,0,0.55);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,0.12);border-radius:24px;padding:10px 20px;color:rgba(255,255,255,0.85);font-size:13px;font-weight:500;display:flex;align-items:center;gap:8px;pointer-events:none;white-space:nowrap;opacity:0;animation:hint-fadein 0.5s ease 1.5s forwards,hint-pulse 2s ease-in-out 2s infinite;transition:opacity 0.3s}
 
 /* ── SAVED VIEW ── */
 .saved-view{position:absolute;inset:0;background:var(--bg);z-index:10;display:none;flex-direction:column}
@@ -1920,7 +1920,8 @@ function wrapQuoteWords(q) {
 
 function buildCard(c,idx){
   var sc=szClass(c.sz);
-  var hint=idx===0?'<div class="swipe-hint"><svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="rgba(255,255,255,0.35)" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg><span class="swipe-hint-txt">swipe to explore</span></div>':'';
+  var _showHint=false;try{_showHint=idx===0&&!localStorage.getItem('seenSwipeHint');}catch(e){}
+  var hint=_showHint?'<div class="swipe-hint-pill" id="swipeHintPill">↑ Swipe to discover</div>':'';
 
   // Score pills
   var topScores = Object.entries(c.scores).sort((a,b)=>b[1]-a[1]).slice(0,3);
@@ -2254,9 +2255,32 @@ function initFeedAutoplay() {
   });
 }
 
+// ── SWIPE HINT ───────────────────────────────────────────────────────────────
+function dismissSwipeHint() {
+  var hint = document.getElementById('swipeHintPill');
+  if (!hint) return;
+  hint.style.opacity = '0';
+  try { localStorage.setItem('seenSwipeHint', '1'); } catch(e) {}
+  setTimeout(function() { if (hint.parentNode) hint.parentNode.removeChild(hint); }, 350);
+}
+
+function initSwipeHint() {
+  var feed = document.getElementById('feed');
+  if (!feed) return;
+  var _dismissed = false;
+  function onFirstScroll() {
+    if (_dismissed) return;
+    _dismissed = true;
+    feed.removeEventListener('scroll', onFirstScroll);
+    dismissSwipeHint();
+  }
+  feed.addEventListener('scroll', onFirstScroll, {passive: true});
+}
+
 // ── INIT ──────────────────────────────────────────────────────────────────────
 render(DATA);
 initFeedAutoplay();
+initSwipeHint();
 
 // ── RESTORE SESSION FROM LOCALSTORAGE ─────────────────────────────────────────
 (function() {
