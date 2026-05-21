@@ -1151,6 +1151,10 @@ function stopCurrentAudio() {
   if (playTimer) { clearInterval(playTimer); playTimer = null; }
   if (audioEl) {
     audioEl.pause();
+    if (audioEl._timeupdateHandler) {
+      audioEl.removeEventListener('timeupdate', audioEl._timeupdateHandler);
+      audioEl._timeupdateHandler = null;
+    }
     audioEl.src = '';
   }
   if (playingId !== null) {
@@ -1172,6 +1176,10 @@ function doPlay(id) {
     var btn = document.getElementById('pb' + id);
     if (btn) btn.innerHTML = pico();
     if (playTimer) { clearInterval(playTimer); playTimer = null; }
+    if (audioEl._timeupdateHandler) {
+      audioEl.removeEventListener('timeupdate', audioEl._timeupdateHandler);
+      audioEl._timeupdateHandler = null;
+    }
     return;
   }
   // If same track paused — resume
@@ -1226,16 +1234,25 @@ function startAudio(id, url) {
   var btn = document.getElementById('pb' + id);
 
   audioEl.oncanplay = function() {
-    if (playingId !== id) return;
     audioEl.oncanplay = null; // fire once only
-    audioEl.currentTime = CLIP_STARTS[id]; // seek after load() reset
-    audioEl.play().then(function() {
-      if (btn) btn.innerHTML = pauseIco();
-      startPlayTimer(id, audioEl.currentTime); // pass actual seek position, not intended
-    }).catch(function(e) {
-      if (btn) btn.innerHTML = pico();
-      showToast('Tap play to start audio');
-    });
+    if (playingId !== id) return;
+
+    // Seek to clip start
+    audioEl.currentTime = CLIP_STARTS[id];
+
+    // Wait for seek to complete before starting playback + timer
+    audioEl.onseeked = function() {
+      audioEl.onseeked = null; // fire once only
+      if (playingId !== id) return;
+
+      audioEl.play().then(function() {
+        if (btn) btn.innerHTML = pauseIco();
+        startPlayTimer(id); // only start AFTER seek confirmed
+      }).catch(function() {
+        if (btn) btn.innerHTML = pico();
+        showToast('Tap play to start audio');
+      });
+    };
   };
 
   audioEl.onerror = function() {
@@ -1257,16 +1274,31 @@ function startAudio(id, url) {
   }
 }
 
-function startPlayTimer(id, actualStart) {
-  var c = DATA.find(function(x){return x.id===id;});
+function startPlayTimer(id) {
+  var c = DATA.find(function(x){ return x.id === id; });
   if (!c) return;
-  // Use actual playback position (post-seek keyframe snap), not the intended seek point
-  clipStartTime = (actualStart !== undefined) ? actualStart : CLIP_STARTS[id];
-  var clipEnd = clipStartTime + CLIP_DURATIONS[id];
+  var clipStart = CLIP_STARTS[id];
+  var clipDuration = CLIP_DURATIONS[id];
+  var clipEnd = clipStart + clipDuration;
 
-  playTimer = setInterval(function() {
-    if (!audioEl || playingId !== id) { clearInterval(playTimer); return; }
-    var elapsed = audioEl.currentTime - clipStartTime + (CLIP_SPEECH_OFFSETS[id]||0);
+  // Set clipStartTime so seekAudio() scrubber still works
+  clipStartTime = clipStart;
+
+  // Clear any previous timeupdate listener before attaching a new one
+  if (audioEl._timeupdateHandler) {
+    audioEl.removeEventListener('timeupdate', audioEl._timeupdateHandler);
+    audioEl._timeupdateHandler = null;
+  }
+
+  // Snapshot word elements once (DOM won't change mid-play)
+  var wordEls = document.querySelectorAll('#qq' + id + ' .q-word');
+  var wordCount = wordEls.length;
+  var secondsPerWord = wordCount > 0 ? clipDuration / wordCount : 1;
+
+  audioEl._timeupdateHandler = function() {
+    if (playingId !== id) return;
+
+    var elapsed = audioEl.currentTime - clipStart + (CLIP_SPEECH_OFFSETS[id] || 0);
     if (elapsed < 0) elapsed = 0;
 
     // Update time display
@@ -1278,23 +1310,24 @@ function startPlayTimer(id, actualStart) {
     }
 
     // Update waveform progress
-    var prog = Math.min(elapsed / CLIP_DURATIONS[id], 1);
+    var prog = Math.min(elapsed / clipDuration, 1);
     setWaveProgress(id, prog, c.ac);
 
-    // Advance word highlight
-    var words = document.querySelectorAll('#qq' + id + ' .q-word');
-    if (words.length > 0) {
-      var wi = Math.min(Math.floor(prog * words.length), words.length - 1);
-      for (var j = 0; j < words.length; j++) words[j].classList.toggle('q-active', j === wi);
+    // Update word highlight — index derived from actual playback position, never from a timer
+    if (wordCount > 0) {
+      var wi = Math.min(Math.floor(elapsed / secondsPerWord), wordCount - 1);
+      for (var j = 0; j < wordEls.length; j++) wordEls[j].classList.toggle('q-active', j === wi);
     }
 
     // Stop at clip end
-    if (audioEl.currentTime >= clipEnd || elapsed >= CLIP_DURATIONS[id]) {
-      var wasAutoplay=autoplayOn;
+    if (audioEl.currentTime >= clipEnd) {
+      var wasAutoplay = autoplayOn;
       stopCurrentAudio();
-      if(wasAutoplay) setTimeout(function(){scrollToNextCard(id)},300);
+      if (wasAutoplay) setTimeout(function(){ scrollToNextCard(id); }, 300);
     }
-  }, 250);
+  };
+
+  audioEl.addEventListener('timeupdate', audioEl._timeupdateHandler);
 }
 
 function seekAudio(e, id) {
