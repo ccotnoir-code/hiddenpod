@@ -85,6 +85,7 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--text);font-fam
 .cat-row::-webkit-scrollbar{display:none}
 .cat-pill{font-size:11px;font-weight:500;padding:5px 12px;border-radius:20px;border:1px solid var(--border);color:var(--muted);white-space:nowrap;cursor:pointer;flex-shrink:0;background:transparent;transition:all 0.18s}
 .cat-pill.active{background:rgba(232,255,71,0.1);border-color:rgba(232,255,71,0.4);color:var(--accent)}
+.discover-badge{font-size:11px;color:rgba(255,255,255,0.3);padding:4px 18px;flex-shrink:0}
 
 /* ── FEED ── */
 .feed-container{flex:1;overflow:hidden;position:relative;margin-top:8px}
@@ -435,8 +436,8 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--text);font-fam
 </div>
 
 <div class="view-tabs">
-  <div class="view-tab active" id="vt-foryou" onclick="switchView('foryou')">For You</div>
-  <div class="view-tab" id="vt-following" onclick="switchView('following')">Following</div>
+  <div class="view-tab active" id="vt-discover" onclick="switchView('discover')">Discover</div>
+  <div class="view-tab" id="vt-allshows" onclick="switchView('allshows')">All shows</div>
   <div class="view-tab" id="vt-trending" onclick="switchView('trending')">Trending</div>
 </div>
 
@@ -451,6 +452,7 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--text);font-fam
   <div class="cat-pill" onclick="filterCat(this,'science')">Science</div>
 </div>
 
+<div class="discover-badge" id="discoverBadge">Showing independent and emerging shows only</div>
 <div class="feed-container"><div class="feed" id="feed"></div></div>
 
 <div class="bottom-nav">
@@ -489,6 +491,10 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--text);font-fam
     </div>
   </div>
   <div class="saved-list" id="savedList"></div>
+  <div onclick="showFollowingView()" style="padding:14px 18px 4px;font-size:12px;color:rgba(255,255,255,0.4);cursor:pointer;display:flex;align-items:center;gap:6px;border-top:1px solid rgba(255,255,255,0.06);margin-top:8px">
+    <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+    View Following shows
+  </div>
 </div>
 
 <!-- FOLLOWING VIEW -->
@@ -772,7 +778,7 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--text);font-fam
     <div class="profile-email" id="profileEmail">–</div>
   </div>
   <div class="profile-stats">
-    <div class="profile-stat"><div class="profile-stat-n" id="statFollowing">0</div><div class="profile-stat-l">FOLLOWING</div></div>
+    <div class="profile-stat" onclick="showFollowingView()" style="cursor:pointer"><div class="profile-stat-n" id="statFollowing">0</div><div class="profile-stat-l">FOLLOWING</div></div>
     <div class="profile-stat"><div class="profile-stat-n" id="statSaved">0</div><div class="profile-stat-l">SAVED</div></div>
     <div class="profile-stat"><div class="profile-stat-n" id="statLiked">0</div><div class="profile-stat-l">LIKED</div></div>
   </div>
@@ -985,7 +991,7 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--text);font-fam
 <script>
 // ── 7 CONFIRMED-WORKING SHOWS ────────────────────────────────────────────────
 var DATA = [
-  {id:1,cat:['news','world'],show:"Lawfare Podcast",outlet:"Lawfare Institute",init:"LF",
+  {id:1,tier:'indie',cat:['news','world'],show:"Lawfare Podcast",outlet:"Lawfare Institute",init:"LF",
    logoBg:"linear-gradient(135deg,#0d2137,#1a4a72)",cardBg:"linear-gradient(160deg,#0d1f2d,#081018)",
    ac:"#47b8ff",city:"Washington, DC",sz:"mid",szLbl:"Mid-tier",match:97,
    ep:"Ancient China and Modern Politics",
@@ -997,7 +1003,7 @@ var DATA = [
    dt:["Expert sourcing","Breaking news match","Underserved topic","High clip potential"],
    scores:{quality:88,structure:91,relevance:97,clipability:85,credibility:94,geodiversity:62}},
 
-  {id:3,cat:['news','world'],show:"Global News Podcast",outlet:"BBC World Service",init:"BBC",
+  {id:3,tier:'major',cat:['news','world'],show:"Global News Podcast",outlet:"BBC World Service",init:"BBC",
    logoBg:"linear-gradient(135deg,#c00,#8b0000)",cardBg:"linear-gradient(160deg,#1a0808,#0a0404)",
    ac:"#ff6b6b",city:"London, UK",sz:"large",szLbl:"Major",match:91,
    ep:"US Charges Raúl Castro with Murder",
@@ -1009,7 +1015,7 @@ var DATA = [
    dt:["International bureau","Geographic diversity","Breaking story","Trending now"],
    scores:{quality:91,structure:88,relevance:91,clipability:82,credibility:96,geodiversity:98}},
 
-  {id:5,cat:['world'],show:"Desert Island Discs",outlet:"BBC Radio 4",init:"DID",
+  {id:5,tier:'major',cat:['world'],show:"Desert Island Discs",outlet:"BBC Radio 4",init:"DID",
    logoBg:"linear-gradient(135deg,#1a0a2d,#3d1a5c)",cardBg:"linear-gradient(160deg,#110820,#060308)",
    ac:"#6ea8ff",city:"London, UK",sz:"large",szLbl:"Major",match:86,
    ep:"Cillian Murphy",
@@ -1021,7 +1027,7 @@ var DATA = [
    dt:["BBC legacy","Iconic interview","World voice","Highly quotable"],
    scores:{quality:91,structure:88,relevance:86,clipability:90,credibility:96,geodiversity:88}},
 
-  {id:7,cat:['tech','politics'],show:"Pivot",outlet:"Vox Media",init:"PV",
+  {id:7,tier:'major',cat:['tech','politics'],show:"Pivot",outlet:"Vox Media",init:"PV",
    logoBg:"linear-gradient(135deg,#1a0a08,#402510)",cardBg:"linear-gradient(160deg,#100806,#060403)",
    ac:"#ff7a47",city:"New York, NY",sz:"large",szLbl:"Major",match:89,
    ep:"Elon's Big Loss, Trump's Stock Trades, and OpenAI vs Apple",
@@ -1033,7 +1039,7 @@ var DATA = [
    dt:["Top clip score","Tech-politics beat","High shareability","Kara Swisher"],
    scores:{quality:89,structure:85,relevance:89,clipability:95,credibility:90,geodiversity:58}},
 
-  {id:12,cat:['politics','tech'],show:"The Ezra Klein Show",outlet:"New York Times",init:"EK",
+  {id:12,tier:'major',cat:['politics','tech'],show:"The Ezra Klein Show",outlet:"New York Times",init:"EK",
    logoBg:"linear-gradient(135deg,#0a0a1a,#18183a)",cardBg:"linear-gradient(160deg,#060610,#020208)",
    ac:"#8fa8d4",city:"New York, NY",sz:"large",szLbl:"Major",match:91,
    ep:"Is It Time to Break the Two-Party System?",
@@ -1045,7 +1051,7 @@ var DATA = [
    dt:["NYT flagship","Expert sourcing","High credibility","Long-form depth"],
    scores:{quality:92,structure:94,relevance:91,clipability:87,credibility:95,geodiversity:62}},
 
-  {id:13,cat:['local','science'],show:"The Sprawl",outlet:"Canadaland · Calgary",init:"SP",
+  {id:13,tier:'indie',cat:['local','science'],show:"The Sprawl",outlet:"Canadaland · Calgary",init:"SP",
    logoBg:"linear-gradient(135deg,#081820,#104038)",cardBg:"linear-gradient(160deg,#060e14,#030608)",
    ac:"#47d4c8",city:"Calgary, AB",sz:"micro",szLbl:"Hidden gem",match:88,
    ep:"The Paper Chase: How 4 Calgarians Made Their Cities Better With Bookshops",
@@ -1057,7 +1063,7 @@ var DATA = [
    dt:["Reader-funded newsroom","Urban planning niche","International voice","Environmental reporting"],
    scores:{quality:77,structure:81,relevance:88,clipability:84,credibility:83,geodiversity:99}},
 
-  {id:16,cat:['world','politics'],show:"The Daily",outlet:"New York Times",init:"TD",
+  {id:16,tier:'major',cat:['world','politics'],show:"The Daily",outlet:"New York Times",init:"TD",
    logoBg:"linear-gradient(135deg,#0a0a0a,#2a2a2a)",cardBg:"linear-gradient(160deg,#080808,#030303)",
    ac:"#c8c8c8",city:"New York, NY",sz:"large",szLbl:"Major",match:80,
    ep:"The Case Against Cuba's Former President",
@@ -1960,7 +1966,8 @@ function finishSignIn() {
 // ── STATE ─────────────────────────────────────────────────────────────────────
 var liked={}, saved={}, followed={};
 var currentFilter='all';
-var filteredData=DATA.slice();
+var activeTab='discover';
+var filteredData=DATA.filter(function(c){return c.tier==='indie';});
 
 // ── HELPERS ──────────────────────────────────────────────────────────────────
 function szClass(s){return s==='micro'?'size-micro':s==='mid'?'size-mid':'size-large'}
@@ -2082,33 +2089,51 @@ function doShare(id){
 function doInfo(id,ev){if(ev)ev.stopPropagation();var p=document.getElementById('dp'+id);if(p)p.classList.toggle('open');}
 
 // ── FILTERING ─────────────────────────────────────────────────────────────────
+// Returns the base dataset for the current tab (before category filter)
+function getBaseData(){
+  if(activeTab==='discover') return DATA.filter(function(c){return c.tier==='indie';});
+  if(activeTab==='trending') return DATA.slice().sort(function(){return Math.random()-0.5;});
+  return DATA.slice(); // allshows
+}
+
 function filterCat(el,cat){
   document.querySelectorAll('.cat-pill').forEach(function(p){p.classList.remove('active')});
   el.classList.add('active');
   currentFilter=cat;
-  filteredData=cat==='all'?DATA:DATA.filter(function(c){return c.cat.indexOf(cat)>-1});
+  var base=getBaseData();
+  filteredData=cat==='all'?base:base.filter(function(c){return c.cat.indexOf(cat)>-1;});
   render(filteredData);
   document.getElementById('feed').scrollTop=0;
 }
 
 // ── VIEW SWITCHING ─────────────────────────────────────────────────────────────
 function switchView(tab){
+  activeTab=tab;
   document.querySelectorAll('.view-tab').forEach(function(t){t.classList.remove('active')});
   var el=document.getElementById('vt-'+tab);
   if(el)el.classList.add('active');
-  var catRow=document.getElementById('catRow');
-  if(tab==='following'){
-    if(catRow)catRow.style.display='none';
-    showFollowingView();
-  } else {
-    if(catRow)catRow.style.display='';
-    closeFollowing();
-    if(tab==='trending'){
-      var trending=DATA.slice().sort(function(a,b){return b.match-a.match});
-      render(trending);
-    } else {
-      render(filteredData);
-    }
+
+  // Show/hide discover badge
+  var badge=document.getElementById('discoverBadge');
+  if(badge)badge.style.display=(tab==='discover')?'':'none';
+
+  // Reset cat pills to "All"
+  document.querySelectorAll('.cat-pill').forEach(function(p){p.classList.remove('active')});
+  var allPill=document.querySelector('.cat-pill[onclick*="\'all\'"]');
+  if(allPill)allPill.classList.add('active');
+  currentFilter='all';
+
+  // Stop playing audio before switching context
+  stopCurrentAudio();
+
+  // Build filtered set for new tab
+  filteredData=getBaseData();
+  render(filteredData);
+  document.getElementById('feed').scrollTop=0;
+
+  // Restart autoplay with new filtered set
+  if(autoplayOn&&filteredData.length>0){
+    setTimeout(function(){doPlay(filteredData[0].id);},300);
   }
 }
 
@@ -2206,8 +2231,7 @@ function closeAllOverlays() {
 
 function showHome(){
   closeAllOverlays();
-  switchView('foryou');
-  render(filteredData);
+  switchView('discover');
   setNav('nav-home');
 }
 
@@ -2252,7 +2276,7 @@ function applyDiscoverMode(){
   else if(mode==='local') sorted=DATA.slice().sort(function(a,b){return b.scores.geodiversity-a.scores.geodiversity});
   else sorted=DATA.slice();
   filteredData=sorted;
-  switchView('foryou');
+  switchView('allshows');
   render(sorted);
   var names={default:'Default Mix',credibility:'Credibility Focus',hidden:'Hidden Gems',trending:'Trending Now',local:'Local Focus'};
   showToast('Discovery: '+names[mode],true);
@@ -2339,7 +2363,7 @@ function initSwipeHint() {
 }
 
 // ── INIT ──────────────────────────────────────────────────────────────────────
-render(DATA);
+render(filteredData);
 initFeedAutoplay();
 initSwipeHint();
 
