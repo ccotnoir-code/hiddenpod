@@ -405,6 +405,52 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--text);font-fam
 .unlock-pro-btn{width:100%;padding:12px;border-radius:12px;border:none;background:var(--green);color:white;font-size:14px;font-weight:700;cursor:pointer;font-family:var(--font-b);margin-bottom:8px;transition:opacity 0.15s}
 .unlock-pro-btn:active{opacity:0.85}
 .unlock-dl-btn{width:100%;padding:12px;border-radius:12px;border:1.5px solid rgba(255,255,255,0.15);background:transparent;color:rgba(255,255,255,0.55);font-size:13px;cursor:pointer;font-family:var(--font-b)}
+/* ── CREATOR DASH INTERNAL NAV ── */
+.dash-nav-tabs{display:flex;gap:4px;padding:0 20px 14px;border-bottom:1px solid rgba(255,255,255,0.06);margin-bottom:0}
+.dash-nav-tab{font-family:var(--font-d);font-size:12px;font-weight:700;padding:6px 14px;border-radius:16px;color:var(--muted);cursor:pointer;transition:all 0.18s;border:1px solid transparent;user-select:none}
+.dash-nav-tab.active{background:rgba(26,107,60,0.15);border-color:rgba(26,107,60,0.35);color:#6fcf97}
+.dash-nav-tab:not(.active):hover{color:var(--text)}
+/* ── TWO-TIER PRICING ── */
+.pricing-tiers{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.pricing-tier{border-radius:12px;padding:14px;border:1px solid;display:flex;flex-direction:column}
+.tier-starter{background:rgba(26,107,60,0.08);border-color:rgba(26,107,60,0.28)}
+.tier-pro{background:rgba(232,255,71,0.04);border-color:rgba(232,255,71,0.22)}
+.tier-badge{font-family:var(--font-d);font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px}
+.tier-starter .tier-badge{color:#6fcf97}
+.tier-pro .tier-badge{color:var(--accent)}
+.tier-price{font-family:var(--font-d);font-size:20px;font-weight:800;line-height:1;margin-bottom:2px}
+.tier-annual{font-size:10px;color:var(--muted);margin-bottom:8px}
+.tier-features{font-size:10.5px;color:rgba(240,240,245,0.48);line-height:1.65;flex:1;margin-bottom:10px}
+.tier-cta{width:100%;padding:9px;border-radius:10px;border:none;font-family:var(--font-d);font-size:12px;font-weight:700;cursor:pointer;transition:opacity 0.15s;margin-top:auto}
+.tier-cta.starter{background:var(--green);color:white}
+.tier-cta.pro{background:var(--accent);color:#0a0a0f}
+.tier-cta:active{opacity:0.8}
+/* ── PRO-GATED FEATURE ROWS ── */
+.pro-locked-section{margin:0 20px 14px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.07);border-radius:14px;padding:14px}
+.pro-locked-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.05)}
+.pro-locked-row:last-child{border-bottom:none;padding-bottom:0}
+.pro-locked-name{font-family:var(--font-d);font-size:12px;font-weight:700;color:rgba(240,240,245,0.35)}
+.pro-badge-pill{font-family:var(--font-d);font-size:9px;font-weight:700;background:rgba(232,255,71,0.1);border:1px solid rgba(232,255,71,0.25);color:var(--accent);padding:2px 7px;border-radius:8px;text-transform:uppercase;letter-spacing:0.5px;display:flex;align-items:center;gap:4px}
+/* ── NEWSLETTER SECTION ── */
+.nl-brief-head{padding:20px 20px 6px}
+.nl-brief-title{font-family:var(--font-d);font-size:18px;font-weight:800;margin-bottom:3px}
+.nl-brief-sub{font-family:var(--font-d);font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:rgba(26,107,60,0.9);margin-bottom:0}
+.nl-brief-desc{font-size:13px;color:rgba(240,240,245,0.5);line-height:1.6;padding:8px 20px 14px}
+.nl-form-row{display:flex;gap:8px;padding:0 20px 6px}
+.nl-email-input{flex:1;min-width:0;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.11);border-radius:10px;padding:10px 12px;color:var(--text);font-family:var(--font-b);font-size:13px;outline:none;transition:border-color 0.18s}
+.nl-email-input:focus{border-color:rgba(26,107,60,0.6)}
+.nl-email-input::placeholder{color:rgba(240,240,245,0.25)}
+.nl-sub-btn{background:var(--green);color:white;border:none;border-radius:10px;padding:10px 16px;font-family:var(--font-d);font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;transition:opacity 0.15s}
+.nl-sub-btn:active{opacity:0.8}
+.nl-confirm{padding:6px 20px 0;font-size:12px;color:#6fcf97;font-weight:600;font-family:var(--font-d);display:none}
+.issue-cards{padding:16px 20px;display:flex;flex-direction:column;gap:10px}
+.issue-card{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:12px;padding:14px;transition:border-color 0.18s}
+.issue-card:hover{border-color:rgba(26,107,60,0.3)}
+.issue-card-date{font-size:10px;font-family:var(--font-d);font-weight:600;letter-spacing:0.5px;color:rgba(240,240,245,0.28);margin-bottom:5px}
+.issue-card-title{font-family:var(--font-d);font-size:13px;font-weight:700;line-height:1.35;margin-bottom:8px}
+.issue-card-link{font-size:11px;color:#6fcf97;font-weight:600;font-family:var(--font-d);text-decoration:none}
+/* ── RANKINGS PLACEHOLDER ── */
+.dash-coming-soon{padding:48px 20px;text-align:center;color:rgba(240,240,245,0.3);font-size:13px}
 .creator-badge{display:inline-flex;align-items:center;padding:2px 7px;border-radius:9px;background:rgba(71,255,232,0.12);border:1px solid rgba(71,255,232,0.3);color:#47ffe8;font-size:9px;font-weight:700;font-family:var(--font-d);margin-left:5px;letter-spacing:0.02em;vertical-align:middle}
 .dash-footer{padding:12px 20px 40px;border-top:1px solid rgba(255,255,255,0.06);display:flex;flex-direction:column;gap:8px}
 .dash-ftr-btn{padding:12px;border-radius:12px;border:1px solid rgba(255,255,255,0.1);background:transparent;color:rgba(255,255,255,0.5);font-size:13px;cursor:pointer;font-family:var(--font-b);transition:opacity 0.15s}
@@ -832,8 +878,8 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--text);font-fam
         <div style="display:flex;align-items:baseline;gap:3px">
           <span class="gauge-score-num">71</span><span class="gauge-denom">/100</span>
         </div>
-        <div class="gauge-meta-label">Overall Score</div>
-        <div class="gauge-tagline">Strong performance — room to grow on credibility and structure.</div>
+        <div class="gauge-meta-label">PodSignal Score</div>
+        <div class="gauge-tagline">Strong PodSignal score — room to grow on consistency and structure.</div>
       </div>
     </div>
   </div>
@@ -844,6 +890,15 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--text);font-fam
     <div class="dash-stat"><div class="dash-stat-n">12</div><div class="dash-stat-l">Follows</div></div>
     <div class="dash-stat"><div class="dash-stat-n">9</div><div class="dash-stat-l">Subscribers</div></div>
   </div>
+  <!-- Internal nav tabs -->
+  <div class="dash-nav-tabs">
+    <div class="dash-nav-tab active" data-tab="overview" onclick="showDashTab('overview')">Overview</div>
+    <div class="dash-nav-tab" data-tab="newsletter" onclick="showDashTab('newsletter')">Newsletter</div>
+    <div class="dash-nav-tab" data-tab="rankings" onclick="showDashTab('rankings')">Rankings</div>
+  </div>
+
+  <!-- OVERVIEW TAB -->
+  <div id="dashTabOverview">
   <!-- Episode list -->
   <div class="dash-section">
     <div class="dash-sec-title">Recent Episodes</div>
@@ -863,27 +918,27 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--text);font-fam
           <div class="ep-score-val" id="aqv1">74/100</div>
         </div>
         <div class="ep-score-item locked">
-          <div class="score-blurred"><div class="ep-score-label">Structure</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" style="width:68%"></div></div><div class="ep-score-val">68/100</div></div>
+          <div class="score-blurred"><div class="ep-score-label">Content Structure</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" style="width:68%"></div></div><div class="ep-score-val">68/100</div></div>
           <div class="lock-overlay"><span class="lock-icon">🔒</span></div>
         </div>
         <div class="ep-score-item locked">
-          <div class="score-blurred"><div class="ep-score-label">Credibility</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" style="width:81%"></div></div><div class="ep-score-val">81/100</div></div>
+          <div class="score-blurred"><div class="ep-score-label">Consistency</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" style="width:81%"></div></div><div class="ep-score-val">81/100</div></div>
           <div class="lock-overlay"><span class="lock-icon">🔒</span></div>
         </div>
         <div class="ep-score-item locked">
-          <div class="score-blurred"><div class="ep-score-label">Relevance</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" style="width:76%"></div></div><div class="ep-score-val">76/100</div></div>
+          <div class="score-blurred"><div class="ep-score-label">Topic Relevance</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" style="width:76%"></div></div><div class="ep-score-val">76/100</div></div>
           <div class="lock-overlay"><span class="lock-icon">🔒</span></div>
         </div>
         <div class="ep-score-item locked">
-          <div class="score-blurred"><div class="ep-score-label">Clipability</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" style="width:63%"></div></div><div class="ep-score-val">63/100</div></div>
+          <div class="score-blurred"><div class="ep-score-label">Clip-ability</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" style="width:63%"></div></div><div class="ep-score-val">63/100</div></div>
           <div class="lock-overlay"><span class="lock-icon">🔒</span></div>
         </div>
         <div class="ep-score-item locked">
-          <div class="score-blurred"><div class="ep-score-label">Geo Diversity</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" style="width:55%"></div></div><div class="ep-score-val">55/100</div></div>
+          <div class="score-blurred"><div class="ep-score-label">Geo Relevance</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" style="width:55%"></div></div><div class="ep-score-val">55/100</div></div>
           <div class="lock-overlay"><span class="lock-icon">🔒</span></div>
         </div>
         <div class="ep-score-item locked" style="grid-column:1/-1">
-          <div class="score-blurred"><div class="ep-score-label">Uniqueness</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" style="width:72%"></div></div><div class="ep-score-val">72/100</div></div>
+          <div class="score-blurred"><div class="ep-score-label">Originality</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" style="width:72%"></div></div><div class="ep-score-val">72/100</div></div>
           <div class="lock-overlay"><span class="lock-icon">🔒</span></div>
         </div>
       </div>
@@ -904,27 +959,27 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--text);font-fam
           <div class="ep-score-val" id="aqv2">80/100</div>
         </div>
         <div class="ep-score-item locked">
-          <div class="score-blurred"><div class="ep-score-label">Structure</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" style="width:71%"></div></div><div class="ep-score-val">71/100</div></div>
+          <div class="score-blurred"><div class="ep-score-label">Content Structure</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" style="width:71%"></div></div><div class="ep-score-val">71/100</div></div>
           <div class="lock-overlay"><span class="lock-icon">🔒</span></div>
         </div>
         <div class="ep-score-item locked">
-          <div class="score-blurred"><div class="ep-score-label">Credibility</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" style="width:79%"></div></div><div class="ep-score-val">79/100</div></div>
+          <div class="score-blurred"><div class="ep-score-label">Consistency</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" style="width:79%"></div></div><div class="ep-score-val">79/100</div></div>
           <div class="lock-overlay"><span class="lock-icon">🔒</span></div>
         </div>
         <div class="ep-score-item locked">
-          <div class="score-blurred"><div class="ep-score-label">Relevance</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" style="width:84%"></div></div><div class="ep-score-val">84/100</div></div>
+          <div class="score-blurred"><div class="ep-score-label">Topic Relevance</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" style="width:84%"></div></div><div class="ep-score-val">84/100</div></div>
           <div class="lock-overlay"><span class="lock-icon">🔒</span></div>
         </div>
         <div class="ep-score-item locked">
-          <div class="score-blurred"><div class="ep-score-label">Clipability</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" style="width:67%"></div></div><div class="ep-score-val">67/100</div></div>
+          <div class="score-blurred"><div class="ep-score-label">Clip-ability</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" style="width:67%"></div></div><div class="ep-score-val">67/100</div></div>
           <div class="lock-overlay"><span class="lock-icon">🔒</span></div>
         </div>
         <div class="ep-score-item locked">
-          <div class="score-blurred"><div class="ep-score-label">Geo Diversity</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" style="width:61%"></div></div><div class="ep-score-val">61/100</div></div>
+          <div class="score-blurred"><div class="ep-score-label">Geo Relevance</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" style="width:61%"></div></div><div class="ep-score-val">61/100</div></div>
           <div class="lock-overlay"><span class="lock-icon">🔒</span></div>
         </div>
         <div class="ep-score-item locked" style="grid-column:1/-1">
-          <div class="score-blurred"><div class="ep-score-label">Uniqueness</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" style="width:85%"></div></div><div class="ep-score-val">85/100</div></div>
+          <div class="score-blurred"><div class="ep-score-label">Originality</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" style="width:85%"></div></div><div class="ep-score-val">85/100</div></div>
           <div class="lock-overlay"><span class="lock-icon">🔒</span></div>
         </div>
       </div>
@@ -945,39 +1000,122 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--text);font-fam
           <div class="ep-score-val" id="aqv3">65/100</div>
         </div>
         <div class="ep-score-item locked">
-          <div class="score-blurred"><div class="ep-score-label">Structure</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" style="width:77%"></div></div><div class="ep-score-val">77/100</div></div>
+          <div class="score-blurred"><div class="ep-score-label">Content Structure</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" style="width:77%"></div></div><div class="ep-score-val">77/100</div></div>
           <div class="lock-overlay"><span class="lock-icon">🔒</span></div>
         </div>
         <div class="ep-score-item locked">
-          <div class="score-blurred"><div class="ep-score-label">Credibility</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" style="width:62%"></div></div><div class="ep-score-val">62/100</div></div>
+          <div class="score-blurred"><div class="ep-score-label">Consistency</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" style="width:62%"></div></div><div class="ep-score-val">62/100</div></div>
           <div class="lock-overlay"><span class="lock-icon">🔒</span></div>
         </div>
         <div class="ep-score-item locked">
-          <div class="score-blurred"><div class="ep-score-label">Relevance</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" style="width:69%"></div></div><div class="ep-score-val">69/100</div></div>
+          <div class="score-blurred"><div class="ep-score-label">Topic Relevance</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" style="width:69%"></div></div><div class="ep-score-val">69/100</div></div>
           <div class="lock-overlay"><span class="lock-icon">🔒</span></div>
         </div>
         <div class="ep-score-item locked">
-          <div class="score-blurred"><div class="ep-score-label">Clipability</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" style="width:73%"></div></div><div class="ep-score-val">73/100</div></div>
+          <div class="score-blurred"><div class="ep-score-label">Clip-ability</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" style="width:73%"></div></div><div class="ep-score-val">73/100</div></div>
           <div class="lock-overlay"><span class="lock-icon">🔒</span></div>
         </div>
         <div class="ep-score-item locked">
-          <div class="score-blurred"><div class="ep-score-label">Geo Diversity</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" style="width:58%"></div></div><div class="ep-score-val">58/100</div></div>
+          <div class="score-blurred"><div class="ep-score-label">Geo Relevance</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" style="width:58%"></div></div><div class="ep-score-val">58/100</div></div>
           <div class="lock-overlay"><span class="lock-icon">🔒</span></div>
         </div>
         <div class="ep-score-item locked" style="grid-column:1/-1">
-          <div class="score-blurred"><div class="ep-score-label">Uniqueness</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" style="width:66%"></div></div><div class="ep-score-val">66/100</div></div>
+          <div class="score-blurred"><div class="ep-score-label">Originality</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" style="width:66%"></div></div><div class="ep-score-val">66/100</div></div>
           <div class="lock-overlay"><span class="lock-icon">🔒</span></div>
         </div>
       </div>
     </div>
   </div>
-  <!-- Unlock CTA -->
+
+  <!-- Two-tier upgrade CTA -->
   <div class="unlock-cta-box">
-    <div class="unlock-cta-title">Unlock all 7 dimensions</div>
-    <div class="unlock-cta-sub">See the full breakdown — structure, credibility, relevance and more — for every episode.</div>
-    <button class="unlock-pro-btn" onclick="showToast('Upgrade flow coming soon — stay tuned!', true)">Upgrade to Pro — $39/mo</button>
+    <div class="unlock-cta-title">Unlock your full PodSignal score</div>
+    <div class="unlock-cta-sub">Choose the plan that fits — upgrade anytime, cancel anytime.</div>
+    <div class="pricing-tiers">
+      <div class="pricing-tier tier-starter">
+        <div class="tier-badge">Starter</div>
+        <div class="tier-price">$9.99<span>/mo</span></div>
+        <div class="tier-annual">or $89/yr — save 26%</div>
+        <div class="tier-features">All 7 PodSignal dimensions · Category rankings · Newsletter inclusion · Growth recommendations</div>
+        <button class="tier-cta starter" onclick="showToast('Starter plan coming soon ✦', true)">Get Starter</button>
+      </div>
+      <div class="pricing-tier tier-pro">
+        <div class="tier-badge">Pro</div>
+        <div class="tier-price">$39<span>/mo</span></div>
+        <div class="tier-annual">or $349/yr — save 25%</div>
+        <div class="tier-features">Everything in Starter · Guest directory · Competitive benchmarking · Quarterly intelligence reports · Awards eligibility · PodSignal badge</div>
+        <button class="tier-cta pro" onclick="showToast('Pro plan coming soon ✦', true)">Get Pro</button>
+      </div>
+    </div>
     <button class="unlock-dl-btn" id="unlockDlBtn" onclick="openDownloadSheet()">Tell us your monthly downloads</button>
   </div>
+
+  <!-- Pro-gated features preview -->
+  <div class="pro-locked-section">
+    <div class="pro-locked-row">
+      <div class="pro-locked-name">Guest Directory Access</div>
+      <div class="pro-badge-pill">🔒 Pro</div>
+    </div>
+    <div class="pro-locked-row">
+      <div class="pro-locked-name">Competitive Benchmarking</div>
+      <div class="pro-badge-pill">🔒 Pro</div>
+    </div>
+    <div class="pro-locked-row">
+      <div class="pro-locked-name">Quarterly Intelligence Report</div>
+      <div class="pro-badge-pill">🔒 Pro</div>
+    </div>
+    <div class="pro-locked-row">
+      <div class="pro-locked-name">Awards Eligibility</div>
+      <div class="pro-badge-pill">🔒 Pro</div>
+    </div>
+    <div class="pro-locked-row">
+      <div class="pro-locked-name">Downloadable PodSignal Badge</div>
+      <div class="pro-badge-pill">🔒 Pro</div>
+    </div>
+  </div>
+
+  </div><!-- end #dashTabOverview -->
+
+  <!-- NEWSLETTER TAB -->
+  <div id="dashTabNewsletter" style="display:none">
+    <div class="nl-brief-head">
+      <div class="nl-brief-title">The HiddenPod Brief</div>
+      <div class="nl-brief-sub">The indie podcasting industry, scored.</div>
+    </div>
+    <p class="nl-brief-desc">Weekly intelligence for independent podcast creators — rankings, trends, and the metrics that matter.</p>
+    <div class="nl-form-row">
+      <input class="nl-email-input" id="dashNlEmail" type="email" placeholder="your@email.com">
+      <button class="nl-sub-btn" onclick="nlSubscribeDash()">Subscribe</button>
+    </div>
+    <div class="nl-confirm" id="dashNlConfirm">You're on the list. ✦</div>
+    <div class="issue-cards">
+      <div class="issue-card">
+        <div class="issue-card-date">June 2, 2026</div>
+        <div class="issue-card-title">The PodSignal Report: Q2 2026 Rankings Are Live</div>
+        <a href="#" class="issue-card-link" onclick="return false">Read Issue →</a>
+      </div>
+      <div class="issue-card">
+        <div class="issue-card-date">May 26, 2026</div>
+        <div class="issue-card-title">Top 10 Shows to Watch This Month</div>
+        <a href="#" class="issue-card-link" onclick="return false">Read Issue →</a>
+      </div>
+      <div class="issue-card">
+        <div class="issue-card-date">May 19, 2026</div>
+        <div class="issue-card-title">What Separates the Top 5% of Indie Podcasts</div>
+        <a href="#" class="issue-card-link" onclick="return false">Read Issue →</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- RANKINGS TAB -->
+  <div id="dashTabRankings" style="display:none">
+    <div class="dash-coming-soon">
+      <div style="font-size:28px;margin-bottom:12px">📊</div>
+      <div style="font-family:var(--font-d);font-size:14px;font-weight:700;color:rgba(240,240,245,0.5);margin-bottom:6px">Category Rankings</div>
+      <div>See how your show ranks against similar independent podcasts.<br>Coming with Starter.</div>
+    </div>
+  </div>
+
   <!-- Footer -->
   <div class="dash-footer">
     <button onclick="switchToListenerView()" style="width:calc(100% - 0px);padding:14px;border-radius:12px;border:1.5px solid var(--green);background:transparent;color:var(--green);font-size:14px;font-weight:600;cursor:pointer;font-family:var(--font-b);display:block;text-align:center;transition:opacity 0.15s" onmousedown="this.style.opacity='0.8'" onmouseup="this.style.opacity='1'">Switch to Listener View</button>
@@ -1698,6 +1836,29 @@ function showCreatorDashboard() {
 
 function toggleEpRow(row) {
   row.classList.toggle('open');
+}
+
+function showDashTab(tab) {
+  document.querySelectorAll('.dash-nav-tab').forEach(function(t){ t.classList.remove('active'); });
+  var activeEl = document.querySelector('.dash-nav-tab[data-tab="'+tab+'"]');
+  if (activeEl) activeEl.classList.add('active');
+  ['Overview','Newsletter','Rankings'].forEach(function(t){
+    var el = document.getElementById('dashTab'+t);
+    if (el) el.style.display = (t.toLowerCase() === tab) ? 'block' : 'none';
+  });
+}
+
+function nlSubscribeDash() {
+  var input = document.getElementById('dashNlEmail');
+  var confirm = document.getElementById('dashNlConfirm');
+  if (!input || !input.value.trim() || !input.value.includes('@')) {
+    showToast('Enter a valid email address');
+    return;
+  }
+  if (input) input.style.display = 'none';
+  var formRow = input ? input.parentNode : null;
+  if (formRow) formRow.style.display = 'none';
+  if (confirm) confirm.style.display = 'block';
 }
 
 function openDownloadSheet() {
