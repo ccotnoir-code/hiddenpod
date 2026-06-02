@@ -213,12 +213,21 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--text);font-fam
 .dp-tags{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:12px}
 .dp-tag{font-size:10px;padding:2px 8px;border-radius:18px;border:1px solid rgba(255,255,255,0.09);color:var(--muted)}
 .dp-tag.hi{background:rgba(232,255,71,0.08);border-color:rgba(232,255,71,0.28);color:var(--accent)}
-.dp-scores{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-bottom:12px}
-.dp-score-item{background:rgba(255,255,255,0.04);border-radius:8px;padding:6px 8px}
-.dp-score-label{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:3px}
-.dp-score-bar{height:3px;background:rgba(255,255,255,0.1);border-radius:2px;overflow:hidden}
+.dp-scores{display:flex;flex-direction:column;gap:8px;margin-bottom:10px}
+.dp-score-item{background:rgba(255,255,255,0.04);border-radius:8px;padding:8px 10px}
+.dp-score-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px}
+.dp-score-label{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;font-family:var(--font-d);font-weight:600}
+.dp-score-val{font-size:10px;font-weight:700;color:var(--accent);font-family:var(--font-d)}
+.dp-score-weight{font-size:9px;color:rgba(240,240,245,0.25);font-family:var(--font-d)}
+.dp-score-bar{height:3px;background:rgba(255,255,255,0.1);border-radius:2px;overflow:hidden;margin-bottom:4px}
 .dp-score-fill{height:100%;border-radius:2px;background:var(--green)}
-.dp-score-val{font-size:10px;font-weight:600;color:var(--text);font-family:var(--font-d);margin-top:2px}
+.dp-score-why{font-size:10px;color:rgba(240,240,245,0.45);line-height:1.4}
+.dp-momentum{margin-bottom:8px;background:rgba(26,107,60,0.12);border:1px solid rgba(26,107,60,0.3);border-radius:8px;padding:7px 10px}
+.dp-momentum-label{font-family:var(--font-d);font-size:9px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;color:#6fcf97;margin-bottom:2px}
+.dp-momentum-val{font-size:11px;color:rgba(240,240,245,0.7);line-height:1.4}
+.dp-breakout{display:inline-flex;align-items:center;gap:4px;font-family:var(--font-d);font-size:9px;font-weight:700;padding:3px 8px;border-radius:8px;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px}
+.dp-breakout.gem{background:rgba(232,255,71,0.1);border:1px solid rgba(232,255,71,0.25);color:var(--accent)}
+.dp-breakout.est{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:var(--muted)}
 .dp-close{width:100%;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.09);background:transparent;color:var(--muted);font-size:11.5px;font-family:var(--font-b);cursor:pointer}
 
 /* ── SWIPE HINT ── */
@@ -613,11 +622,11 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--text);font-fam
     <div class="discover-sub">Choose how the algorithm surfaces episodes for you</div>
     <div class="discover-option active" data-mode="default" onclick="selectDiscoverMode('default')">
       <div class="d-radio"><div class="d-dot"></div></div>
-      <div class="d-text"><div class="d-name">Default Mix</div><div class="d-desc">Balanced across credibility, relevance, and uniqueness</div></div>
+      <div class="d-text"><div class="d-name">Default Mix</div><div class="d-desc">Balanced across all 7 PodSignal dimensions</div></div>
     </div>
     <div class="discover-option" data-mode="credibility" onclick="selectDiscoverMode('credibility')">
       <div class="d-radio"><div class="d-dot"></div></div>
-      <div class="d-text"><div class="d-name">Credibility Focus</div><div class="d-desc">Prioritize expert-sourced, high-verification shows</div></div>
+      <div class="d-text"><div class="d-name">Consistency Focus</div><div class="d-desc">Prioritize shows with stable cadence and high Consistency scores</div></div>
     </div>
     <div class="discover-option" data-mode="hidden" onclick="selectDiscoverMode('hidden')">
       <div class="d-radio"><div class="d-dot"></div></div>
@@ -954,35 +963,13 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--text);font-fam
         <span class="ep-chev">›</span>
       </div>
       <div class="ep-scores-grid">
-        <div class="ep-score-item unlocked">
-          <div class="ep-score-label">Audio Quality</div>
-          <div class="ep-score-bar-bg"><div class="ep-score-bar-fill" id="aq1" style="width:74%"></div></div>
-          <div class="ep-score-val" id="aqv1">74/100</div>
-        </div>
-        <div class="ep-score-item locked">
-          <div class="score-blurred"><div class="ep-score-label">Content Structure</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" style="width:68%"></div></div><div class="ep-score-val">68/100</div></div>
-          <div class="lock-overlay"><span class="lock-icon">🔒</span></div>
-        </div>
-        <div class="ep-score-item locked">
-          <div class="score-blurred"><div class="ep-score-label">Consistency</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" style="width:81%"></div></div><div class="ep-score-val">81/100</div></div>
-          <div class="lock-overlay"><span class="lock-icon">🔒</span></div>
-        </div>
-        <div class="ep-score-item locked">
-          <div class="score-blurred"><div class="ep-score-label">Topic Relevance</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" style="width:76%"></div></div><div class="ep-score-val">76/100</div></div>
-          <div class="lock-overlay"><span class="lock-icon">🔒</span></div>
-        </div>
-        <div class="ep-score-item locked">
-          <div class="score-blurred"><div class="ep-score-label">Clip-ability</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" style="width:63%"></div></div><div class="ep-score-val">63/100</div></div>
-          <div class="lock-overlay"><span class="lock-icon">🔒</span></div>
-        </div>
-        <div class="ep-score-item locked">
-          <div class="score-blurred"><div class="ep-score-label">Geo Relevance</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" style="width:55%"></div></div><div class="ep-score-val">55/100</div></div>
-          <div class="lock-overlay"><span class="lock-icon">🔒</span></div>
-        </div>
-        <div class="ep-score-item locked" style="grid-column:1/-1">
-          <div class="score-blurred"><div class="ep-score-label">Originality</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" style="width:72%"></div></div><div class="ep-score-val">72/100</div></div>
-          <div class="lock-overlay"><span class="lock-icon">🔒</span></div>
-        </div>
+        <div class="ep-score-item unlocked"><div class="ep-score-label">Audio Quality</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" id="aq1" style="width:74%"></div></div><div class="ep-score-val" id="aqv1">74/100</div></div>
+        <div class="ep-score-item unlocked"><div class="ep-score-label">Content Structure</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" style="width:68%"></div></div><div class="ep-score-val">68/100</div></div>
+        <div class="ep-score-item unlocked"><div class="ep-score-label">Topic Relevance</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" style="width:76%"></div></div><div class="ep-score-val">76/100</div></div>
+        <div class="ep-score-item unlocked"><div class="ep-score-label">Clip-ability</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" style="width:63%"></div></div><div class="ep-score-val">63/100</div></div>
+        <div class="ep-score-item unlocked"><div class="ep-score-label">Consistency</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" style="width:81%"></div></div><div class="ep-score-val">81/100</div></div>
+        <div class="ep-score-item unlocked"><div class="ep-score-label">Geographic Fit</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" style="width:55%"></div></div><div class="ep-score-val">55/100</div></div>
+        <div class="ep-score-item unlocked" style="grid-column:1/-1"><div class="ep-score-label">Episode Vitality</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" style="width:72%"></div></div><div class="ep-score-val">72/100</div></div>
       </div>
     </div>
     <!-- EP 2 -->
@@ -995,35 +982,13 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--text);font-fam
         <span class="ep-chev">›</span>
       </div>
       <div class="ep-scores-grid">
-        <div class="ep-score-item unlocked">
-          <div class="ep-score-label">Audio Quality</div>
-          <div class="ep-score-bar-bg"><div class="ep-score-bar-fill" id="aq2" style="width:80%"></div></div>
-          <div class="ep-score-val" id="aqv2">80/100</div>
-        </div>
-        <div class="ep-score-item locked">
-          <div class="score-blurred"><div class="ep-score-label">Content Structure</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" style="width:71%"></div></div><div class="ep-score-val">71/100</div></div>
-          <div class="lock-overlay"><span class="lock-icon">🔒</span></div>
-        </div>
-        <div class="ep-score-item locked">
-          <div class="score-blurred"><div class="ep-score-label">Consistency</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" style="width:79%"></div></div><div class="ep-score-val">79/100</div></div>
-          <div class="lock-overlay"><span class="lock-icon">🔒</span></div>
-        </div>
-        <div class="ep-score-item locked">
-          <div class="score-blurred"><div class="ep-score-label">Topic Relevance</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" style="width:84%"></div></div><div class="ep-score-val">84/100</div></div>
-          <div class="lock-overlay"><span class="lock-icon">🔒</span></div>
-        </div>
-        <div class="ep-score-item locked">
-          <div class="score-blurred"><div class="ep-score-label">Clip-ability</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" style="width:67%"></div></div><div class="ep-score-val">67/100</div></div>
-          <div class="lock-overlay"><span class="lock-icon">🔒</span></div>
-        </div>
-        <div class="ep-score-item locked">
-          <div class="score-blurred"><div class="ep-score-label">Geo Relevance</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" style="width:61%"></div></div><div class="ep-score-val">61/100</div></div>
-          <div class="lock-overlay"><span class="lock-icon">🔒</span></div>
-        </div>
-        <div class="ep-score-item locked" style="grid-column:1/-1">
-          <div class="score-blurred"><div class="ep-score-label">Originality</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" style="width:85%"></div></div><div class="ep-score-val">85/100</div></div>
-          <div class="lock-overlay"><span class="lock-icon">🔒</span></div>
-        </div>
+        <div class="ep-score-item unlocked"><div class="ep-score-label">Audio Quality</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" id="aq2" style="width:80%"></div></div><div class="ep-score-val" id="aqv2">80/100</div></div>
+        <div class="ep-score-item unlocked"><div class="ep-score-label">Content Structure</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" style="width:71%"></div></div><div class="ep-score-val">71/100</div></div>
+        <div class="ep-score-item unlocked"><div class="ep-score-label">Topic Relevance</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" style="width:84%"></div></div><div class="ep-score-val">84/100</div></div>
+        <div class="ep-score-item unlocked"><div class="ep-score-label">Clip-ability</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" style="width:67%"></div></div><div class="ep-score-val">67/100</div></div>
+        <div class="ep-score-item unlocked"><div class="ep-score-label">Consistency</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" style="width:79%"></div></div><div class="ep-score-val">79/100</div></div>
+        <div class="ep-score-item unlocked"><div class="ep-score-label">Geographic Fit</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" style="width:61%"></div></div><div class="ep-score-val">61/100</div></div>
+        <div class="ep-score-item unlocked" style="grid-column:1/-1"><div class="ep-score-label">Episode Vitality</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" style="width:85%"></div></div><div class="ep-score-val">85/100</div></div>
       </div>
     </div>
     <!-- EP 3 -->
@@ -1036,49 +1001,27 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--text);font-fam
         <span class="ep-chev">›</span>
       </div>
       <div class="ep-scores-grid">
-        <div class="ep-score-item unlocked">
-          <div class="ep-score-label">Audio Quality</div>
-          <div class="ep-score-bar-bg"><div class="ep-score-bar-fill" id="aq3" style="width:65%"></div></div>
-          <div class="ep-score-val" id="aqv3">65/100</div>
-        </div>
-        <div class="ep-score-item locked">
-          <div class="score-blurred"><div class="ep-score-label">Content Structure</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" style="width:77%"></div></div><div class="ep-score-val">77/100</div></div>
-          <div class="lock-overlay"><span class="lock-icon">🔒</span></div>
-        </div>
-        <div class="ep-score-item locked">
-          <div class="score-blurred"><div class="ep-score-label">Consistency</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" style="width:62%"></div></div><div class="ep-score-val">62/100</div></div>
-          <div class="lock-overlay"><span class="lock-icon">🔒</span></div>
-        </div>
-        <div class="ep-score-item locked">
-          <div class="score-blurred"><div class="ep-score-label">Topic Relevance</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" style="width:69%"></div></div><div class="ep-score-val">69/100</div></div>
-          <div class="lock-overlay"><span class="lock-icon">🔒</span></div>
-        </div>
-        <div class="ep-score-item locked">
-          <div class="score-blurred"><div class="ep-score-label">Clip-ability</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" style="width:73%"></div></div><div class="ep-score-val">73/100</div></div>
-          <div class="lock-overlay"><span class="lock-icon">🔒</span></div>
-        </div>
-        <div class="ep-score-item locked">
-          <div class="score-blurred"><div class="ep-score-label">Geo Relevance</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" style="width:58%"></div></div><div class="ep-score-val">58/100</div></div>
-          <div class="lock-overlay"><span class="lock-icon">🔒</span></div>
-        </div>
-        <div class="ep-score-item locked" style="grid-column:1/-1">
-          <div class="score-blurred"><div class="ep-score-label">Originality</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" style="width:66%"></div></div><div class="ep-score-val">66/100</div></div>
-          <div class="lock-overlay"><span class="lock-icon">🔒</span></div>
-        </div>
+        <div class="ep-score-item unlocked"><div class="ep-score-label">Audio Quality</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" id="aq3" style="width:65%"></div></div><div class="ep-score-val" id="aqv3">65/100</div></div>
+        <div class="ep-score-item unlocked"><div class="ep-score-label">Content Structure</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" style="width:77%"></div></div><div class="ep-score-val">77/100</div></div>
+        <div class="ep-score-item unlocked"><div class="ep-score-label">Topic Relevance</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" style="width:69%"></div></div><div class="ep-score-val">69/100</div></div>
+        <div class="ep-score-item unlocked"><div class="ep-score-label">Clip-ability</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" style="width:73%"></div></div><div class="ep-score-val">73/100</div></div>
+        <div class="ep-score-item unlocked"><div class="ep-score-label">Consistency</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" style="width:62%"></div></div><div class="ep-score-val">62/100</div></div>
+        <div class="ep-score-item unlocked"><div class="ep-score-label">Geographic Fit</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" style="width:58%"></div></div><div class="ep-score-val">58/100</div></div>
+        <div class="ep-score-item unlocked" style="grid-column:1/-1"><div class="ep-score-label">Episode Vitality</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" style="width:66%"></div></div><div class="ep-score-val">66/100</div></div>
       </div>
     </div>
   </div>
 
   <!-- Two-tier upgrade CTA -->
   <div class="unlock-cta-box">
-    <div class="unlock-cta-title">Unlock your full PodSignal score</div>
-    <div class="unlock-cta-sub">Choose the plan that fits — upgrade anytime, cancel anytime.</div>
+    <div class="unlock-cta-title">See exactly what's driving each score</div>
+    <div class="unlock-cta-sub">Upgrade to Starter to unlock subcategory breakdowns, category rankings, and growth recommendations per dimension.</div>
     <div class="pricing-tiers">
       <div class="pricing-tier tier-starter">
         <div class="tier-badge">Starter</div>
         <div class="tier-price">$9.99<span>/mo</span></div>
         <div class="tier-annual">or $89/yr — save 26%</div>
-        <div class="tier-features">All 7 PodSignal dimensions · Category rankings · Newsletter inclusion · Growth recommendations</div>
+        <div class="tier-features">Subcategory breakdown for all 7 dimensions · Category rankings · Newsletter inclusion · Growth recommendations per dimension</div>
         <button class="tier-cta starter" onclick="showToast('Starter plan coming soon ✦', true)">Get Starter</button>
       </div>
       <div class="pricing-tier tier-pro">
@@ -1213,7 +1156,7 @@ var DATA = [
    dh:"A mid-size show winning on substance",
    db:"Drawing parallels between classical Chinese political philosophy and contemporary governance questions.",
    dt:["Expert sourcing","Breaking news match","Underserved topic","High clip potential"],
-   scores:{quality:88,structure:91,relevance:97,clipability:85,credibility:94,geodiversity:62}},
+   scores:{quality:82,structure:88,relevance:94,clipability:79,consistency:74,geofit:38,vitality:85},momentum:4},
 
   {id:3,tier:'major',cat:['news','world'],show:"Global News Podcast",outlet:"BBC World Service",init:"BBC",
    logoBg:"linear-gradient(135deg,#c00,#8b0000)",cardBg:"linear-gradient(160deg,#1a0808,#0a0404)",
@@ -1225,7 +1168,7 @@ var DATA = [
    dh:"Global coverage you won't get from U.S. outlets",
    db:"Cuba's leadership condemns the US indictment as political theatre while Cuban-American communities respond.",
    dt:["International bureau","Geographic diversity","Breaking story","Trending now"],
-   scores:{quality:91,structure:88,relevance:91,clipability:82,credibility:96,geodiversity:98}},
+   scores:{quality:91,structure:88,relevance:91,clipability:82,consistency:93,geofit:72,vitality:96},momentum:8},
 
   {id:5,tier:'major',cat:['world'],show:"Desert Island Discs",outlet:"BBC Radio 4",init:"DID",
    logoBg:"linear-gradient(135deg,#1a0a2d,#3d1a5c)",cardBg:"linear-gradient(160deg,#110820,#060308)",
@@ -1237,7 +1180,7 @@ var DATA = [
    dh:"BBC's most beloved interview show in a defining moment",
    db:"The Oppenheimer star recalls reading Christopher Nolan's script alone in an office, armed with snacks.",
    dt:["BBC legacy","Iconic interview","World voice","Highly quotable"],
-   scores:{quality:91,structure:88,relevance:86,clipability:90,credibility:96,geodiversity:88}},
+   scores:{quality:94,structure:90,relevance:83,clipability:88,consistency:91,geofit:55,vitality:71},momentum:2},
 
   {id:7,tier:'major',cat:['tech','politics'],show:"Pivot",outlet:"Vox Media",init:"PV",
    logoBg:"linear-gradient(135deg,#1a0a08,#402510)",cardBg:"linear-gradient(160deg,#100806,#060403)",
@@ -1249,7 +1192,7 @@ var DATA = [
    dh:"The tech-politics intersection no one else covers this bluntly",
    db:"Elon Musk loses his lawsuit against Sam Altman and OpenAI after jurors deliberate for less than two hours.",
    dt:["Top clip score","Tech-politics beat","High shareability","Kara Swisher"],
-   scores:{quality:89,structure:85,relevance:89,clipability:95,credibility:90,geodiversity:58}},
+   scores:{quality:89,structure:86,relevance:91,clipability:93,consistency:88,geofit:41,vitality:97},momentum:9},
 
   {id:12,tier:'major',cat:['politics','tech'],show:"The Ezra Klein Show",outlet:"New York Times",init:"EK",
    logoBg:"linear-gradient(135deg,#0a0a1a,#18183a)",cardBg:"linear-gradient(160deg,#060610,#020208)",
@@ -1261,7 +1204,7 @@ var DATA = [
    dh:"The long-form idea interview at its best",
    db:"Why the current redistricting battle could eliminate almost all competitive House elections.",
    dt:["NYT flagship","Expert sourcing","High credibility","Long-form depth"],
-   scores:{quality:92,structure:94,relevance:91,clipability:87,credibility:95,geodiversity:62}},
+   scores:{quality:88,structure:92,relevance:93,clipability:81,consistency:85,geofit:44,vitality:79},momentum:5},
 
   {id:13,tier:'indie',cat:['local','science'],show:"The Sprawl",outlet:"Canadaland · Calgary",init:"SP",
    logoBg:"linear-gradient(135deg,#081820,#104038)",cardBg:"linear-gradient(160deg,#060e14,#030608)",
@@ -1273,7 +1216,7 @@ var DATA = [
    dh:"Canadian civic journalism that belongs in front of a global audience",
    db:"Inside Paper Birch Books, a literary independent bookstore built around the lefty, the literary, and the curious.",
    dt:["Reader-funded newsroom","Urban planning niche","International voice","Environmental reporting"],
-   scores:{quality:77,structure:81,relevance:88,clipability:84,credibility:83,geodiversity:99}},
+   scores:{quality:76,structure:82,relevance:91,clipability:79,consistency:71,geofit:96,vitality:68},momentum:6},
 
   {id:16,tier:'major',cat:['world','politics'],show:"The Daily",outlet:"New York Times",init:"TD",
    logoBg:"linear-gradient(135deg,#0a0a0a,#2a2a2a)",cardBg:"linear-gradient(160deg,#080808,#030303)",
@@ -1285,9 +1228,36 @@ var DATA = [
    dh:"The Daily's strongest clip moment of the month",
    db:"A community reckons with the US indictment of Raúl Castro — and what justice might look like for Cuban Americans.",
    dt:["Top credibility score","Clip density peak","Widely shared","Best-in-class sourcing"],
-   scores:{quality:92,structure:91,relevance:80,clipability:96,credibility:98,geodiversity:82}},
+   scores:{quality:93,structure:91,relevance:87,clipability:94,consistency:97,geofit:58,vitality:93},momentum:7},
 ];
 
+
+// ── PODSIGNAL v1.0 ALGORITHM CONSTANTS ──────────────────────────────────────
+var DIM_NAMES = {
+  quality:     'Audio Quality',
+  structure:   'Content Structure',
+  relevance:   'Topic Relevance',
+  clipability: 'Clip-ability',
+  consistency: 'Consistency',
+  geofit:      'Geographic Fit',
+  vitality:    'Episode Vitality'
+};
+var DIM_WEIGHTS = {
+  quality:14, structure:19, relevance:21,
+  clipability:18, consistency:15, geofit:5, vitality:8
+};
+// Plain-English "why" descriptions per dimension, score-bucketed
+var DIM_WHY = {
+  quality: function(v){ return v>=85?'Excellent clarity, balanced levels, and clean mastering':v>=70?'Strong clarity and balance — filler word density slightly elevated':'Compression issues detected; high filler word density'; },
+  structure: function(v){ return v>=85?'Strong opening hook, coherent topic flow, and clear closing signal':v>=70?'Good narrative arc — segment density slightly below average':'Opening hook takes too long; topic coherence is inconsistent'; },
+  relevance: function(v){ return v>=85?'Title, content, and category are tightly aligned':v>=70?'Strong category alignment — description accuracy could improve':'Significant gap between title promises and content delivered'; },
+  clipability: function(v){ return v>=85?'High quotable density and strong emotional variation throughout':v>=70?'Several strong clip moments — crosstalk rate slightly elevated':'Few clearly quotable moments; silence-to-content ratio elevated'; },
+  consistency: function(v){ return v>=85?'Highly regular cadence and very stable episode length':v>=70?'Solid publication cadence — episode length varies more than average':'Irregular publishing gaps detected; episode length inconsistent'; },
+  geofit: function(v){ return v>=75?'Content geography closely matches listener geography':v>=50?'Moderate local resonance — audience is broader than content focus':'Low local resonance — content and audience geography differ significantly'; },
+  vitality: function(v){ return v>=85?'Trending well above this show\'s own baseline — strong engagement signals':v>=70?'Performing near this show\'s recent average':'Below recent baseline — this episode is showing lower engagement than typical'; }
+};
+// Breakout Index: gap between quality and audience size
+function breakoutIndex(sz){ return sz==='micro'?'Hidden Gem':sz==='large'?'Established':null; }
 
 // ── REAL AUDIO ENGINE ────────────────────────────────────────────────────────
 var audioEl = null;
@@ -2226,14 +2196,33 @@ function buildCard(c,idx){
   var _showHint=false;try{_showHint=idx===0&&!localStorage.getItem('seenSwipeHint');}catch(e){}
   var hint=_showHint?'<div class="swipe-hint-pill" id="swipeHintPill">↑ Swipe to discover</div>':'';
 
-  // Score pills
+  // Score pills — top 3 dims by score, using display names
   var topScores = Object.entries(c.scores).sort((a,b)=>b[1]-a[1]).slice(0,3);
-  var scorePills = topScores.map(([k,v])=>'<span class="score-pill hi">'+k.charAt(0).toUpperCase()+k.slice(1)+' '+v+'</span>').join('');
+  var scorePills = topScores.map(([k,v])=>'<span class="score-pill hi">'+(DIM_NAMES[k]||k)+' '+v+'</span>').join('');
 
-  // Algo score explanation for drawer
-  var scoreItems = Object.entries(c.scores).map(([k,v])=>
-    '<div class="dp-score-item"><div class="dp-score-label">'+k+'</div><div class="dp-score-bar"><div class="dp-score-fill" style="width:'+v+'%"></div></div><div class="dp-score-val">'+v+'/100</div></div>'
-  ).join('');
+  // PodSignal dimensions panel for "Why?" drawer — plain-English descriptions
+  var scoreItems = Object.keys(DIM_NAMES).map(function(k){
+    var v = c.scores[k]||0;
+    var name = DIM_NAMES[k]; var wt = DIM_WEIGHTS[k]; var why = DIM_WHY[k]?DIM_WHY[k](v):'';
+    return '<div class="dp-score-item">'
+      +'<div class="dp-score-header"><span class="dp-score-label">'+name+'</span><span class="dp-score-val">'+v+'</span><span class="dp-score-weight">'+wt+'%</span></div>'
+      +'<div class="dp-score-bar"><div class="dp-score-fill" style="width:'+v+'%"></div></div>'
+      +'<div class="dp-score-why">'+why+'</div>'
+      +'</div>';
+  }).join('');
+
+  // Discovery Momentum bonus
+  var mom = c.momentum||0;
+  var momentumHtml = mom>0
+    ? '<div class="dp-momentum"><div class="dp-momentum-label">Discovery Momentum +'+mom+'</div>'
+      +'<div class="dp-momentum-val">This episode is trending '+Math.round(mom/3*10)/10+'x this show\'s recent average — included in PodSignal score as a sliding bonus.</div></div>'
+    : '';
+
+  // Breakout Index badge
+  var bi = breakoutIndex(c.sz);
+  var breakoutHtml = bi==='Hidden Gem'
+    ? '<span class="dp-breakout gem">✦ Hidden Gem</span>'
+    : bi==='Established' ? '<span class="dp-breakout est">Established</span>' : '';
 
   var tagsH=c.dt.map((t,i)=>'<span class="dp-tag'+(i===0?' hi':'')+'">'+t+'</span>').join('');
 
@@ -2280,8 +2269,10 @@ function buildCard(c,idx){
     +'<div class="dp-handle"></div>'
     +'<div class="dp-title"><div class="dp-dot"></div>'+c.dh+'</div>'
     +'<div class="dp-body">'+c.db+'</div>'
-    +'<div style="font-size:10px;font-weight:600;color:var(--muted);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:6px">Algorithm scores</div>'
+    +breakoutHtml
+    +'<div style="font-size:10px;font-weight:600;color:var(--muted);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:6px">PodSignal Dimensions</div>'
     +'<div class="dp-scores">'+scoreItems+'</div>'
+    +momentumHtml
     +'<div class="dp-tags">'+tagsH+'</div>'
     +'<button class="dp-close" onclick="doInfo('+c.id+',event)">Got it</button>'
     +'</div></div>'
@@ -2505,15 +2496,15 @@ function applyDiscoverMode(){
   closeDiscoverSheet();
   var mode=currentDiscoverMode;
   var sorted;
-  if(mode==='credibility') sorted=DATA.slice().sort(function(a,b){return b.scores.credibility-a.scores.credibility});
+  if(mode==='credibility') sorted=DATA.slice().sort(function(a,b){return b.scores.consistency-a.scores.consistency});
   else if(mode==='hidden') sorted=DATA.filter(function(c){return c.sz==='micro'});
   else if(mode==='trending') sorted=DATA.slice().sort(function(a,b){return b.match-a.match});
-  else if(mode==='local') sorted=DATA.slice().sort(function(a,b){return b.scores.geodiversity-a.scores.geodiversity});
+  else if(mode==='local') sorted=DATA.slice().sort(function(a,b){return b.scores.geofit-a.scores.geofit});
   else sorted=DATA.slice();
   filteredData=sorted;
   switchView('allshows');
   render(sorted);
-  var names={default:'Default Mix',credibility:'Credibility Focus',hidden:'Hidden Gems',trending:'Trending Now',local:'Local Focus'};
+  var names={default:'Default Mix',credibility:'Consistency Focus',hidden:'Hidden Gems',trending:'Trending Now',local:'Local Focus'};
   showToast('Discovery: '+names[mode],true);
 }
 function showProfile() {
