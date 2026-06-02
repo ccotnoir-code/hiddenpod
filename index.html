@@ -31,6 +31,28 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--text);font-fam
 .site-nav-link:hover{color:var(--text)}
 .site-nav-cta{font-family:var(--font-d);font-size:11px;font-weight:700;color:#0a0a0f;background:var(--accent);text-decoration:none;padding:4px 12px;border-radius:14px;transition:opacity 0.15s;white-space:nowrap}
 .site-nav-cta:hover{opacity:0.85}
+/* ── NEWSLETTER OVERLAY ── */
+.nl-overlay{position:fixed;inset:0;z-index:500;display:none;align-items:flex-start;justify-content:center;padding-top:48px;background:rgba(0,0,0,0.55);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)}
+.nl-overlay.open{display:flex}
+.nl-sheet{background:#131318;border:1px solid rgba(255,255,255,0.1);border-radius:20px;width:min(360px,90vw);padding:24px;position:relative;animation:nl-drop 0.22s ease}
+@keyframes nl-drop{from{opacity:0;transform:translateY(-12px)}to{opacity:1;transform:translateY(0)}}
+.nl-sheet-close{position:absolute;top:14px;right:16px;background:none;border:none;color:rgba(240,240,245,0.4);font-size:18px;cursor:pointer;line-height:1;padding:2px 6px;border-radius:8px;transition:color 0.15s}
+.nl-sheet-close:hover{color:var(--text)}
+.nl-sheet-title{font-family:var(--font-d);font-size:17px;font-weight:800;margin-bottom:2px}
+.nl-sheet-sub{font-family:var(--font-d);font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:rgba(26,107,60,0.9);margin-bottom:10px}
+.nl-sheet-desc{font-size:13px;color:rgba(240,240,245,0.5);line-height:1.6;margin-bottom:18px}
+.nl-sheet-form{display:flex;gap:8px;margin-bottom:6px}
+.nl-sheet-input{flex:1;min-width:0;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.11);border-radius:10px;padding:10px 12px;color:var(--text);font-family:var(--font-b);font-size:13px;outline:none;transition:border-color 0.18s}
+.nl-sheet-input:focus{border-color:rgba(26,107,60,0.6)}
+.nl-sheet-input::placeholder{color:rgba(240,240,245,0.25)}
+.nl-sheet-btn{background:var(--green);color:white;border:none;border-radius:10px;padding:10px 16px;font-family:var(--font-d);font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;transition:opacity 0.15s;flex-shrink:0}
+.nl-sheet-btn:active{opacity:0.8}
+.nl-sheet-confirm{font-size:12px;color:#6fcf97;font-weight:600;font-family:var(--font-d);display:none;padding:2px 0 6px}
+.nl-issue-list{display:flex;flex-direction:column;gap:8px;margin-top:14px;padding-top:14px;border-top:1px solid rgba(255,255,255,0.07)}
+.nl-issue{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:10px;padding:11px 13px}
+.nl-issue-date{font-size:10px;font-family:var(--font-d);font-weight:600;letter-spacing:0.5px;color:rgba(240,240,245,0.28);margin-bottom:4px}
+.nl-issue-title{font-family:var(--font-d);font-size:12px;font-weight:700;line-height:1.35;margin-bottom:6px}
+.nl-issue-link{font-size:11px;color:#6fcf97;font-weight:600;font-family:var(--font-d);text-decoration:none;cursor:default}
 
 /* ── FULL SCREEN SHELL ── */
 .wrap{background:var(--bg);display:flex;flex-direction:column;height:100dvh}
@@ -475,7 +497,7 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--text);font-fam
     <a href="/" class="site-nav-wm">hidden<span class="p">pod</span></a>
     <a href="/creators" class="site-nav-link">For Creators</a>
     <a href="/rankings" class="site-nav-link">Rankings</a>
-    <a href="/#newsletter" class="site-nav-link">Newsletter</a>
+    <a href="#" class="site-nav-link" onclick="openNlOverlay();return false;">Newsletter</a>
   </div>
   <a href="/" class="site-nav-link" style="color:rgba(240,240,245,0.3)">← hiddenpod.com</a>
 </nav>
@@ -1141,6 +1163,38 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--text);font-fam
     <button onclick="switchToListenerView()" style="width:calc(100% - 0px);padding:14px;border-radius:12px;border:1.5px solid var(--green);background:transparent;color:var(--green);font-size:14px;font-weight:600;cursor:pointer;font-family:var(--font-b);display:block;text-align:center;transition:opacity 0.15s" onmousedown="this.style.opacity='0.8'" onmouseup="this.style.opacity='1'">Switch to Listener View</button>
     <button class="dash-ftr-btn danger" onclick="doSignOut()">Sign Out</button>
     <p onclick="doSignOut()" style="font-size:11px;color:rgba(255,255,255,0.2);text-align:center;padding:8px 20px 16px;cursor:pointer">Using someone else's device? &nbsp;<span style="text-decoration:underline">Sign in with a different account →</span></p>
+  </div>
+</div>
+
+<!-- NEWSLETTER OVERLAY -->
+<div class="nl-overlay" id="nlOverlay" onclick="nlOverlayBgClick(event)">
+  <div class="nl-sheet">
+    <button class="nl-sheet-close" onclick="closeNlOverlay()">✕</button>
+    <div class="nl-sheet-title">The HiddenPod Brief</div>
+    <div class="nl-sheet-sub">The indie podcasting industry, scored.</div>
+    <p class="nl-sheet-desc">Weekly intelligence for independent podcast creators — rankings, trends, and the metrics that matter. Free every Friday.</p>
+    <div class="nl-sheet-form" id="nlSheetForm">
+      <input class="nl-sheet-input" id="nlSheetEmail" type="email" placeholder="your@email.com">
+      <button class="nl-sheet-btn" onclick="nlSheetSubscribe()">Subscribe</button>
+    </div>
+    <div class="nl-sheet-confirm" id="nlSheetConfirm">You're on the list. ✦</div>
+    <div class="nl-issue-list">
+      <div class="nl-issue">
+        <div class="nl-issue-date">June 2, 2026</div>
+        <div class="nl-issue-title">The PodSignal Report: Q2 2026 Rankings Are Live</div>
+        <a href="#" class="nl-issue-link" onclick="return false">Read Issue →</a>
+      </div>
+      <div class="nl-issue">
+        <div class="nl-issue-date">May 26, 2026</div>
+        <div class="nl-issue-title">Top 10 Shows to Watch This Month</div>
+        <a href="#" class="nl-issue-link" onclick="return false">Read Issue →</a>
+      </div>
+      <div class="nl-issue">
+        <div class="nl-issue-date">May 19, 2026</div>
+        <div class="nl-issue-title">What Separates the Top 5% of Indie Podcasts</div>
+        <a href="#" class="nl-issue-link" onclick="return false">Read Issue →</a>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -2627,6 +2681,28 @@ initSwipeHint();
     try { localStorage.removeItem('hp_user'); } catch(e2) {}
   }
 })();
+
+// ── NEWSLETTER OVERLAY ────────────────────────────────────────────────────────
+function openNlOverlay() {
+  document.getElementById('nlOverlay').classList.add('open');
+}
+function closeNlOverlay() {
+  document.getElementById('nlOverlay').classList.remove('open');
+}
+function nlOverlayBgClick(e) {
+  if (e.target === document.getElementById('nlOverlay')) closeNlOverlay();
+}
+function nlSheetSubscribe() {
+  var input = document.getElementById('nlSheetEmail');
+  var form  = document.getElementById('nlSheetForm');
+  var conf  = document.getElementById('nlSheetConfirm');
+  if (!input || !input.value.trim() || !input.value.includes('@')) {
+    showToast('Enter a valid email address');
+    return;
+  }
+  if (form)  form.style.display  = 'none';
+  if (conf)  conf.style.display  = 'block';
+}
 
 // ── URL PARAM FLOW TRIGGER ─────────────────────────────────────────────────────
 // /discover?flow=creator  → launch creator onboarding
