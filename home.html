@@ -225,9 +225,10 @@ footer{background:rgba(0,0,0,0.4);border-top:1px solid var(--border);padding:56p
       <div class="hero-eyebrow">The quality layer for independent podcasting</div>
       <h1 class="hero-headline">Great podcasts deserve to be found.</h1>
       <p class="hero-sub">PodSignal scores every independent show on seven dimensions of quality — independent of audience size. For the first time, a 300-listener local journalism podcast can outscore an iHeart network show on merit.</p>
+      <div id="heroWelcome" style="display:none;font-size:13px;font-family:var(--font-d);font-weight:600;color:rgba(200,240,0,0.75);margin-bottom:12px"></div>
       <div class="hero-ctas">
-        <a href="/creators" class="btn-primary">Claim your show →</a>
-        <a href="/discover" class="btn-outline">Browse discoveries →</a>
+        <a href="/creators" class="btn-primary" id="heroCreatorCta">Claim your show →</a>
+        <a href="/discover" class="btn-outline" id="heroListenerCta">Browse discoveries →</a>
       </div>
     </div>
     <div class="hero-visual" aria-hidden="true">
@@ -419,7 +420,7 @@ footer{background:rgba(0,0,0,0.4);border-top:1px solid var(--border);padding:56p
             <div class="cf-text"><strong>Share assets</strong> — AI-generated cards for every episode, ready for social</div>
           </div>
         </div>
-        <a href="/creators" class="btn-primary">Claim your show — it's free →</a>
+        <a href="/creators" class="btn-primary" id="creatorSectionCta">Claim your show — it's free →</a>
       </div>
       <div>
         <div class="dash-card">
@@ -552,6 +553,40 @@ function nlSubscribe(){
   document.getElementById('nlEmail').value='';
   showToast('You\'re subscribed — see you Friday ✦');
 }
+
+// ── Auth-aware CTAs ────────────────────────────────────────────────────────────
+(function(){
+  try {
+    var stored = localStorage.getItem('hp_user');
+    if (!stored) return;
+    var u = JSON.parse(stored);
+    if (!u || !u.mode) return;
+
+    var creatorCta     = document.getElementById('heroCreatorCta');
+    var listenerCta    = document.getElementById('heroListenerCta');
+    var sectionCta     = document.getElementById('creatorSectionCta');
+    var welcome        = document.getElementById('heroWelcome');
+    var firstName      = u.name ? u.name.split(' ')[0] : null;
+
+    if (u.mode === 'creator') {
+      if (u.claimedShow && u.claimedShow.name) {
+        // Returning creator with a claimed show → send straight to dashboard
+        if (creatorCta)  { creatorCta.textContent  = 'Go to Dashboard →'; creatorCta.href  = '/discover'; }
+        if (sectionCta)  { sectionCta.textContent  = 'Go to Dashboard →'; sectionCta.href  = '/discover'; }
+        if (welcome)     { welcome.textContent = 'Welcome back — ' + u.claimedShow.name; welcome.style.display = ''; }
+      } else {
+        // Creator logged in but hasn't claimed yet → skip auth step
+        if (creatorCta) creatorCta.href = '/discover?flow=creator';
+        if (sectionCta) sectionCta.href = '/discover?flow=creator';
+        if (welcome && firstName) { welcome.textContent = 'Welcome back, ' + firstName + ' — finish setting up your show'; welcome.style.display = ''; }
+      }
+    } else if (u.mode === 'listener') {
+      // Returning listener → shortcut to feed
+      if (listenerCta) { listenerCta.textContent = 'Go to Discover →'; listenerCta.href = '/discover'; }
+      if (welcome && firstName) { welcome.textContent = 'Welcome back, ' + firstName; welcome.style.display = ''; }
+    }
+  } catch(e) {}
+})();
 </script>
 </body>
 </html>

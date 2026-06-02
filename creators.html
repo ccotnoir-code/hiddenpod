@@ -193,9 +193,10 @@ footer{background:rgba(0,0,0,0.4);border-top:1px solid var(--border);padding:56p
       <div class="eyebrow">For independent podcast creators</div>
       <h1 class="h1">Know exactly where your show stands.</h1>
       <p class="sub">Claim your show and get a free PodSignal score. See how your podcast performs across 7 quality dimensions — independent of audience size — and learn exactly what to improve.</p>
+      <div id="crHeroWelcome" style="display:none;font-size:13px;font-family:var(--font-d);font-weight:600;color:rgba(200,240,0,0.75);margin-bottom:12px"></div>
       <div class="hero-ctas">
-        <a href="/discover?flow=creator" class="btn-primary">Claim your show — it's free →</a>
-        <a href="/discover?flow=listener" class="btn-outline">Explore as a listener</a>
+        <a href="/discover?flow=creator" class="btn-primary" id="crHeroCreatorCta">Claim your show — it's free →</a>
+        <a href="/discover?flow=listener" class="btn-outline" id="crHeroListenerCta">Explore as a listener</a>
       </div>
     </div>
     <!-- Dashboard mockup -->
@@ -386,7 +387,7 @@ footer{background:rgba(0,0,0,0.4);border-top:1px solid var(--border);padding:56p
     <div class="eyebrow" style="text-align:center">Get started today</div>
     <h2 class="cta-band-heading">Your PodSignal score is waiting.</h2>
     <p class="cta-band-sub">Free to claim. No credit card. Takes 5 minutes.</p>
-    <a href="/discover?flow=creator" class="btn-primary" style="display:inline-flex;margin:0 auto">Claim your show →</a>
+    <a href="/discover?flow=creator" class="btn-primary" id="crBandCta" style="display:inline-flex;margin:0 auto">Claim your show →</a>
   </div>
 </div>
 
@@ -426,6 +427,40 @@ function toggleMenu(){
 function toggleFaq(el){
   el.parentNode.classList.toggle('open');
 }
+
+// ── Auth-aware CTAs ────────────────────────────────────────────────────────────
+(function(){
+  try {
+    var stored = localStorage.getItem('hp_user');
+    if (!stored) return;
+    var u = JSON.parse(stored);
+    if (!u || !u.mode) return;
+
+    var heroCta    = document.getElementById('crHeroCreatorCta');
+    var listenCta  = document.getElementById('crHeroListenerCta');
+    var bandCta    = document.getElementById('crBandCta');
+    var welcome    = document.getElementById('crHeroWelcome');
+    var firstName  = u.name ? u.name.split(' ')[0] : null;
+
+    if (u.mode === 'creator') {
+      if (u.claimedShow && u.claimedShow.name) {
+        // Already claimed — shortcut to dashboard
+        if (heroCta)   { heroCta.textContent   = 'Go to Dashboard →'; heroCta.href   = '/discover'; }
+        if (bandCta)   { bandCta.textContent   = 'Go to Dashboard →'; bandCta.href   = '/discover'; }
+        if (welcome)   { welcome.textContent = 'Welcome back — ' + u.claimedShow.name; welcome.style.display = ''; }
+      } else {
+        // Logged in but no show yet — skip auth in flow
+        if (heroCta) heroCta.href = '/discover?flow=creator';
+        if (bandCta) bandCta.href = '/discover?flow=creator';
+        if (welcome && firstName) { welcome.textContent = 'Welcome back, ' + firstName + ' — finish setting up your show'; welcome.style.display = ''; }
+      }
+    } else if (u.mode === 'listener') {
+      // Listener visiting creators page — nudge them to the feed
+      if (listenCta) { listenCta.textContent = 'Go to Discover →'; listenCta.href = '/discover'; }
+      if (welcome && firstName) { welcome.textContent = 'Welcome back, ' + firstName; welcome.style.display = ''; }
+    }
+  } catch(e) {}
+})();
 </script>
 </body>
 </html>
