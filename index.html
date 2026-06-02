@@ -440,6 +440,71 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--text);font-fam
 .score-blurred{filter:blur(3px);pointer-events:none}
 .lock-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
 .lock-icon{font-size:14px;opacity:0.5}
+/* ── SUBCATEGORY DETAIL (creator dashboard) ── */
+.ep-subcats-wrap{display:none;position:relative;margin-top:8px;border-top:1px solid rgba(255,255,255,0.06);padding-top:10px}
+.ep-row.open .ep-subcats-wrap{display:block}
+.ep-subcats-content{display:flex;flex-direction:column;gap:10px;transition:filter 0.6s ease-in}
+.ep-subcats-content.blurred{filter:blur(4px);pointer-events:none;user-select:none}
+.ep-subcat-group{display:flex;flex-direction:column;gap:5px}
+.ep-subcat-group-title{font-family:var(--font-d);font-size:9px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;color:rgba(240,240,245,0.38);margin-bottom:2px}
+.ep-subcat-row{display:flex;align-items:center;gap:8px;min-height:16px}
+.ep-subcat-name{font-size:10.5px;color:rgba(240,240,245,0.55);flex:1;min-width:0}
+.ep-subcat-bar{width:52px;height:3px;background:rgba(255,255,255,0.07);border-radius:2px;overflow:hidden;flex-shrink:0}
+.ep-subcat-fill{height:100%;border-radius:2px;background:rgba(26,107,60,0.85)}
+.ep-subcat-val{font-family:var(--font-d);font-size:9px;font-weight:700;color:rgba(240,240,245,0.48);width:20px;text-align:right;flex-shrink:0}
+.ep-subcats-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:2;cursor:pointer}
+.ep-subcats-prompt{background:rgba(10,10,15,0.88);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:10px 16px;display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);pointer-events:auto}
+.ep-subcats-prompt-icon{font-size:18px}
+.ep-subcats-prompt-text{font-size:11px;color:rgba(240,240,245,0.55);line-height:1.4;max-width:200px}
+.ep-subcats-prompt-btn{font-family:var(--font-d);font-size:11px;font-weight:700;color:#6fcf97;background:rgba(26,107,60,0.1);border:1px solid rgba(26,107,60,0.3);border-radius:10px;padding:5px 12px;cursor:pointer;transition:background 0.15s}
+.ep-subcats-prompt-btn:active{background:rgba(26,107,60,0.25)}
+@keyframes subcat-unlock{0%{opacity:0.5;transform:scale(0.98)}50%{background:rgba(26,107,60,0.12)}100%{opacity:1;transform:scale(1)}}
+.ep-subcat-group.unlocking{animation:subcat-unlock 0.5s ease-out both}
+/* Pro upgrade row (Starter tier only) */
+.pro-upgrade-banner{margin:0 20px 14px;padding:12px 14px;background:rgba(232,255,71,0.03);border:1px solid rgba(232,255,71,0.12);border-radius:12px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.pro-upgrade-banner-text{font-size:12px;color:rgba(240,240,245,0.45);line-height:1.5;flex:1}
+.pro-upgrade-banner-btn{font-family:var(--font-d);font-size:11px;font-weight:700;color:var(--accent);background:rgba(232,255,71,0.06);border:1px solid rgba(232,255,71,0.2);border-radius:10px;padding:5px 10px;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:background 0.15s}
+.pro-upgrade-banner-btn:active{background:rgba(232,255,71,0.12)}
+/* ── UPGRADE MODAL ── */
+.upgrade-modal-overlay{position:fixed;inset:0;z-index:600;background:rgba(0,0,0,0.75);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);display:none;align-items:flex-start;justify-content:center;padding:20px 16px;overflow-y:auto}
+.upgrade-modal-overlay.open{display:flex}
+.upgrade-modal{background:var(--surface);border:1px solid rgba(255,255,255,0.1);border-radius:20px;width:min(400px,100%);position:relative;overflow:hidden}
+.um-close{position:absolute;top:14px;right:16px;background:none;border:none;color:var(--muted);font-size:18px;cursor:pointer;padding:2px 6px;border-radius:8px;line-height:1;transition:color 0.15s;z-index:1}
+.um-close:hover{color:var(--text)}
+.um-step{padding:22px 20px}
+.um-step-title{font-family:var(--font-d);font-size:16px;font-weight:800;margin-bottom:3px}
+.um-step-sub{font-size:12px;color:var(--muted);margin-bottom:16px}
+.um-bill-row{display:flex;gap:0;background:rgba(255,255,255,0.06);border-radius:20px;padding:3px;margin-bottom:16px;align-self:flex-start;width:fit-content}
+.um-bill-btn{font-family:var(--font-d);font-size:11px;font-weight:700;padding:5px 16px;border-radius:16px;border:none;background:transparent;color:var(--muted);cursor:pointer;transition:all 0.15s}
+.um-bill-btn.active{background:var(--surface2);color:var(--text)}
+.um-plans{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.um-plan{border-radius:14px;padding:14px;border:1.5px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.02);cursor:pointer;transition:all 0.15s;display:flex;flex-direction:column}
+.um-plan.selected{border-color:rgba(26,107,60,0.6);background:rgba(26,107,60,0.08)}
+.um-plan-badge{font-family:var(--font-d);font-size:10px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;color:var(--muted);margin-bottom:5px}
+.um-plan.selected .um-plan-badge{color:#6fcf97}
+.um-plan-price{font-family:var(--font-d);font-size:20px;font-weight:800;line-height:1;margin-bottom:1px}
+.um-plan-cycle{font-size:10px;color:var(--muted);margin-bottom:9px}
+.um-plan-features{font-size:10px;color:rgba(240,240,245,0.42);line-height:1.7;flex:1;margin-bottom:10px}
+.um-plan-select-btn{width:100%;padding:9px;border-radius:10px;border:none;font-family:var(--font-d);font-size:12px;font-weight:700;cursor:pointer;transition:all 0.15s;margin-top:auto}
+.um-plan.selected .um-plan-select-btn{background:var(--green);color:white}
+.um-plan:not(.selected) .um-plan-select-btn{background:rgba(255,255,255,0.06);color:var(--muted)}
+.um-maybe{display:block;text-align:center;font-size:12px;color:var(--muted);cursor:pointer;padding:10px;text-decoration:underline;text-decoration-color:transparent;transition:text-decoration-color 0.15s}
+.um-maybe:hover{text-decoration-color:var(--muted)}
+.um-pay-opts{display:flex;flex-direction:column;gap:10px;margin-bottom:14px}
+.um-pay-btn{display:flex;align-items:center;gap:12px;padding:14px 16px;border-radius:14px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.04);cursor:pointer;transition:all 0.15s;font-family:var(--font-d);font-size:13px;font-weight:700;color:var(--text);width:100%;text-align:left}
+.um-pay-btn:hover{background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.2)}
+.um-pay-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;background:rgba(255,255,255,0.06)}
+.um-back{display:block;text-align:center;font-size:12px;color:var(--muted);cursor:pointer;text-decoration:underline;padding:6px;margin-top:2px}
+.um-processing{display:flex;flex-direction:column;align-items:center;padding:44px 20px;gap:14px}
+.um-spinner{width:36px;height:36px;border:3px solid rgba(255,255,255,0.1);border-top-color:var(--green);border-radius:50%;animation:um-spin 0.8s linear infinite}
+@keyframes um-spin{to{transform:rotate(360deg)}}
+.um-proc-text{font-size:13px;color:var(--muted);font-family:var(--font-d);font-weight:600}
+.um-success{display:none;flex-direction:column;align-items:center;padding:40px 20px;gap:10px;text-align:center}
+.um-success-check{width:56px;height:56px;background:rgba(26,107,60,0.15);border:2px solid rgba(26,107,60,0.5);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;animation:um-pop 0.4s cubic-bezier(0.175,0.885,0.32,1.275)}
+@keyframes um-pop{from{transform:scale(0.5);opacity:0}to{transform:scale(1);opacity:1}}
+.um-success-title{font-family:var(--font-d);font-size:18px;font-weight:800}
+.um-success-plan{font-family:var(--font-d);font-size:13px;font-weight:700;color:#6fcf97;margin-bottom:2px}
+.um-success-sub{font-size:12px;color:var(--muted)}
 .unlock-cta-box{margin:0 20px 16px;background:rgba(26,107,60,0.07);border:1px solid rgba(26,107,60,0.22);border-radius:16px;padding:16px;text-align:center}
 .unlock-cta-title{font-size:14px;font-weight:700;font-family:var(--font-d);margin-bottom:3px}
 .unlock-cta-sub{font-size:11px;color:rgba(255,255,255,0.4);margin-bottom:12px}
@@ -971,6 +1036,16 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--text);font-fam
         <div class="ep-score-item unlocked"><div class="ep-score-label">Geographic Fit</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" style="width:55%"></div></div><div class="ep-score-val">55/100</div></div>
         <div class="ep-score-item unlocked" style="grid-column:1/-1"><div class="ep-score-label">Episode Vitality</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" style="width:72%"></div></div><div class="ep-score-val">72/100</div></div>
       </div>
+      <div class="ep-subcats-wrap" id="ep1-subcats">
+        <div class="ep-subcats-content blurred" id="ep1-subcats-content"></div>
+        <div class="ep-subcats-overlay" id="ep1-subcats-overlay" onclick="openUpgradeModal('starter');event.stopPropagation()">
+          <div class="ep-subcats-prompt">
+            <div class="ep-subcats-prompt-icon">🔒</div>
+            <div class="ep-subcats-prompt-text">See exactly what's driving each score</div>
+            <button class="ep-subcats-prompt-btn" onclick="openUpgradeModal('starter');event.stopPropagation()">Upgrade to Starter →</button>
+          </div>
+        </div>
+      </div>
     </div>
     <!-- EP 2 -->
     <div class="ep-row" onclick="toggleEpRow(this)">
@@ -989,6 +1064,16 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--text);font-fam
         <div class="ep-score-item unlocked"><div class="ep-score-label">Consistency</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" style="width:79%"></div></div><div class="ep-score-val">79/100</div></div>
         <div class="ep-score-item unlocked"><div class="ep-score-label">Geographic Fit</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" style="width:61%"></div></div><div class="ep-score-val">61/100</div></div>
         <div class="ep-score-item unlocked" style="grid-column:1/-1"><div class="ep-score-label">Episode Vitality</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" style="width:85%"></div></div><div class="ep-score-val">85/100</div></div>
+      </div>
+      <div class="ep-subcats-wrap" id="ep2-subcats">
+        <div class="ep-subcats-content blurred" id="ep2-subcats-content"></div>
+        <div class="ep-subcats-overlay" id="ep2-subcats-overlay" onclick="openUpgradeModal('starter');event.stopPropagation()">
+          <div class="ep-subcats-prompt">
+            <div class="ep-subcats-prompt-icon">🔒</div>
+            <div class="ep-subcats-prompt-text">See exactly what's driving each score</div>
+            <button class="ep-subcats-prompt-btn" onclick="openUpgradeModal('starter');event.stopPropagation()">Upgrade to Starter →</button>
+          </div>
+        </div>
       </div>
     </div>
     <!-- EP 3 -->
@@ -1009,11 +1094,21 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--text);font-fam
         <div class="ep-score-item unlocked"><div class="ep-score-label">Geographic Fit</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" style="width:58%"></div></div><div class="ep-score-val">58/100</div></div>
         <div class="ep-score-item unlocked" style="grid-column:1/-1"><div class="ep-score-label">Episode Vitality</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" style="width:66%"></div></div><div class="ep-score-val">66/100</div></div>
       </div>
+      <div class="ep-subcats-wrap" id="ep3-subcats">
+        <div class="ep-subcats-content blurred" id="ep3-subcats-content"></div>
+        <div class="ep-subcats-overlay" id="ep3-subcats-overlay" onclick="openUpgradeModal('starter');event.stopPropagation()">
+          <div class="ep-subcats-prompt">
+            <div class="ep-subcats-prompt-icon">🔒</div>
+            <div class="ep-subcats-prompt-text">See exactly what's driving each score</div>
+            <button class="ep-subcats-prompt-btn" onclick="openUpgradeModal('starter');event.stopPropagation()">Upgrade to Starter →</button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
-  <!-- Two-tier upgrade CTA -->
-  <div class="unlock-cta-box">
+  <!-- Upgrade CTA — visible for free tier only -->
+  <div class="unlock-cta-box" id="dashUpgradeCta">
     <div class="unlock-cta-title">See exactly what's driving each score</div>
     <div class="unlock-cta-sub">Upgrade to Starter to unlock subcategory breakdowns, category rankings, and growth recommendations per dimension.</div>
     <div class="pricing-tiers">
@@ -1022,17 +1117,22 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--text);font-fam
         <div class="tier-price">$9.99<span>/mo</span></div>
         <div class="tier-annual">or $89/yr — save 26%</div>
         <div class="tier-features">Subcategory breakdown for all 7 dimensions · Category rankings · Newsletter inclusion · Growth recommendations per dimension</div>
-        <button class="tier-cta starter" onclick="showToast('Starter plan coming soon ✦', true)">Get Starter</button>
+        <button class="tier-cta starter" onclick="openUpgradeModal('starter')">Get Starter</button>
       </div>
       <div class="pricing-tier tier-pro">
         <div class="tier-badge">Pro</div>
         <div class="tier-price">$39<span>/mo</span></div>
         <div class="tier-annual">or $349/yr — save 25%</div>
         <div class="tier-features">Everything in Starter · Guest directory · Competitive benchmarking · Quarterly intelligence reports · Awards eligibility · PodSignal badge</div>
-        <button class="tier-cta pro" onclick="showToast('Pro plan coming soon ✦', true)">Get Pro</button>
+        <button class="tier-cta pro" onclick="openUpgradeModal('pro')">Get Pro</button>
       </div>
     </div>
     <button class="unlock-dl-btn" id="unlockDlBtn" onclick="openDownloadSheet()">Tell us your monthly downloads</button>
+  </div>
+  <!-- Pro upgrade banner — visible for Starter tier only -->
+  <div class="pro-upgrade-banner" id="dashProBanner" style="display:none">
+    <div class="pro-upgrade-banner-text">Unlock benchmarking, trends, and improvement recommendations</div>
+    <button class="pro-upgrade-banner-btn" onclick="openUpgradeModal('pro')">Upgrade to Pro →</button>
   </div>
 
   <!-- Pro-gated features preview -->
@@ -1106,6 +1206,72 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--text);font-fam
     <button onclick="switchToListenerView()" style="width:calc(100% - 0px);padding:14px;border-radius:12px;border:1.5px solid var(--green);background:transparent;color:var(--green);font-size:14px;font-weight:600;cursor:pointer;font-family:var(--font-b);display:block;text-align:center;transition:opacity 0.15s" onmousedown="this.style.opacity='0.8'" onmouseup="this.style.opacity='1'">Switch to Listener View</button>
     <button class="dash-ftr-btn danger" onclick="doSignOut()">Sign Out</button>
     <p onclick="doSignOut()" style="font-size:11px;color:rgba(255,255,255,0.2);text-align:center;padding:8px 20px 16px;cursor:pointer">Using someone else's device? &nbsp;<span style="text-decoration:underline">Sign in with a different account →</span></p>
+  </div>
+</div>
+
+<!-- UPGRADE MODAL -->
+<div class="upgrade-modal-overlay" id="upgradeModal" onclick="upgradeModalBgClick(event)">
+  <div class="upgrade-modal">
+    <button class="um-close" onclick="closeUpgradeModal()">✕</button>
+
+    <!-- Step 1: Plan selection -->
+    <div class="um-step" id="umStep1">
+      <div class="um-step-title">Upgrade your plan</div>
+      <div class="um-step-sub">Choose a tier and billing cycle.</div>
+      <div class="um-bill-row">
+        <button class="um-bill-btn active" id="umBillMonthly" onclick="setUmBilling('monthly')">Monthly</button>
+        <button class="um-bill-btn" id="umBillAnnual" onclick="setUmBilling('annual')">Annual</button>
+      </div>
+      <div class="um-plans">
+        <div class="um-plan" id="umPlanStarter" onclick="highlightPlan('starter')">
+          <div class="um-plan-badge">Starter</div>
+          <div class="um-plan-price" id="umStarterPrice">$9.99</div>
+          <div class="um-plan-cycle" id="umStarterCycle">/month</div>
+          <div class="um-plan-features">All 7 PodSignal dimension scores<br>Subcategory breakdowns<br>Category rankings<br>Newsletter inclusion<br>Growth recommendations</div>
+          <button class="um-plan-select-btn" onclick="confirmPlan('starter');event.stopPropagation()">Select Starter</button>
+        </div>
+        <div class="um-plan" id="umPlanPro" onclick="highlightPlan('pro')">
+          <div class="um-plan-badge">Pro</div>
+          <div class="um-plan-price" id="umProPrice">$39</div>
+          <div class="um-plan-cycle" id="umProCycle">/month</div>
+          <div class="um-plan-features">Everything in Starter<br>Guest directory<br>Competitive benchmarking<br>Quarterly intelligence reports<br>Awards eligibility<br>PodSignal badge</div>
+          <button class="um-plan-select-btn" onclick="confirmPlan('pro');event.stopPropagation()">Select Pro</button>
+        </div>
+      </div>
+      <a class="um-maybe" onclick="closeUpgradeModal()">Maybe later</a>
+    </div>
+
+    <!-- Step 2: Payment method -->
+    <div class="um-step" id="umStep2" style="display:none">
+      <div class="um-step-title">Choose payment method</div>
+      <div class="um-step-sub" id="umPaySub">Starter — $9.99/month</div>
+      <div class="um-pay-opts">
+        <button class="um-pay-btn" onclick="processPayment('apple')">
+          <div class="um-pay-icon">🍎</div>Apple Pay
+        </button>
+        <button class="um-pay-btn" onclick="processPayment('paypal')">
+          <div class="um-pay-icon">🅿</div>PayPal
+        </button>
+        <button class="um-pay-btn" onclick="processPayment('card')">
+          <div class="um-pay-icon">💳</div>Credit / Debit Card
+        </button>
+      </div>
+      <a class="um-back" onclick="goToStep(1)">← Back</a>
+    </div>
+
+    <!-- Step 3: Processing + Success -->
+    <div class="um-step" id="umStep3" style="display:none">
+      <div class="um-processing" id="umProcessing">
+        <div class="um-spinner"></div>
+        <div class="um-proc-text">Processing payment...</div>
+      </div>
+      <div class="um-success" id="umSuccess">
+        <div class="um-success-check">✓</div>
+        <div class="um-success-title" id="umSuccessTitle">Welcome to Starter!</div>
+        <div class="um-success-plan" id="umSuccessPlan">Starter · $9.99/month</div>
+        <div class="um-success-sub">Your dashboard is unlocking now.</div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -1875,6 +2041,9 @@ function showCreatorDashboard() {
   document.getElementById('phone').appendChild(dash);
   dash.classList.add('open');
   setNav('nav-profile');
+  // Render subcategory detail rows and apply tier gating
+  renderEpisodeSubcats(1); renderEpisodeSubcats(2); renderEpisodeSubcats(3);
+  applyDashboardTier(getUserTier());
   showToast('Welcome to your creator dashboard ✦', true);
 }
 
@@ -2647,6 +2816,9 @@ initSwipeHint();
           var dlBtn = document.getElementById('unlockDlBtn');
           if (dlBtn) dlBtn.style.display = 'none';
         }
+        // Render subcats and apply tier gating on restore
+        renderEpisodeSubcats(1); renderEpisodeSubcats(2); renderEpisodeSubcats(3);
+        applyDashboardTier(getUserTier());
         dash.classList.add('open');
         setNav('nav-profile');
       } else {
@@ -2672,6 +2844,140 @@ initSwipeHint();
     try { localStorage.removeItem('hp_user'); } catch(e2) {}
   }
 })();
+
+// ── TIER MANAGEMENT ───────────────────────────────────────────────────────────
+function getUserTier(){
+  try{var u=JSON.parse(localStorage.getItem('hp_user')||'{}');return u.tier||'free';}catch(e){return 'free';}
+}
+function setUserTier(tier){
+  try{var s=localStorage.getItem('hp_user');var u=s?JSON.parse(s):{};u.tier=tier;localStorage.setItem('hp_user',JSON.stringify(u));}catch(e){}
+}
+
+// Subcategory data per episode (static illustrative values)
+var SUBCAT_DEFS=[
+  {dim:'Audio Quality',     subs:['Clarity','Loudness norm.','Balance','Filler words','Pause analysis','Compression']},
+  {dim:'Content Structure', subs:['Hook speed','Topic coherence','Segment density','Closing signal','Ad placement']},
+  {dim:'Topic Relevance',   subs:['Category align.','Title match','Description','Keywords','Guest relevance']},
+  {dim:'Clip-ability',      subs:['Quotable density','Emotional range','Story complete.','Crosstalk rate','Silence ratio']},
+  {dim:'Consistency',       subs:['Cadence','Length stability','Quality stability','Pub. gap penalty']},
+  {dim:'Geographic Fit',    subs:['Local resonance']},
+  {dim:'Episode Vitality',  subs:['Engagement signal']}
+];
+var SUBCAT_SCORES=[
+  // ep1
+  [[77,63,81,68,56,72],[69,67,61,75,84],[88,83,71,79,92],[67,61,75,80,69],[70,76,73,64],[53],[71]],
+  // ep2
+  [[83,72,79,74,62,78],[65,74,68,79,86],[91,80,76,84,87],[71,67,78,82,73],[76,80,75,68],[58],[84]],
+  // ep3
+  [[70,60,74,59,54,67],[62,67,59,70,81],[85,78,69,76,89],[63,58,72,77,66],[65,69,67,60],[51],[64]]
+];
+function renderEpisodeSubcats(epNum){
+  var container=document.getElementById('ep'+epNum+'-subcats-content');
+  if(!container)return;
+  var scores=SUBCAT_SCORES[epNum-1];
+  container.innerHTML=SUBCAT_DEFS.map(function(d,di){
+    var rows=(scores[di]||[]).map(function(v,si){
+      return '<div class="ep-subcat-row">'
+        +'<div class="ep-subcat-name">'+d.subs[si]+'</div>'
+        +'<div class="ep-subcat-bar"><div class="ep-subcat-fill" style="width:'+v+'%"></div></div>'
+        +'<div class="ep-subcat-val">'+v+'</div>'
+        +'</div>';
+    }).join('');
+    return '<div class="ep-subcat-group">'+
+      '<div class="ep-subcat-group-title">'+d.dim+'</div>'+rows+'</div>';
+  }).join('');
+}
+
+function applyDashboardTier(tier){
+  for(var i=1;i<=3;i++){
+    var content=document.getElementById('ep'+i+'-subcats-content');
+    var overlay=document.getElementById('ep'+i+'-subcats-overlay');
+    if(tier==='free'){
+      if(content)content.classList.add('blurred');
+      if(overlay)overlay.style.display='flex';
+    } else {
+      if(content)content.classList.remove('blurred');
+      if(overlay)overlay.style.display='none';
+    }
+  }
+  var cta=document.getElementById('dashUpgradeCta');
+  var proBanner=document.getElementById('dashProBanner');
+  var proSection=document.querySelector('.pro-locked-section');
+  if(cta)cta.style.display=(tier==='free')?'':'none';
+  if(proBanner)proBanner.style.display=(tier==='starter')?'':'none';
+  if(proSection)proSection.style.display=(tier==='pro')?'none':'';
+}
+
+// ── UPGRADE MODAL ─────────────────────────────────────────────────────────────
+var _umPlan='starter';
+var _umBilling='monthly';
+function openUpgradeModal(plan){
+  _umPlan=plan||'starter';
+  highlightPlan(_umPlan);
+  goToStep(1);
+  document.getElementById('upgradeModal').classList.add('open');
+}
+function closeUpgradeModal(){document.getElementById('upgradeModal').classList.remove('open');}
+function upgradeModalBgClick(e){if(e.target===document.getElementById('upgradeModal'))closeUpgradeModal();}
+function goToStep(n){
+  [1,2,3].forEach(function(i){var s=document.getElementById('umStep'+i);if(s)s.style.display=i===n?'':'none';});
+}
+function setUmBilling(cycle){
+  _umBilling=cycle;
+  document.getElementById('umBillMonthly').classList.toggle('active',cycle==='monthly');
+  document.getElementById('umBillAnnual').classList.toggle('active',cycle==='annual');
+  document.getElementById('umStarterPrice').textContent=cycle==='monthly'?'$9.99':'$7.42';
+  document.getElementById('umStarterCycle').textContent=cycle==='monthly'?'/month':'/month, billed $89/yr';
+  document.getElementById('umProPrice').textContent=cycle==='monthly'?'$39':'$29';
+  document.getElementById('umProCycle').textContent=cycle==='monthly'?'/month':'/month, billed $349/yr';
+}
+function highlightPlan(plan){
+  _umPlan=plan;
+  document.getElementById('umPlanStarter').classList.toggle('selected',plan==='starter');
+  document.getElementById('umPlanPro').classList.toggle('selected',plan==='pro');
+}
+function confirmPlan(plan){
+  _umPlan=plan;
+  highlightPlan(plan);
+  var sub=plan==='starter'
+    ?(_umBilling==='monthly'?'Starter — $9.99/month':'Starter — $89/year')
+    :(_umBilling==='monthly'?'Pro — $39/month':'Pro — $349/year');
+  document.getElementById('umPaySub').textContent=sub;
+  goToStep(2);
+}
+function processPayment(method){
+  goToStep(3);
+  document.getElementById('umProcessing').style.display='flex';
+  document.getElementById('umSuccess').style.display='none';
+  setTimeout(function(){
+    document.getElementById('umProcessing').style.display='none';
+    var title=_umPlan==='pro'?'Welcome to Pro!':'Welcome to Starter!';
+    var planLabel=_umPlan==='pro'
+      ?(_umBilling==='monthly'?'Pro · $39/month':'Pro · $349/year')
+      :(_umBilling==='monthly'?'Starter · $9.99/month':'Starter · $89/year');
+    document.getElementById('umSuccessTitle').textContent=title;
+    document.getElementById('umSuccessPlan').textContent=planLabel;
+    document.getElementById('umSuccess').style.display='flex';
+    setTimeout(function(){
+      closeUpgradeModal();
+      setUserTier(_umPlan);
+      unlockDashboardAnimation(_umPlan);
+    },1000);
+  },1500);
+}
+function unlockDashboardAnimation(tier){
+  applyDashboardTier(tier);
+  // Staggered shimmer on each subcat group
+  var groups=document.querySelectorAll('.ep-subcat-group');
+  groups.forEach(function(g,i){
+    setTimeout(function(){
+      g.classList.add('unlocking');
+      setTimeout(function(){g.classList.remove('unlocking');},500);
+    },i*120);
+  });
+  var msg=tier==='pro'?'Pro unlocked — full benchmarking enabled ✦':'Starter unlocked — subcategories now visible ✦';
+  showToast(msg,true);
+}
 
 // ── NEWSLETTER OVERLAY ────────────────────────────────────────────────────────
 function openNlOverlay() {
