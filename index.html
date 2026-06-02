@@ -22,9 +22,19 @@
 }
 html,body{width:100%;height:100%;background:var(--bg);color:var(--text);font-family:var(--font-b);overflow:hidden;user-select:none}
 
+/* ── SITE NAV BAR ── */
+.site-nav{width:100%;height:40px;background:rgba(10,10,15,0.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,0.07);display:flex;align-items:center;justify-content:space-between;padding:0 18px;flex-shrink:0;z-index:200}
+.site-nav-left{display:flex;align-items:center;gap:4px}
+.site-nav-wm{font-family:var(--font-d);font-size:14px;font-weight:800;letter-spacing:-0.3px;text-decoration:none;color:var(--text);margin-right:8px}
+.site-nav-wm .p{color:var(--accent)}
+.site-nav-link{font-family:var(--font-d);font-size:11px;font-weight:600;color:rgba(240,240,245,0.45);text-decoration:none;padding:4px 10px;border-radius:14px;transition:color 0.15s;white-space:nowrap}
+.site-nav-link:hover{color:var(--text)}
+.site-nav-cta{font-family:var(--font-d);font-size:11px;font-weight:700;color:#0a0a0f;background:var(--accent);text-decoration:none;padding:4px 12px;border-radius:14px;transition:opacity 0.15s;white-space:nowrap}
+.site-nav-cta:hover{opacity:0.85}
+
 /* ── FULL SCREEN SHELL ── */
-.wrap{background:var(--bg)}
-.phone{width:100vw;height:100dvh;background:var(--bg);border-radius:0;overflow:hidden;position:relative;display:flex;flex-direction:column}
+.wrap{background:var(--bg);display:flex;flex-direction:column;height:100dvh}
+.phone{width:100vw;height:calc(100dvh - 40px);background:var(--bg);border-radius:0;overflow:hidden;position:relative;display:flex;flex-direction:column}
 .phone::before{display:none}
 .status-bar{display:none}
 
@@ -459,7 +469,17 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--text);font-fam
 </style>
 </head>
 <body>
-<div class="wrap"><div class="phone" id="phone">
+<div class="wrap">
+<nav class="site-nav">
+  <div class="site-nav-left">
+    <a href="/" class="site-nav-wm">hidden<span class="p">pod</span></a>
+    <a href="/creators" class="site-nav-link">For Creators</a>
+    <a href="/rankings" class="site-nav-link">Rankings</a>
+    <a href="/#newsletter" class="site-nav-link">Newsletter</a>
+  </div>
+  <a href="/" class="site-nav-link" style="color:rgba(240,240,245,0.3)">← hiddenpod.com</a>
+</nav>
+<div class="phone" id="phone">
 
 <div class="top-nav">
   <div class="logo-group">
@@ -2606,6 +2626,29 @@ initSwipeHint();
   } catch(e) {
     try { localStorage.removeItem('hp_user'); } catch(e2) {}
   }
+})();
+
+// ── URL PARAM FLOW TRIGGER ─────────────────────────────────────────────────────
+// /discover?flow=creator  → launch creator onboarding
+// /discover?flow=listener → launch listener onboarding
+// Only fires if no active session is already restored (userMode stays null)
+(function() {
+  try {
+    var params = new URLSearchParams(window.location.search);
+    var flow = params.get('flow');
+    if (!flow || userMode) return; // skip if no param or already logged in
+    // Clean up the URL without a page reload
+    var cleanUrl = window.location.pathname;
+    window.history.replaceState({}, '', cleanUrl);
+    // Small tick so DOM is fully ready before triggering flow
+    setTimeout(function() {
+      if (flow === 'creator') {
+        selectRole('podcaster');
+      } else if (flow === 'listener') {
+        selectRole('listener');
+      }
+    }, 50);
+  } catch(e) {}
 })();
 </script>
 </body>
