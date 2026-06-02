@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HiddenPod — The Quality Layer for Independent Podcasting</title>
+<meta name="description" content="PodSignal scores every independent podcast on seven dimensions of quality. Great podcasts deserve to be found.">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0a0f0a;
+  --card-bg:rgba(255,255,255,0.03);
+  --accent:#C8F000;
+  --green-dark:#1A6B3C;
+  --text:#e8f0e8;
+  --muted:rgba(232,240,232,0.48);
+  --border:rgba(255,255,255,0.08);
+  --font-d:'Syne',sans-serif;
+  --font-b:'DM Sans',sans-serif;
+  --radius:14px;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--font-b);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
+
+/* ── NAV ── */
+nav{position:sticky;top:0;z-index:100;background:rgba(10,15,10,0.88);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:0 40px;height:64px;display:flex;align-items:center;justify-content:space-between}
+.wordmark{font-family:var(--font-d);font-size:20px;font-weight:800;letter-spacing:-0.5px;text-decoration:none;color:var(--text)}
+.wordmark .pod{color:var(--accent)}
+.nav-links{display:flex;align-items:center;gap:8px}
+.nav-link{font-family:var(--font-d);font-size:13px;font-weight:600;color:var(--muted);text-decoration:none;padding:6px 14px;border-radius:20px;transition:color 0.18s}
+.nav-link:hover{color:var(--text)}
+.nav-cta{background:var(--accent);color:#0a0f0a;border-radius:20px;padding:7px 18px;font-family:var(--font-d);font-size:13px;font-weight:700;text-decoration:none;transition:opacity 0.18s}
+.nav-cta:hover{opacity:0.88}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px;background:none;border:none}
+.hamburger span{display:block;width:22px;height:2px;background:var(--text);border-radius:2px;transition:all 0.2s}
+.mobile-menu{display:none;position:fixed;top:64px;left:0;right:0;background:rgba(10,15,10,0.98);border-bottom:1px solid var(--border);padding:16px 24px;z-index:99;flex-direction:column;gap:4px}
+.mobile-menu.open{display:flex}
+.mobile-menu .nav-link{padding:12px 0;border-radius:0;border-bottom:1px solid var(--border);color:var(--text)}
+.mobile-menu .nav-cta{margin-top:8px;text-align:center;padding:12px}
+
+/* ── SECTIONS ── */
+section{padding:80px 40px}
+.container{max-width:1140px;margin:0 auto}
+.section-eyebrow{font-family:var(--font-d);font-size:11px;font-weight:700;letter-spacing:2px;color:var(--accent);text-transform:uppercase;margin-bottom:14px}
+.section-heading{font-family:var(--font-d);font-size:38px;font-weight:800;line-height:1.1;letter-spacing:-0.5px;margin-bottom:18px}
+.section-subhead{font-size:17px;color:var(--muted);line-height:1.7;max-width:560px;margin-bottom:32px}
+
+/* ── HERO ── */
+.hero{padding:96px 40px 80px;overflow:hidden}
+.hero-inner{max-width:1140px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;min-height:500px}
+.hero-eyebrow{font-family:var(--font-d);font-size:11px;font-weight:700;letter-spacing:2.5px;color:var(--accent);text-transform:uppercase;margin-bottom:20px}
+.hero-headline{font-family:var(--font-d);font-size:52px;font-weight:800;line-height:1.05;letter-spacing:-1px;margin-bottom:20px}
+.hero-sub{font-size:17px;color:var(--muted);line-height:1.75;margin-bottom:36px;max-width:480px}
+.hero-ctas{display:flex;gap:12px;flex-wrap:wrap}
+.btn-primary{display:inline-flex;align-items:center;gap:6px;background:var(--accent);color:#0a0f0a;font-family:var(--font-d);font-size:14px;font-weight:700;padding:13px 24px;border-radius:24px;text-decoration:none;transition:opacity 0.18s;white-space:nowrap}
+.btn-primary:hover{opacity:0.88}
+.btn-outline{display:inline-flex;align-items:center;gap:6px;border:1px solid rgba(200,240,0,0.4);color:var(--accent);font-family:var(--font-d);font-size:14px;font-weight:700;padding:12px 24px;border-radius:24px;text-decoration:none;transition:all 0.18s;white-space:nowrap}
+.btn-outline:hover{background:rgba(200,240,0,0.07);border-color:var(--accent)}
+
+/* ── FLOATING CARDS ── */
+.hero-visual{position:relative;height:500px;overflow:hidden}
+@keyframes card-rise{
+  0%  {opacity:0;transform:translateY(80px) rotate(-1deg)}
+  12% {opacity:1;transform:translateY(50px) rotate(-1deg)}
+  78% {opacity:1;transform:translateY(-10px) rotate(0.5deg)}
+  92% {opacity:0;transform:translateY(-40px) rotate(0.5deg)}
+  100%{opacity:0;transform:translateY(-40px)}
+}
+.fc{position:absolute;width:264px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:16px;padding:16px;animation:card-rise linear infinite;opacity:0;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)}
+.fc:nth-child(1){left:0;    bottom:-80px;animation-duration:12s;animation-delay:0s}
+.fc:nth-child(2){left:80px; bottom:-80px;animation-duration:14s;animation-delay:2.8s}
+.fc:nth-child(3){left:180px;bottom:-80px;animation-duration:11s;animation-delay:5.2s}
+.fc:nth-child(4){left:30px; bottom:-80px;animation-duration:13s;animation-delay:8.0s}
+.fc:nth-child(5){left:140px;bottom:-80px;animation-duration:12.5s;animation-delay:10.5s}
+.fc-header{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.fc-init{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-family:var(--font-d);font-size:10px;font-weight:700;color:#0a0f0a;flex-shrink:0}
+.fc-name{font-family:var(--font-d);font-size:13px;font-weight:700;line-height:1.2}
+.fc-cat{font-size:10px;color:var(--muted)}
+.fc-score-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.fc-score-label{font-size:10px;color:var(--muted);font-family:var(--font-d);font-weight:600;letter-spacing:0.5px}
+.fc-score{font-family:var(--font-d);font-size:24px;font-weight:800;color:var(--accent);line-height:1}
+.fc-bar-track{height:4px;background:rgba(255,255,255,0.08);border-radius:2px;overflow:hidden}
+.fc-bar-fill{height:100%;border-radius:2px;background:var(--accent)}
+
+/* ── PODSIGNAL SECTION ── */
+.ps-section{background:rgba(26,107,60,0.06);border-top:1px solid rgba(26,107,60,0.15);border-bottom:1px solid rgba(26,107,60,0.15)}
+.ps-body{font-size:16px;color:var(--muted);line-height:1.75;max-width:680px;margin-bottom:32px}
+.dim-pills{display:flex;flex-wrap:wrap;gap:10px}
+.dim-pill{display:flex;flex-direction:column;gap:2px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:10px;padding:10px 16px;transition:border-color 0.18s}
+.dim-pill:hover{border-color:rgba(200,240,0,0.3)}
+.dim-pill-name{font-family:var(--font-d);font-size:12px;font-weight:700;color:var(--text)}
+.dim-pill-desc{font-size:11px;color:var(--muted)}
+
+/* ── DISCOVERIES GRID ── */
+.disco-subhead{font-size:15px;color:var(--muted);margin-bottom:36px}
+.disco-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.disco-card{background:var(--card-bg);border:1px solid var(--border);border-radius:var(--radius);padding:22px;display:flex;flex-direction:column;gap:12px;transition:border-color 0.18s}
+.disco-card:hover{border-color:rgba(200,240,0,0.2)}
+.disco-card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.disco-show{font-family:var(--font-d);font-size:15px;font-weight:700;line-height:1.3}
+.disco-score{font-family:var(--font-d);font-size:28px;font-weight:800;color:var(--accent);line-height:1;flex-shrink:0}
+.disco-desc{font-size:13px;color:var(--muted);line-height:1.55;flex:1}
+.disco-footer{display:flex;align-items:center;justify-content:space-between}
+.cat-tag{font-family:var(--font-d);font-size:10px;font-weight:700;padding:3px 9px;border-radius:10px;letter-spacing:0.3px}
+.cat-local{background:rgba(72,200,180,0.12);color:#48c8b4;border:1px solid rgba(72,200,180,0.2)}
+.cat-culture{background:rgba(180,120,255,0.12);color:#b478ff;border:1px solid rgba(180,120,255,0.2)}
+.cat-politics{background:rgba(255,140,80,0.12);color:#ff8c50;border:1px solid rgba(255,140,80,0.2)}
+.cat-investigative{background:rgba(255,200,60,0.12);color:#ffc83c;border:1px solid rgba(255,200,60,0.2)}
+.cat-tech{background:rgba(80,160,255,0.12);color:#50a0ff;border:1px solid rgba(80,160,255,0.2)}
+.cat-science{background:rgba(100,220,120,0.12);color:#64dc78;border:1px solid rgba(100,220,120,0.2)}
+.cat-news{background:rgba(255,100,100,0.12);color:#ff6464;border:1px solid rgba(255,100,100,0.2)}
+.disco-listen{font-family:var(--font-d);font-size:12px;font-weight:700;color:var(--accent);text-decoration:none;display:flex;align-items:center;gap:4px;transition:gap 0.18s}
+.disco-listen:hover{gap:7px}
+
+/* ── CREATORS SECTION ── */
+.creators-inner{display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:center}
+.creator-features{display:flex;flex-direction:column;gap:16px;margin-bottom:32px}
+.creator-feature{display:flex;gap:12px;align-items:flex-start}
+.cf-dot{width:8px;height:8px;border-radius:50%;background:var(--accent);margin-top:7px;flex-shrink:0}
+.cf-text{font-size:15px;color:var(--muted);line-height:1.5}
+.cf-text strong{color:var(--text)}
+
+/* ── DASHBOARD MOCKUP ── */
+.dash-card{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.1);border-radius:18px;padding:22px;position:relative;overflow:hidden}
+.dash-header{display:flex;align-items:center;gap:12px;margin-bottom:20px}
+.dash-init{width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,#0d2137,#1a4a72);display:flex;align-items:center;justify-content:center;font-family:var(--font-d);font-size:11px;font-weight:700;color:white}
+.dash-name{font-family:var(--font-d);font-size:14px;font-weight:700}
+.dash-sub{font-size:11px;color:var(--muted)}
+.dash-score-row{display:flex;align-items:flex-end;gap:8px;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--border)}
+.dash-score-label{font-family:var(--font-d);font-size:10px;font-weight:700;letter-spacing:1px;color:var(--muted);text-transform:uppercase;margin-bottom:4px}
+.dash-score-num{font-family:var(--font-d);font-size:42px;font-weight:800;color:var(--accent);line-height:1}
+.dash-score-tag{font-size:11px;color:var(--muted);padding-bottom:6px}
+.dash-dims{display:flex;flex-direction:column;gap:10px;position:relative}
+.dim-row{display:flex;align-items:center;gap:10px}
+.dim-label{font-family:var(--font-d);font-size:10px;font-weight:600;color:var(--muted);width:108px;flex-shrink:0}
+.dim-track{flex:1;height:5px;background:rgba(255,255,255,0.07);border-radius:3px;overflow:hidden}
+.dim-fill{height:100%;border-radius:3px;background:var(--accent)}
+.dim-val{font-family:var(--font-d);font-size:10px;font-weight:700;color:var(--accent);width:24px;text-align:right}
+.dash-pro-blur{position:absolute;inset:0;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);background:rgba(10,15,10,0.55);border-radius:4px;display:flex;align-items:center;justify-content:center;top:34px}
+.dash-pro-label{background:rgba(200,240,0,0.1);border:1px solid rgba(200,240,0,0.3);color:var(--accent);font-family:var(--font-d);font-size:11px;font-weight:700;padding:7px 14px;border-radius:20px;display:flex;align-items:center;gap:6px}
+
+/* ── NEWSLETTER ── */
+.newsletter-section{background:linear-gradient(135deg,rgba(26,107,60,0.14),rgba(200,240,0,0.04));border-top:1px solid rgba(26,107,60,0.2);border-bottom:1px solid rgba(26,107,60,0.2);text-align:center}
+.newsletter-heading{font-family:var(--font-d);font-size:36px;font-weight:800;letter-spacing:-0.5px;margin-bottom:12px}
+.newsletter-sub{font-size:16px;color:var(--muted);margin-bottom:32px}
+.nl-form{display:flex;gap:10px;max-width:420px;margin:0 auto 14px;flex-wrap:wrap;justify-content:center}
+.nl-input{flex:1;min-width:220px;background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:24px;padding:12px 20px;color:var(--text);font-family:var(--font-b);font-size:14px;outline:none;transition:border-color 0.18s}
+.nl-input:focus{border-color:rgba(200,240,0,0.4)}
+.nl-input::placeholder{color:rgba(232,240,232,0.3)}
+.nl-btn{background:var(--accent);color:#0a0f0a;font-family:var(--font-d);font-size:14px;font-weight:700;padding:12px 24px;border-radius:24px;border:none;cursor:pointer;white-space:nowrap;transition:opacity 0.18s}
+.nl-btn:hover{opacity:0.88}
+.nl-fine{font-size:12px;color:rgba(232,240,232,0.3)}
+
+/* ── TOAST ── */
+.hp-toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(20px);background:rgba(200,240,0,0.12);border:1px solid rgba(200,240,0,0.3);color:var(--accent);font-family:var(--font-d);font-size:13px;font-weight:600;padding:10px 22px;border-radius:24px;white-space:nowrap;z-index:9999;pointer-events:none;opacity:0;transition:all 0.3s}
+.hp-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ── FOOTER ── */
+footer{background:rgba(0,0,0,0.4);border-top:1px solid var(--border);padding:56px 40px 32px}
+.footer-inner{max-width:1140px;margin:0 auto}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1.5fr;gap:48px;margin-bottom:40px}
+.footer-wordmark{font-family:var(--font-d);font-size:18px;font-weight:800;letter-spacing:-0.5px;text-decoration:none;color:var(--text);display:inline-block;margin-bottom:10px}
+.footer-wordmark .pod{color:var(--accent)}
+.footer-tagline{font-size:13px;color:var(--muted);line-height:1.5;margin-bottom:8px}
+.footer-url{font-size:12px;color:rgba(200,240,0,0.5)}
+.footer-col-title{font-family:var(--font-d);font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:14px}
+.footer-links{display:flex;flex-direction:column;gap:8px}
+.footer-link{font-size:14px;color:var(--muted);text-decoration:none;transition:color 0.18s}
+.footer-link:hover{color:var(--text)}
+.footer-legal{font-size:12px;color:rgba(232,240,232,0.25);line-height:1.7}
+.footer-bottom{padding-top:28px;border-top:1px solid var(--border);font-size:12px;color:rgba(232,240,232,0.2)}
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px){
+  nav{padding:0 24px}
+  .nav-links{display:none}
+  .hamburger{display:flex}
+  .hero-inner,.creators-inner{grid-template-columns:1fr;gap:48px}
+  .hero{padding:64px 24px 60px}
+  .hero-headline{font-size:38px}
+  .hero-visual{height:360px}
+  .fc{width:220px}
+  section{padding:64px 24px}
+  .section-heading{font-size:28px}
+  .disco-grid{grid-template-columns:repeat(2,1fr)}
+  .footer-grid{grid-template-columns:1fr;gap:32px}
+}
+@media(max-width:600px){
+  .hero-headline{font-size:30px}
+  .disco-grid{grid-template-columns:1fr}
+  .newsletter-heading{font-size:26px}
+  .hero-visual{height:280px}
+  .fc{width:200px}
+  .fc:nth-child(3),.fc:nth-child(4){display:none}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="/" class="wordmark">hidden<span class="pod">pod</span></a>
+  <div class="nav-links">
+    <a href="/rankings" class="nav-link">Rankings</a>
+    <a href="#newsletter" class="nav-link">Newsletter</a>
+    <a href="/creators" class="nav-link">For Creators</a>
+    <a href="/discover" class="nav-cta">Discover →</a>
+  </div>
+  <button class="hamburger" onclick="toggleMenu()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="/rankings" class="nav-link">Rankings</a>
+  <a href="#newsletter" class="nav-link">Newsletter</a>
+  <a href="/creators" class="nav-link">For Creators</a>
+  <a href="/discover" class="nav-cta">Discover →</a>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner container">
+    <div class="hero-text">
+      <div class="hero-eyebrow">The quality layer for independent podcasting</div>
+      <h1 class="hero-headline">Great podcasts deserve to be found.</h1>
+      <p class="hero-sub">PodSignal scores every independent show on seven dimensions of quality — independent of audience size. For the first time, a 300-listener local journalism podcast can outscore an iHeart network show on merit.</p>
+      <div class="hero-ctas">
+        <a href="/creators" class="btn-primary">Claim your show →</a>
+        <a href="/discover" class="btn-outline">Browse discoveries →</a>
+      </div>
+    </div>
+    <div class="hero-visual" aria-hidden="true">
+      <!-- Card 1: Granite Goodness -->
+      <div class="fc">
+        <div class="fc-header">
+          <div class="fc-init" style="background:linear-gradient(135deg,#0d3028,#1a6048)">GG</div>
+          <div><div class="fc-name">Granite Goodness</div><div class="fc-cat">Local · Concord, NH</div></div>
+        </div>
+        <div class="fc-score-row">
+          <div class="fc-score-label">PODSIGNAL</div>
+          <div class="fc-score">84</div>
+        </div>
+        <div class="fc-bar-track"><div class="fc-bar-fill" style="width:84%"></div></div>
+      </div>
+      <!-- Card 2: Lawfare Daily -->
+      <div class="fc">
+        <div class="fc-header">
+          <div class="fc-init" style="background:linear-gradient(135deg,#0d2137,#1a4a72)">LF</div>
+          <div><div class="fc-name">Lawfare Daily</div><div class="fc-cat">Politics · Washington, DC</div></div>
+        </div>
+        <div class="fc-score-row">
+          <div class="fc-score-label">PODSIGNAL</div>
+          <div class="fc-score">88</div>
+        </div>
+        <div class="fc-bar-track"><div class="fc-bar-fill" style="width:88%"></div></div>
+      </div>
+      <!-- Card 3: The Sprawl -->
+      <div class="fc">
+        <div class="fc-header">
+          <div class="fc-init" style="background:linear-gradient(135deg,#081820,#104038)">SP</div>
+          <div><div class="fc-name">The Sprawl</div><div class="fc-cat">Investigative · Calgary</div></div>
+        </div>
+        <div class="fc-score-row">
+          <div class="fc-score-label">PODSIGNAL</div>
+          <div class="fc-score">82</div>
+        </div>
+        <div class="fc-bar-track"><div class="fc-bar-fill" style="width:82%"></div></div>
+      </div>
+      <!-- Card 4: Hidden Brain -->
+      <div class="fc">
+        <div class="fc-header">
+          <div class="fc-init" style="background:linear-gradient(135deg,#1a0a2d,#3d1a5c)">HB</div>
+          <div><div class="fc-name">Hidden Brain</div><div class="fc-cat">Science · Washington, DC</div></div>
+        </div>
+        <div class="fc-score-row">
+          <div class="fc-score-label">PODSIGNAL</div>
+          <div class="fc-score">91</div>
+        </div>
+        <div class="fc-bar-track"><div class="fc-bar-fill" style="width:91%"></div></div>
+      </div>
+      <!-- Card 5: The Paper Chase -->
+      <div class="fc">
+        <div class="fc-header">
+          <div class="fc-init" style="background:linear-gradient(135deg,#281808,#5c3a18)">PC</div>
+          <div><div class="fc-name">The Paper Chase</div><div class="fc-cat">Culture · Calgary</div></div>
+        </div>
+        <div class="fc-score-row">
+          <div class="fc-score-label">PODSIGNAL</div>
+          <div class="fc-score">79</div>
+        </div>
+        <div class="fc-bar-track"><div class="fc-bar-fill" style="width:79%"></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PODSIGNAL EXPLANATION -->
+<section class="ps-section">
+  <div class="container">
+    <div class="section-eyebrow">How it works</div>
+    <h2 class="section-heading">What is PodSignal?</h2>
+    <p class="ps-body">PodSignal is HiddenPod's proprietary quality scoring system. Every active independent podcast is assessed across seven dimensions — audio quality, content structure, topic relevance, clip-ability, consistency, geographic relevance, and originality. The result is a single score that tells listeners whether a show is worth their time, and tells creators exactly what to improve.</p>
+    <div class="dim-pills">
+      <div class="dim-pill"><span class="dim-pill-name">Audio Quality</span><span class="dim-pill-desc">Clarity and production</span></div>
+      <div class="dim-pill"><span class="dim-pill-name">Content Structure</span><span class="dim-pill-desc">Narrative arc and pacing</span></div>
+      <div class="dim-pill"><span class="dim-pill-name">Topic Relevance</span><span class="dim-pill-desc">Depth and specificity</span></div>
+      <div class="dim-pill"><span class="dim-pill-name">Clip-ability</span><span class="dim-pill-desc">Quotable, shareable moments</span></div>
+      <div class="dim-pill"><span class="dim-pill-name">Consistency</span><span class="dim-pill-desc">Cadence and reliability</span></div>
+      <div class="dim-pill"><span class="dim-pill-name">Geographic Relevance</span><span class="dim-pill-desc">Serves its intended audience</span></div>
+      <div class="dim-pill"><span class="dim-pill-name">Originality</span><span class="dim-pill-desc">Distinct voice and perspective</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- THIS WEEK'S DISCOVERIES -->
+<section>
+  <div class="container">
+    <div class="section-eyebrow">Weekly top picks</div>
+    <h2 class="section-heading">This week's top discoveries</h2>
+    <p class="disco-subhead">The highest PodSignal scores among independent shows published in the last 7 days.</p>
+    <div class="disco-grid">
+
+      <div class="disco-card">
+        <div class="disco-card-top">
+          <div class="disco-show">Granite Goodness</div>
+          <div class="disco-score">84</div>
+        </div>
+        <p class="disco-desc">New Hampshire's weekly civic affairs digest, produced independently from Concord.</p>
+        <div class="disco-footer">
+          <span class="cat-tag cat-local">Local</span>
+          <a href="/discover" class="disco-listen">Listen →</a>
+        </div>
+      </div>
+
+      <div class="disco-card">
+        <div class="disco-card-top">
+          <div class="disco-show">The Paper Chase</div>
+          <div class="disco-score">79</div>
+        </div>
+        <p class="disco-desc">How four Calgarians are making their cities better through independent bookshops.</p>
+        <div class="disco-footer">
+          <span class="cat-tag cat-culture">Culture</span>
+          <a href="/discover" class="disco-listen">Listen →</a>
+        </div>
+      </div>
+
+      <div class="disco-card">
+        <div class="disco-card-top">
+          <div class="disco-show">Lawfare Daily</div>
+          <div class="disco-score">88</div>
+        </div>
+        <p class="disco-desc">Daily legal analysis of national security, foreign policy, and the rule of law.</p>
+        <div class="disco-footer">
+          <span class="cat-tag cat-politics">Politics</span>
+          <a href="/discover" class="disco-listen">Listen →</a>
+        </div>
+      </div>
+
+      <div class="disco-card">
+        <div class="disco-card-top">
+          <div class="disco-show">The Sprawl</div>
+          <div class="disco-score">82</div>
+        </div>
+        <p class="disco-desc">Calgary's in-depth municipal journalism podcast.</p>
+        <div class="disco-footer">
+          <span class="cat-tag cat-investigative">Investigative</span>
+          <a href="/discover" class="disco-listen">Listen →</a>
+        </div>
+      </div>
+
+      <div class="disco-card">
+        <div class="disco-card-top">
+          <div class="disco-show">Civic Frequency</div>
+          <div class="disco-score">76</div>
+        </div>
+        <p class="disco-desc">Weekly accountability journalism from a two-person newsroom in Boise, Idaho.</p>
+        <div class="disco-footer">
+          <span class="cat-tag cat-local">Local</span>
+          <a href="/discover" class="disco-listen">Listen →</a>
+        </div>
+      </div>
+
+      <div class="disco-card">
+        <div class="disco-card-top">
+          <div class="disco-show">The Signal Room</div>
+          <div class="disco-score">81</div>
+        </div>
+        <p class="disco-desc">Independent technology analysis without the Silicon Valley consensus.</p>
+        <div class="disco-footer">
+          <span class="cat-tag cat-tech">Technology</span>
+          <a href="/discover" class="disco-listen">Listen →</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- FOR CREATORS -->
+<section style="background:rgba(255,255,255,0.015);border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
+  <div class="container">
+    <div class="creators-inner">
+      <div>
+        <div class="section-eyebrow">For creators</div>
+        <h2 class="section-heading">Know exactly where you stand.</h2>
+        <p class="section-subhead" style="margin-bottom:24px">Claim your show and get your PodSignal score — free. See how your episodes score across all seven dimensions, understand what's working and what isn't, and access tools to grow your audience.</p>
+        <div class="creator-features">
+          <div class="creator-feature">
+            <div class="cf-dot"></div>
+            <div class="cf-text"><strong>Full PodSignal breakdown</strong> — see your score on every dimension</div>
+          </div>
+          <div class="creator-feature">
+            <div class="cf-dot"></div>
+            <div class="cf-text"><strong>Listener intelligence</strong> — know who's following you and where they found you</div>
+          </div>
+          <div class="creator-feature">
+            <div class="cf-dot"></div>
+            <div class="cf-text"><strong>Share assets</strong> — AI-generated cards for every episode, ready for social</div>
+          </div>
+        </div>
+        <a href="/creators" class="btn-primary">Claim your show — it's free →</a>
+      </div>
+      <div>
+        <div class="dash-card">
+          <div class="dash-header">
+            <div class="dash-init">YS</div>
+            <div>
+              <div class="dash-name">Your Show</div>
+              <div class="dash-sub">Independent · Claimed</div>
+            </div>
+          </div>
+          <div class="dash-score-row">
+            <div>
+              <div class="dash-score-label">PodSignal Score</div>
+              <div class="dash-score-num">74</div>
+            </div>
+            <div class="dash-score-tag">Top 28% of independent shows</div>
+          </div>
+          <div class="dash-dims">
+            <!-- Audio Quality — unlocked -->
+            <div class="dim-row">
+              <div class="dim-label">Audio Quality</div>
+              <div class="dim-track"><div class="dim-fill" style="width:82%"></div></div>
+              <div class="dim-val">82</div>
+            </div>
+            <div class="dim-row">
+              <div class="dim-label">Content Structure</div>
+              <div class="dim-track"><div class="dim-fill" style="width:68%"></div></div>
+              <div class="dim-val">68</div>
+            </div>
+            <div class="dim-row">
+              <div class="dim-label">Topic Relevance</div>
+              <div class="dim-track"><div class="dim-fill" style="width:77%"></div></div>
+              <div class="dim-val">77</div>
+            </div>
+            <div class="dim-row">
+              <div class="dim-label">Clip-ability</div>
+              <div class="dim-track"><div class="dim-fill" style="width:61%"></div></div>
+              <div class="dim-val">61</div>
+            </div>
+            <div class="dim-row">
+              <div class="dim-label">Consistency</div>
+              <div class="dim-track"><div class="dim-fill" style="width:73%"></div></div>
+              <div class="dim-val">73</div>
+            </div>
+            <div class="dim-row">
+              <div class="dim-label">Geo Relevance</div>
+              <div class="dim-track"><div class="dim-fill" style="width:88%"></div></div>
+              <div class="dim-val">88</div>
+            </div>
+            <div class="dim-row">
+              <div class="dim-label">Originality</div>
+              <div class="dim-track"><div class="dim-fill" style="width:70%"></div></div>
+              <div class="dim-val">70</div>
+            </div>
+            <!-- Pro blur over dims 2–7 -->
+            <div class="dash-pro-blur">
+              <div class="dash-pro-label">
+                <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+                Pro: unlock full breakdown
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NEWSLETTER -->
+<section class="newsletter-section" id="newsletter">
+  <div class="container">
+    <h2 class="newsletter-heading">The Weekly Signal</h2>
+    <p class="newsletter-sub">The best independent podcast discoveries of the week, curated by PodSignal. Free every Friday.</p>
+    <div class="nl-form">
+      <input class="nl-input" type="email" id="nlEmail" placeholder="you@example.com">
+      <button class="nl-btn" onclick="nlSubscribe()">Subscribe</button>
+    </div>
+    <p class="nl-fine">Join 0 independent podcast fans. No spam, unsubscribe anytime.</p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div>
+        <a href="/" class="footer-wordmark">hidden<span class="pod">pod</span></a>
+        <p class="footer-tagline">The quality layer for independent podcasting.</p>
+        <p class="footer-url">hiddenpod.com</p>
+      </div>
+      <div>
+        <div class="footer-col-title">Navigate</div>
+        <div class="footer-links">
+          <a href="/discover" class="footer-link">Discover</a>
+          <a href="/rankings" class="footer-link">Rankings</a>
+          <a href="/creators" class="footer-link">For Creators</a>
+          <a href="#newsletter" class="footer-link">Newsletter</a>
+          <a href="#" class="footer-link">About</a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title">Legal</div>
+        <p class="footer-legal">PodSignal is a trademark of HiddenPod, Inc.</p>
+        <p class="footer-legal" style="margin-top:8px">© 2026 HiddenPod, Inc. All rights reserved.</p>
+      </div>
+    </div>
+    <div class="footer-bottom">Built on quality, not clout.</div>
+  </div>
+</footer>
+
+<!-- TOAST -->
+<div class="hp-toast" id="hpToast"></div>
+
+<script>
+function toggleMenu(){
+  var m=document.getElementById('mobileMenu');
+  m.classList.toggle('open');
+}
+
+function showToast(msg){
+  var t=document.getElementById('hpToast');
+  t.textContent=msg;
+  t.classList.add('show');
+  setTimeout(function(){t.classList.remove('show');},3000);
+}
+
+function nlSubscribe(){
+  var email=document.getElementById('nlEmail').value.trim();
+  if(!email||!email.includes('@')){showToast('Enter a valid email address');return;}
+  document.getElementById('nlEmail').value='';
+  showToast('You\'re subscribed — see you Friday ✦');
+}
+</script>
+</body>
+</html>

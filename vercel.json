@@ -1,6 +1,11 @@
 {
   "rewrites": [
+    { "source": "/discover", "destination": "/index.html" },
+    { "source": "/discover/(.*)", "destination": "/index.html" },
     { "source": "/api/(.*)", "destination": "/api/$1" },
-    { "source": "/(.*)", "destination": "/index.html" }
+    { "source": "/rankings", "destination": "/rankings.html" },
+    { "source": "/creators", "destination": "/creators.html" },
+    { "source": "/", "destination": "/home.html" },
+    { "source": "/(.*)", "destination": "/home.html" }
   ]
 }

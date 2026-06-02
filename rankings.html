@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PodSignal Rankings — HiddenPod</title>
+<meta name="description" content="The highest-scoring independent podcasts by category, updated weekly. Powered by PodSignal.">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0a0f0a;
+  --card-bg:rgba(255,255,255,0.03);
+  --accent:#C8F000;
+  --green-dark:#1A6B3C;
+  --text:#e8f0e8;
+  --muted:rgba(232,240,232,0.48);
+  --border:rgba(255,255,255,0.08);
+  --font-d:'Syne',sans-serif;
+  --font-b:'DM Sans',sans-serif;
+  --radius:14px;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--font-b);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
+
+/* ── NAV ── */
+nav{position:sticky;top:0;z-index:100;background:rgba(10,15,10,0.88);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:0 40px;height:64px;display:flex;align-items:center;justify-content:space-between}
+.wordmark{font-family:var(--font-d);font-size:20px;font-weight:800;letter-spacing:-0.5px;text-decoration:none;color:var(--text)}
+.wordmark .pod{color:var(--accent)}
+.nav-links{display:flex;align-items:center;gap:8px}
+.nav-link{font-family:var(--font-d);font-size:13px;font-weight:600;color:var(--muted);text-decoration:none;padding:6px 14px;border-radius:20px;transition:color 0.18s}
+.nav-link:hover{color:var(--text)}
+.nav-link.active{color:var(--accent)}
+.nav-cta{background:var(--accent);color:#0a0f0a;border-radius:20px;padding:7px 18px;font-family:var(--font-d);font-size:13px;font-weight:700;text-decoration:none;transition:opacity 0.18s}
+.nav-cta:hover{opacity:0.88}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px;background:none;border:none}
+.hamburger span{display:block;width:22px;height:2px;background:var(--text);border-radius:2px}
+.mobile-menu{display:none;position:fixed;top:64px;left:0;right:0;background:rgba(10,15,10,0.98);border-bottom:1px solid var(--border);padding:16px 24px;z-index:99;flex-direction:column;gap:4px}
+.mobile-menu.open{display:flex}
+.mobile-menu .nav-link{padding:12px 0;border-radius:0;border-bottom:1px solid var(--border);color:var(--text)}
+.mobile-menu .nav-cta{margin-top:8px;text-align:center;padding:12px}
+
+/* ── PAGE HEADER ── */
+.page-header{padding:64px 40px 40px;border-bottom:1px solid var(--border)}
+.page-header-inner{max-width:1140px;margin:0 auto}
+.page-eyebrow{font-family:var(--font-d);font-size:11px;font-weight:700;letter-spacing:2px;color:var(--accent);text-transform:uppercase;margin-bottom:12px}
+.page-heading{font-family:var(--font-d);font-size:44px;font-weight:800;letter-spacing:-0.8px;margin-bottom:10px}
+.page-subhead{font-size:16px;color:var(--muted);margin-bottom:14px;max-width:560px}
+.page-meta{display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+.page-date{font-family:var(--font-d);font-size:12px;font-weight:600;color:var(--muted)}
+.page-note{font-size:12px;color:rgba(232,240,232,0.3);line-height:1.5;max-width:540px}
+
+/* ── CATEGORY TABS ── */
+.cat-tabs-wrap{padding:0 40px;border-bottom:1px solid var(--border);position:sticky;top:64px;z-index:50;background:rgba(10,15,10,0.95);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+.cat-tabs{max-width:1140px;margin:0 auto;display:flex;gap:4px;overflow-x:auto;padding:12px 0;scrollbar-width:none}
+.cat-tabs::-webkit-scrollbar{display:none}
+.cat-tab{font-family:var(--font-d);font-size:12px;font-weight:700;padding:6px 16px;border-radius:20px;border:1px solid var(--border);color:var(--muted);background:transparent;cursor:pointer;white-space:nowrap;transition:all 0.18s;flex-shrink:0}
+.cat-tab:hover{color:var(--text);border-color:rgba(255,255,255,0.15)}
+.cat-tab.active{background:var(--accent);border-color:var(--accent);color:#0a0f0a}
+
+/* ── RANKINGS TABLE ── */
+.rankings-wrap{padding:40px}
+.rankings-inner{max-width:1140px;margin:0 auto}
+.table-header{display:grid;grid-template-columns:60px 1fr 140px 90px 80px 80px;gap:0;padding:0 16px 10px;border-bottom:1px solid var(--border);margin-bottom:4px}
+.th{font-family:var(--font-d);font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:rgba(232,240,232,0.25)}
+.th.score-col,.th.change-col,.th.listen-col{text-align:center}
+.rankings-list{display:flex;flex-direction:column;gap:3px}
+.rank-row{display:grid;grid-template-columns:60px 1fr 140px 90px 80px 80px;gap:0;align-items:center;padding:14px 16px;border-radius:var(--radius);transition:background 0.15s;cursor:default}
+.rank-row:hover{background:rgba(255,255,255,0.03)}
+.rank-num{font-family:var(--font-d);font-size:22px;font-weight:800;color:rgba(232,240,232,0.18);line-height:1}
+.rank-num.top3{color:rgba(200,240,0,0.5)}
+.rank-info{}
+.rank-show{font-family:var(--font-d);font-size:14px;font-weight:700;line-height:1.2;margin-bottom:3px}
+.rank-outlet{font-size:12px;color:var(--muted)}
+.rank-cat{}
+.cat-tag{display:inline-block;font-family:var(--font-d);font-size:10px;font-weight:700;padding:3px 9px;border-radius:10px;letter-spacing:0.3px;white-space:nowrap}
+.cat-local{background:rgba(72,200,180,0.12);color:#48c8b4;border:1px solid rgba(72,200,180,0.2)}
+.cat-culture{background:rgba(180,120,255,0.12);color:#b478ff;border:1px solid rgba(180,120,255,0.2)}
+.cat-politics{background:rgba(255,140,80,0.12);color:#ff8c50;border:1px solid rgba(255,140,80,0.2)}
+.cat-investigative{background:rgba(255,200,60,0.12);color:#ffc83c;border:1px solid rgba(255,200,60,0.2)}
+.cat-tech,.cat-technology{background:rgba(80,160,255,0.12);color:#50a0ff;border:1px solid rgba(80,160,255,0.2)}
+.cat-science{background:rgba(100,220,120,0.12);color:#64dc78;border:1px solid rgba(100,220,120,0.2)}
+.cat-news{background:rgba(255,100,100,0.12);color:#ff6464;border:1px solid rgba(255,100,100,0.2)}
+.cat-business{background:rgba(255,180,60,0.12);color:#ffb43c;border:1px solid rgba(255,180,60,0.2)}
+.cat-health{background:rgba(100,200,255,0.12);color:#64c8ff;border:1px solid rgba(100,200,255,0.2)}
+.rank-score{text-align:center;font-family:var(--font-d);font-size:26px;font-weight:800;color:var(--accent);line-height:1}
+.rank-change{text-align:center;font-family:var(--font-d);font-size:12px;font-weight:700}
+.rank-change.up{color:#64dc78}
+.rank-change.down{color:#ff6464}
+.rank-change.flat{color:rgba(232,240,232,0.25)}
+.rank-listen{text-align:center}
+.rank-listen a{font-family:var(--font-d);font-size:11px;font-weight:700;color:var(--accent);text-decoration:none;padding:5px 12px;border-radius:12px;border:1px solid rgba(200,240,0,0.25);transition:all 0.18s;white-space:nowrap}
+.rank-listen a:hover{background:rgba(200,240,0,0.08);border-color:var(--accent)}
+.empty-state{padding:48px 16px;text-align:center;color:var(--muted);font-size:14px}
+
+/* ── EXPLAINER ── */
+.explainer{max-width:1140px;margin:32px auto 0;background:rgba(26,107,60,0.07);border:1px solid rgba(26,107,60,0.18);border-radius:var(--radius);padding:22px 28px}
+.explainer-label{font-family:var(--font-d);font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:rgba(200,240,0,0.5);margin-bottom:8px}
+.explainer-text{font-size:13px;color:var(--muted);line-height:1.65}
+
+/* ── FOOTER ── */
+footer{background:rgba(0,0,0,0.4);border-top:1px solid var(--border);padding:56px 40px 32px;margin-top:80px}
+.footer-inner{max-width:1140px;margin:0 auto}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1.5fr;gap:48px;margin-bottom:40px}
+.footer-wordmark{font-family:var(--font-d);font-size:18px;font-weight:800;letter-spacing:-0.5px;text-decoration:none;color:var(--text);display:inline-block;margin-bottom:10px}
+.footer-wordmark .pod{color:var(--accent)}
+.footer-tagline{font-size:13px;color:var(--muted);line-height:1.5;margin-bottom:8px}
+.footer-url{font-size:12px;color:rgba(200,240,0,0.5)}
+.footer-col-title{font-family:var(--font-d);font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:14px}
+.footer-links{display:flex;flex-direction:column;gap:8px}
+.footer-link{font-size:14px;color:var(--muted);text-decoration:none;transition:color 0.18s}
+.footer-link:hover{color:var(--text)}
+.footer-legal{font-size:12px;color:rgba(232,240,232,0.25);line-height:1.7}
+.footer-bottom{padding-top:28px;border-top:1px solid var(--border);font-size:12px;color:rgba(232,240,232,0.2)}
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px){
+  nav{padding:0 24px}
+  .nav-links{display:none}
+  .hamburger{display:flex}
+  .page-header{padding:48px 24px 32px}
+  .page-heading{font-size:30px}
+  .cat-tabs-wrap{padding:0 24px}
+  .rankings-wrap{padding:24px}
+  .table-header{display:none}
+  .rank-row{grid-template-columns:44px 1fr 70px 60px;gap:8px}
+  .rank-cat,.rank-listen{display:none}
+  .footer-grid{grid-template-columns:1fr;gap:32px}
+}
+@media(max-width:600px){
+  .page-heading{font-size:24px}
+  .rank-row{grid-template-columns:36px 1fr 56px 48px;padding:12px 8px}
+  .rank-num{font-size:16px}
+  .rank-score{font-size:20px}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="/" class="wordmark">hidden<span class="pod">pod</span></a>
+  <div class="nav-links">
+    <a href="/rankings" class="nav-link active">Rankings</a>
+    <a href="/#newsletter" class="nav-link">Newsletter</a>
+    <a href="/creators" class="nav-link">For Creators</a>
+    <a href="/discover" class="nav-cta">Discover →</a>
+  </div>
+  <button class="hamburger" onclick="toggleMenu()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="/rankings" class="nav-link">Rankings</a>
+  <a href="/#newsletter" class="nav-link">Newsletter</a>
+  <a href="/creators" class="nav-link">For Creators</a>
+  <a href="/discover" class="nav-cta">Discover →</a>
+</div>
+
+<!-- PAGE HEADER -->
+<div class="page-header">
+  <div class="page-header-inner">
+    <div class="page-eyebrow">Updated weekly</div>
+    <h1 class="page-heading">PodSignal Rankings</h1>
+    <p class="page-subhead">The highest-scoring independent podcasts by category, updated weekly.</p>
+    <div class="page-meta">
+      <span class="page-date">Week of June 2, 2026</span>
+      <p class="page-note">Rankings include only independent shows not affiliated with major networks or appearing on platform top charts. Powered by PodSignal.</p>
+    </div>
+  </div>
+</div>
+
+<!-- CATEGORY TABS -->
+<div class="cat-tabs-wrap">
+  <div class="cat-tabs" id="catTabs">
+    <button class="cat-tab active" onclick="filterTab(this,'all')">All</button>
+    <button class="cat-tab" onclick="filterTab(this,'news')">News</button>
+    <button class="cat-tab" onclick="filterTab(this,'politics')">Politics</button>
+    <button class="cat-tab" onclick="filterTab(this,'investigative')">Investigative</button>
+    <button class="cat-tab" onclick="filterTab(this,'local')">Local</button>
+    <button class="cat-tab" onclick="filterTab(this,'culture')">Culture</button>
+    <button class="cat-tab" onclick="filterTab(this,'technology')">Technology</button>
+    <button class="cat-tab" onclick="filterTab(this,'science')">Science</button>
+    <button class="cat-tab" onclick="filterTab(this,'business')">Business</button>
+    <button class="cat-tab" onclick="filterTab(this,'health')">Health</button>
+  </div>
+</div>
+
+<!-- RANKINGS TABLE -->
+<div class="rankings-wrap">
+  <div class="rankings-inner">
+    <div class="table-header">
+      <div class="th">#</div>
+      <div class="th">Show</div>
+      <div class="th">Category</div>
+      <div class="th score-col">PodSignal</div>
+      <div class="th change-col">Change</div>
+      <div class="th listen-col">Listen</div>
+    </div>
+    <div class="rankings-list" id="rankingsList"></div>
+  </div>
+
+  <!-- EXPLAINER -->
+  <div class="explainer">
+    <div class="explainer-label">How PodSignal rankings work</div>
+    <p class="explainer-text">Every active independent podcast is scored weekly across seven dimensions. Only shows not affiliated with major networks or appearing on platform top charts are eligible. Scores reflect episode quality, not audience size — a 200-listener show can rank above a 200,000-listener show on merit.</p>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div>
+        <a href="/" class="footer-wordmark">hidden<span class="pod">pod</span></a>
+        <p class="footer-tagline">The quality layer for independent podcasting.</p>
+        <p class="footer-url">hiddenpod.com</p>
+      </div>
+      <div>
+        <div class="footer-col-title">Navigate</div>
+        <div class="footer-links">
+          <a href="/discover" class="footer-link">Discover</a>
+          <a href="/rankings" class="footer-link">Rankings</a>
+          <a href="/creators" class="footer-link">For Creators</a>
+          <a href="/#newsletter" class="footer-link">Newsletter</a>
+          <a href="#" class="footer-link">About</a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title">Legal</div>
+        <p class="footer-legal">PodSignal is a trademark of HiddenPod, Inc.</p>
+        <p class="footer-legal" style="margin-top:8px">© 2026 HiddenPod, Inc. All rights reserved.</p>
+      </div>
+    </div>
+    <div class="footer-bottom">Built on quality, not clout.</div>
+  </div>
+</footer>
+
+<script>
+var SHOWS = [
+  {rank:1,  show:"Lawfare Daily",         outlet:"Lawfare Institute",       cat:"politics",     score:88, change:1},
+  {rank:2,  show:"Hidden Brain",           outlet:"Shankar Vedantam",        cat:"science",      score:86, change:0},
+  {rank:3,  show:"Granite Goodness",       outlet:"Concord Independent",     cat:"local",        score:84, change:3},
+  {rank:4,  show:"The Signal Room",        outlet:"Independent",             cat:"technology",   score:83, change:2},
+  {rank:5,  show:"The Sprawl",             outlet:"Canadaland · Calgary",    cat:"investigative",score:82, change:0},
+  {rank:6,  show:"Civic Frequency",        outlet:"Boise Newsroom",          cat:"local",        score:81, change:1},
+  {rank:7,  show:"The Paper Chase",        outlet:"Independent",             cat:"culture",      score:79, change:-1},
+  {rank:8,  show:"Ear Worthy",             outlet:"Independent",             cat:"culture",      score:78, change:0},
+  {rank:9,  show:"The Uncertain Hour",     outlet:"Independent",             cat:"investigative",score:77, change:2},
+  {rank:10, show:"Reveal",                 outlet:"Center for Investigative Reporting", cat:"investigative",score:76,change:0},
+  {rank:11, show:"Consider This",          outlet:"NPR",                     cat:"news",         score:75, change:-2},
+  {rank:12, show:"Desert Island Discs",    outlet:"BBC Radio 4",             cat:"culture",      score:75, change:0},
+  {rank:13, show:"Throughline",            outlet:"NPR",                     cat:"politics",     score:74, change:1},
+  {rank:14, show:"Science Vs",             outlet:"Spotify",                 cat:"science",      score:73, change:0},
+  {rank:15, show:"The Daily Beans",        outlet:"Independent",             cat:"politics",     score:72, change:-1},
+  {rank:16, show:"Civic Cocktail",         outlet:"Independent",             cat:"local",        score:72, change:2},
+  {rank:17, show:"Your Own Backyard",      outlet:"Christopher Jerard",      cat:"investigative",score:71, change:0},
+  {rank:18, show:"The Big One",            outlet:"KPCC",                    cat:"science",      score:70, change:1},
+  {rank:19, show:"Ear Hustle",             outlet:"Radiotopia",              cat:"culture",      score:70, change:0},
+  {rank:20, show:"The Argument",           outlet:"New York Times",          cat:"politics",     score:69, change:-2},
+];
+
+var CAT_DISPLAY = {
+  politics:'Politics', science:'Science', local:'Local', technology:'Technology',
+  investigative:'Investigative', culture:'Culture', news:'News',
+  business:'Business', health:'Health'
+};
+
+function catClass(cat){
+  return 'cat-'+cat.replace(/\s+/g,'-').toLowerCase();
+}
+
+function changeHtml(c){
+  if(c>0) return '<span class="rank-change up">▲'+c+'</span>';
+  if(c<0) return '<span class="rank-change down">▼'+Math.abs(c)+'</span>';
+  return '<span class="rank-change flat">—</span>';
+}
+
+function renderRankings(shows){
+  var list=document.getElementById('rankingsList');
+  if(!shows.length){
+    list.innerHTML='<div class="empty-state">No shows in this category yet.</div>';
+    return;
+  }
+  list.innerHTML=shows.map(function(s,i){
+    var displayRank=i+1;
+    var numClass='rank-num'+(displayRank<=3?' top3':'');
+    var catKey=s.cat.toLowerCase();
+    return '<div class="rank-row">'
+      +'<div class="'+numClass+'">'+displayRank+'</div>'
+      +'<div class="rank-info"><div class="rank-show">'+s.show+'</div><div class="rank-outlet">'+s.outlet+'</div></div>'
+      +'<div class="rank-cat"><span class="cat-tag '+catClass(s.cat)+'">'+CAT_DISPLAY[catKey]+'</span></div>'
+      +'<div class="rank-score">'+s.score+'</div>'
+      +'<div>'+changeHtml(s.change)+'</div>'
+      +'<div class="rank-listen"><a href="/discover">Listen</a></div>'
+      +'</div>';
+  }).join('');
+}
+
+function filterTab(el,cat){
+  document.querySelectorAll('.cat-tab').forEach(function(t){t.classList.remove('active')});
+  el.classList.add('active');
+  var filtered=cat==='all'?SHOWS:SHOWS.filter(function(s){return s.cat.toLowerCase()===cat;});
+  renderRankings(filtered);
+}
+
+function toggleMenu(){
+  var m=document.getElementById('mobileMenu');
+  m.classList.toggle('open');
+}
+
+// Initial render
+renderRankings(SHOWS);
+</script>
+</body>
+</html>
