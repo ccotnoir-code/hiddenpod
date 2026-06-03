@@ -121,7 +121,7 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--text);font-fam
 
 /* ── FEED ── */
 .feed-container{flex:1;overflow:hidden;position:relative;margin-top:8px}
-.feed{position:absolute;inset:0;overflow-y:scroll;scroll-snap-type:y mandatory;scrollbar-width:none;padding-bottom:80px}
+.feed{position:absolute;inset:0;overflow-y:scroll;scroll-snap-type:y mandatory;scrollbar-width:none;padding-bottom:16px}
 .feed::-webkit-scrollbar{display:none}
 
 /* ── CLIP CARD ── */
@@ -266,21 +266,11 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--text);font-fam
 .unfollow-btn{font-family:var(--font-d);font-size:10px;font-weight:600;padding:4px 10px;border-radius:18px;border:1px solid rgba(255,255,255,0.15);color:var(--muted);background:transparent;cursor:pointer}
 
 /* ── TOAST ── */
-.toast{position:absolute;bottom:84px;left:50%;transform:translateX(-50%) translateY(12px);background:var(--surface2);border:1px solid var(--border);border-radius:20px;padding:7px 14px;font-size:11.5px;color:var(--text);white-space:nowrap;z-index:300;opacity:0;transition:all 0.2s;pointer-events:none;max-width:280px;text-align:center}
+.toast{position:absolute;bottom:20px;left:50%;transform:translateX(-50%) translateY(12px);background:var(--surface2);border:1px solid var(--border);border-radius:20px;padding:7px 14px;font-size:11.5px;color:var(--text);white-space:nowrap;z-index:300;opacity:0;transition:all 0.2s;pointer-events:none;max-width:280px;text-align:center}
 .toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
 .toast.green{border-color:rgba(26,107,60,0.5);background:#0d1f14}
 
 /* ── BOTTOM NAV ── */
-.bottom-nav{height:68px;background:var(--surface);border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-around;padding:0 8px 6px;flex-shrink:0;z-index:50}
-.ni{display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:5px 10px;border-radius:12px;position:relative}
-.ni.on{background:rgba(232,255,71,0.07)}
-.ni svg{opacity:0.3;transition:opacity 0.15s}
-.ni.on svg{opacity:1}
-.ni-lbl{font-size:9.5px;color:var(--muted);font-weight:500}
-.ni.on .ni-lbl{color:var(--accent)}
-.ni-badge{position:absolute;top:3px;right:5px;width:15px;height:15px;background:var(--accent);border-radius:50%;font-size:8px;font-weight:700;color:#0a0a0f;display:flex;align-items:center;justify-content:center;font-family:var(--font-d)}
-.nc{width:46px;height:46px;border-radius:50%;background:var(--green);display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 0 16px rgba(26,107,60,0.35);margin-bottom:5px;transition:transform 0.15s}
-.nc:active{transform:scale(0.93)}
 
 /* ── WORD HIGHLIGHT ── */
 .q-word{display:inline;border-radius:3px;transition:background 0.1s}
@@ -328,7 +318,7 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--text);font-fam
 .pref-skip{background:none;border:none;color:rgba(255,255,255,0.3);font-size:13px;cursor:pointer;padding:12px;font-family:var(--font-b)}
 
 /* ── PROFILE VIEW ── */
-.profile-view{position:absolute;inset:0;background:var(--bg);z-index:10;display:none;flex-direction:column;padding-top:90px;padding-bottom:100px;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.profile-view{position:absolute;inset:0;background:var(--bg);z-index:10;display:none;flex-direction:column;padding-top:90px;padding-bottom:32px;overflow-y:auto;-webkit-overflow-scrolling:touch}
 .profile-view.open{display:flex}
 .profile-header{display:flex;flex-direction:column;align-items:center;padding:24px 24px 20px}
 .profile-avatar-lg{width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,var(--accent),#47ffe8);display:flex;align-items:center;justify-content:center;font-family:var(--font-d);font-size:26px;font-weight:700;color:#0a0a0f;margin-bottom:12px}
@@ -403,7 +393,7 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--text);font-fam
 .creator-skip{background:none;border:none;color:rgba(255,255,255,0.3);font-size:13px;cursor:pointer;padding:8px;font-family:var(--font-b)}
 
 /* ── CREATOR DASHBOARD ── */
-.creator-dash{position:absolute;inset:0;background:var(--bg);z-index:10;display:none;flex-direction:column;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:100px}
+.creator-dash{position:absolute;inset:0;background:var(--bg);z-index:10;display:none;flex-direction:column;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:32px}
 .creator-dash.open{display:flex}
 .dash-top{padding:52px 20px 14px;flex-shrink:0}
 .creator-show-row{display:flex;align-items:center;gap:12px;margin-bottom:14px}
@@ -617,27 +607,6 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--text);font-fam
 <div class="discover-badge" id="discoverBadge">Showing independent and emerging shows only</div>
 <div class="feed-container"><div class="feed" id="feed"></div></div>
 
-<div class="bottom-nav">
-  <div class="ni on" id="nav-home" onclick="showHome()">
-    <svg width="20" height="20" fill="none" viewBox="0 0 24 24"><path d="M3 12L12 3L21 12V21H15V15H9V21H3V12Z" fill="#E8FF47"/></svg>
-    <span class="ni-lbl">Home</span>
-  </div>
-  <div class="ni" id="nav-search" onclick="showToast('Search coming soon')">
-    <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21L16.65 16.65"/></svg>
-    <span class="ni-lbl">Search</span>
-  </div>
-  <div class="nc" onclick="openDiscoverSheet()">
-    <svg width="20" height="20" fill="none" viewBox="0 0 24 24"><path d="M12 2L13.5 8.5L20 7L15.5 12L20 17L13.5 15.5L12 22L10.5 15.5L4 17L8.5 12L4 7L10.5 8.5L12 2Z" fill="white"/></svg>
-  </div>
-  <div class="ni" id="nav-saved" onclick="showSaved()">
-    <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"/></svg>
-    <span class="ni-lbl">Saved</span>
-  </div>
-  <div class="ni" id="nav-profile" onclick="showProfile()">
-    <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2M12 11a4 4 0 100-8 4 4 0 000 8z"/></svg>
-    <span class="ni-lbl">Profile</span>
-  </div>
-</div>
 
 </div></div>
 
@@ -2012,11 +1981,6 @@ function showCreatorDashboard() {
     av.style.background = 'linear-gradient(135deg,#47ffe8,#47a8ff)';
     av.style.color = '#0a0a0f';
   }
-  // Update bottom nav profile icon with creator initials (blue-green)
-  var navProfile = document.getElementById('nav-profile');
-  if (navProfile) {
-    navProfile.innerHTML = '<div style="width:24px;height:24px;border-radius:50%;background:linear-gradient(135deg,#47ffe8,#47a8ff);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#0a0a0f;font-family:var(--font-d)">' + creatorInitials + '</div><span class="ni-lbl">Profile</span>';
-  }
   // Show creator badge in wordmark
   var badge = document.getElementById('creatorBadge');
   if (badge) badge.style.display = '';
@@ -2040,7 +2004,6 @@ function showCreatorDashboard() {
   var dash = document.getElementById('creatorDash');
   document.getElementById('phone').appendChild(dash);
   dash.classList.add('open');
-  setNav('nav-profile');
   // Render subcategory detail rows and apply tier gating
   renderEpisodeSubcats(1); renderEpisodeSubcats(2); renderEpisodeSubcats(3);
   applyDashboardTier(getUserTier());
@@ -2085,7 +2048,6 @@ function openDownloadSheet() {
 
 function switchToListenerView() {
   closeAllOverlays();
-  setNav('nav-home');
   showToast('Switched to listener view');
 }
 
@@ -2162,12 +2124,6 @@ function finishOnboarding() {
     if (autoplayOn && filteredData.length > 0) doPlay(filteredData[0].id);
   }, 600);
 
-  // Update bottom nav profile icon with initials
-  var navProfile = document.getElementById('nav-profile');
-  if (navProfile) {
-    navProfile.innerHTML = '<div style="width:24px;height:24px;border-radius:50%;background:linear-gradient(135deg,var(--accent),#47ffe8);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#0a0a0f;font-family:var(--font-d)">' + initials + '</div><span class="ni-lbl">Profile</span>';
-  }
-
   // Persist login state
   try {
     localStorage.setItem('hp_user', JSON.stringify({
@@ -2209,7 +2165,6 @@ function updateProfileView() {
 
 function closeProfile() {
   document.getElementById('profileView').classList.remove('open');
-  setNav('nav-home');
 }
 
 function showPrefEdit() {
@@ -2246,11 +2201,6 @@ function doSignOut() {
   }
   var badge = document.getElementById('creatorBadge');
   if (badge) badge.style.display = 'none';
-  // Reset bottom nav profile icon to generic person outline
-  var navProfile = document.getElementById('nav-profile');
-  if (navProfile) {
-    navProfile.innerHTML = '<svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2M12 11a4 4 0 100-8 4 4 0 000 8z"/></svg><span class="ni-lbl">Profile</span>';
-  }
   closeAllOverlays();
   stopCurrentAudio();
   toggleEmailForm(false);
@@ -2534,14 +2484,6 @@ function switchView(tab){
 
 // ── SAVED VIEW ────────────────────────────────────────────────────────────────
 function updateSavedBadge(){
-  var count=Object.keys(saved).filter(function(k){return saved[k]}).length;
-  var badge=document.getElementById('savedBadge');
-  if(!badge){
-    var nav=document.getElementById('nav-saved');
-    if(nav&&count>0){var b=document.createElement('div');b.className='ni-badge';b.id='savedBadge';b.textContent=count;nav.appendChild(b);}
-  } else {
-    if(count>0)badge.textContent=count;else badge.remove();
-  }
 }
 
 function showSaved(){
@@ -2550,11 +2492,9 @@ function showSaved(){
   document.getElementById('phone').appendChild(sv);
   sv.classList.add('open');
   updateSavedList();
-  setNav('nav-saved');
 }
 function closeSaved(){
   document.getElementById('savedView').classList.remove('open');
-  setNav('nav-home');
 }
 function updateSavedList(){
   var list=document.getElementById('savedList');
@@ -2627,7 +2567,6 @@ function closeAllOverlays() {
 function showHome(){
   closeAllOverlays();
   switchView('discover');
-  setNav('nav-home');
 }
 
 // ── AUTOPLAY ──────────────────────────────────────────────────────────────────
@@ -2685,18 +2624,10 @@ function showProfile() {
     var dash = document.getElementById('creatorDash');
     document.getElementById('phone').appendChild(dash);
     dash.classList.add('open');
-    setNav('nav-profile');
     return;
   }
   updateProfileView();
   document.getElementById('profileView').classList.add('open');
-  setNav('nav-profile');
-}
-function setNav(active){
-  ['nav-home','nav-search','nav-saved','nav-profile'].forEach(function(id){
-    var el=document.getElementById(id);
-    if(el)el.classList.toggle('on',id===active);
-  });
 }
 
 // ── TOAST ─────────────────────────────────────────────────────────────────────
@@ -2796,8 +2727,6 @@ initSwipeHint();
         if (av) { av.textContent = initials; av.style.background = 'linear-gradient(135deg,#47ffe8,#47a8ff)'; av.style.color = '#0a0a0f'; }
         var badge = document.getElementById('creatorBadge');
         if (badge) badge.style.display = '';
-        var navProfile = document.getElementById('nav-profile');
-        if (navProfile) navProfile.innerHTML = '<div style="width:24px;height:24px;border-radius:50%;background:linear-gradient(135deg,#47ffe8,#47a8ff);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#0a0a0f;font-family:var(--font-d)">' + initials + '</div><span class="ni-lbl">Profile</span>';
         // Reopen dashboard (no welcome toast on restore)
         var dash = document.getElementById('creatorDash');
         document.getElementById('phone').appendChild(dash);
@@ -2820,13 +2749,10 @@ initSwipeHint();
         renderEpisodeSubcats(1); renderEpisodeSubcats(2); renderEpisodeSubcats(3);
         applyDashboardTier(getUserTier());
         dash.classList.add('open');
-        setNav('nav-profile');
       } else {
         // Restore listener avatar
         var av = document.getElementById('topAvatar');
         if (av) { av.textContent = initials; av.style.background = 'linear-gradient(135deg,var(--accent),#47ffe8)'; av.style.color = '#0a0a0f'; }
-        var navProfile = document.getElementById('nav-profile');
-        if (navProfile) navProfile.innerHTML = '<div style="width:24px;height:24px;border-radius:50%;background:linear-gradient(135deg,var(--accent),#47ffe8);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#0a0a0f;font-family:var(--font-d)">' + initials + '</div><span class="ni-lbl">Profile</span>';
         updateProfileView();
         // Re-apply category filter
         if (userPrefs.length > 0) {
