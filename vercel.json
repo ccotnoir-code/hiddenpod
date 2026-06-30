@@ -3,6 +3,7 @@
     { "source": "/discover", "destination": "/index.html" },
     { "source": "/discover/(.*)", "destination": "/index.html" },
     { "source": "/api/(.*)", "destination": "/api/$1" },
+    { "source": "/data/(.*)", "destination": "/data/$1" },
     { "source": "/rankings", "destination": "/rankings.html" },
     { "source": "/creators", "destination": "/creators.html" },
     { "source": "/", "destination": "/home.html" },

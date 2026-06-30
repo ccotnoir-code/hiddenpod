@@ -1,0 +1,10 @@
+{
+  "_note": "Populated by pipeline/01_discover.js → 02_ingest.js → 03_score.js → 04_assemble.js. Run after obtaining Podcast Index API credentials.",
+  "meta": {
+    "generatedAt": null,
+    "algorithmVersion": "v1.2",
+    "totalShows": 0,
+    "sourceCategories": ["News", "Politics"]
+  },
+  "shows": []
+}
