@@ -14,7 +14,7 @@
 const fs   = require('fs');
 const path = require('path');
 const { sleep } = require('./utils/podcast_index');
-const { fetchTranscript, toPlainText, extractWindow } = require('./utils/transcript_parser');
+const { fetchTranscript, toPlainText, extractWindow, parseSRTWithTimestamps, parseVTTWithTimestamps } = require('./utils/transcript_parser');
 
 const CONCURRENCY  = 6;    // transcript fetches — no API rate limit
 const BATCH_DELAY  = 100;  // ms between transcript batches
@@ -102,7 +102,36 @@ async function ingestShow(show) {
 
   const dur  = show.episodeDuration || 1800;
   const clip = findClipWindow(plainText, dur);
-  const clipStartSec = wordIndexToSeconds(clip.startWord, wordCount, dur);
+
+  // For VTT/SRT formats, extract real timestamps so the audio seek is accurate.
+  // For HTML/plain text, fall back to proportional word-position estimation.
+  let clipStartSec = wordIndexToSeconds(clip.startWord, wordCount, dur);
+  const transcriptType = show.transcriptType || '';
+  if (transcriptType === 'text/vtt' || transcriptType === 'application/srt') {
+    try {
+      const cues = transcriptType === 'text/vtt'
+        ? parseVTTWithTimestamps(rawText)
+        : parseSRTWithTimestamps(rawText);
+      if (cues.length > 0) {
+        // Build a flat word-to-cue index so we can look up the timestamp
+        // of the word at clip.startWord.
+        let wordIdx = 0;
+        let resolvedStart = null;
+        for (const cue of cues) {
+          const cueWords = cue.text.split(/\s+/).filter(Boolean);
+          if (wordIdx + cueWords.length > clip.startWord) {
+            resolvedStart = cue.startSeconds;
+            break;
+          }
+          wordIdx += cueWords.length;
+        }
+        if (resolvedStart !== null) clipStartSec = Math.round(resolvedStart);
+      }
+    } catch (e) {
+      // Timestamp parse failed — keep proportional estimate
+    }
+  }
+
   const clipDurSec   = Math.round((CLIP_WORDS / wordCount) * dur);
   const clampedDur   = Math.min(Math.max(clipDurSec, 25), 55);
   const scoringWindow = extractWindow(plainText, clipStartSec, dur, 2000);

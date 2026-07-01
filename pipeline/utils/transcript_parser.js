@@ -11,6 +11,13 @@ async function fetchTranscript(url) {
   return res.text();
 }
 
+// Parse HH:MM:SS,mmm or HH:MM:SS.mmm to fractional seconds
+function parseTimestampSec(ts) {
+  const m = ts.match(/(\d{2}):(\d{2}):(\d{2})[,\.](\d{3})/);
+  if (!m) return 0;
+  return parseInt(m[1]) * 3600 + parseInt(m[2]) * 60 + parseInt(m[3]) + parseInt(m[4]) / 1000;
+}
+
 function parseSRT(text) {
   // Strip sequence numbers, timestamps, HTML tags; join cue text.
   const lines = text.replace(/\r\n/g, '\n').split('\n');
@@ -21,17 +28,58 @@ function parseSRT(text) {
     if (timestampRe.test(line)) { inCue = true; continue; }
     if (inCue) {
       if (line.trim() === '') { inCue = false; continue; }
-      // Strip HTML tags (<i>, <b>, <c>, etc.)
       cues.push(line.replace(/<[^>]+>/g, '').trim());
     }
   }
   return cues.filter(Boolean).join(' ');
 }
 
+// Parse SRT/VTT keeping timestamps: returns [{startSeconds, text}]
+function parseSRTWithTimestamps(text) {
+  const lines = text.replace(/\r\n/g, '\n').split('\n');
+  const cues = [];
+  const timestampRe = /^(\d{2}:\d{2}:\d{2}[,\.]\d{3})\s*-->/;
+  let currentStart = null;
+  let currentText = [];
+  for (const line of lines) {
+    const m = line.match(timestampRe);
+    if (m) {
+      if (currentStart !== null && currentText.length) {
+        cues.push({ startSeconds: currentStart, text: currentText.join(' ') });
+      }
+      currentStart = parseTimestampSec(m[1]);
+      currentText = [];
+      continue;
+    }
+    if (currentStart !== null) {
+      if (line.trim() === '') {
+        if (currentText.length) {
+          cues.push({ startSeconds: currentStart, text: currentText.join(' ') });
+          currentStart = null;
+          currentText = [];
+        }
+        continue;
+      }
+      const clean = line.replace(/<[^>]+>/g, '').trim();
+      if (clean) currentText.push(clean);
+    }
+  }
+  if (currentStart !== null && currentText.length) {
+    cues.push({ startSeconds: currentStart, text: currentText.join(' ') });
+  }
+  return cues;
+}
+
 function parseVTT(text) {
   // Like SRT but starts with WEBVTT header.
   const withoutHeader = text.replace(/^WEBVTT.*\n+/, '');
   return parseSRT(withoutHeader);
+}
+
+// Parse VTT/SRT keeping timestamps — strips WEBVTT header first
+function parseVTTWithTimestamps(text) {
+  const withoutHeader = text.replace(/^WEBVTT[^\n]*\n+/, '');
+  return parseSRTWithTimestamps(withoutHeader);
 }
 
 function parseJSON(text) {
@@ -94,4 +142,4 @@ function extractWindow(plainText, targetSeconds, totalDurationSeconds, windowWor
   return words.slice(start, end).join(' ');
 }
 
-module.exports = { fetchTranscript, toPlainText, extractWindow };
+module.exports = { fetchTranscript, toPlainText, extractWindow, parseSRTWithTimestamps, parseVTTWithTimestamps };

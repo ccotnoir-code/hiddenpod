@@ -146,12 +146,12 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--text);font-fam
 .follow-btn.on{background:var(--green);color:white;border-color:var(--green)}
 
 /* ── MOMENT AREA ── */
-.moment-area{flex:1;display:flex;flex-direction:column;justify-content:center;padding:8px 0 4px}
+.moment-area{flex:1;display:flex;flex-direction:column;justify-content:center;padding:8px 0 4px;overflow:hidden;min-height:0}
 .moment-lbl{font-size:9.5px;font-weight:500;color:var(--accent);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:6px;display:flex;align-items:center;gap:4px}
 .moment-lbl::before{content:'';width:12px;height:2px;background:var(--accent);border-radius:2px}
-.moment-quote{font-family:var(--font-d);font-size:16px;font-weight:700;line-height:1.35;letter-spacing:-0.3px}
+.moment-quote{font-family:var(--font-d);font-size:16px;font-weight:700;line-height:1.35;letter-spacing:-0.3px;display:-webkit-box;-webkit-line-clamp:5;-webkit-box-orient:vertical;overflow:hidden}
 .moment-quote em{font-style:normal;color:var(--accent)}
-.ep-title{font-size:10.5px;color:var(--muted);margin-top:6px;line-height:1.4}
+.ep-title{font-size:10.5px;color:var(--muted);margin-top:6px;line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .score-row{display:flex;gap:5px;margin-top:7px;flex-wrap:wrap}
 .score-pill{font-size:9px;padding:2px 7px;border-radius:8px;border:1px solid rgba(255,255,255,0.08);color:rgba(255,255,255,0.38);font-family:var(--font-d);font-weight:600}
 .score-pill.hi{border-color:rgba(232,255,71,0.25);color:rgba(232,255,71,0.65)}
