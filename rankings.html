@@ -186,15 +186,20 @@ footer{background:rgba(0,0,0,0.4);border-top:1px solid var(--border);padding:56p
   </div>
 </div>
 
-<!-- RANKINGS TABLE -->
+<!-- SEARCH + RANKINGS TABLE -->
 <div class="rankings-wrap">
   <div class="rankings-inner">
+    <div style="margin-bottom:20px">
+      <input id="searchInput" type="search" placeholder="Search shows…" oninput="applyFilters()"
+        style="width:100%;max-width:420px;background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:10px;padding:10px 16px;font-size:14px;color:var(--text);font-family:var(--font-b);outline:none">
+    </div>
+    <div id="rankingsMeta" style="font-family:var(--font-d);font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:rgba(232,240,232,0.25);margin-bottom:12px"></div>
     <div class="table-header">
       <div class="th">#</div>
       <div class="th">Show</div>
       <div class="th">Category</div>
       <div class="th score-col">PodSignal</div>
-      <div class="th change-col">Change</div>
+      <div class="th change-col">Tier</div>
       <div class="th listen-col">Listen</div>
     </div>
     <div class="rankings-list" id="rankingsList"></div>
@@ -237,80 +242,85 @@ footer{background:rgba(0,0,0,0.4);border-top:1px solid var(--border);padding:56p
 </footer>
 
 <script>
-var SHOWS = [
-  {rank:1,  show:"Lawfare Daily",         outlet:"Lawfare Institute",       cat:"politics",     score:88, change:1},
-  {rank:2,  show:"Hidden Brain",           outlet:"Shankar Vedantam",        cat:"science",      score:86, change:0},
-  {rank:3,  show:"Granite Goodness",       outlet:"Concord Independent",     cat:"local",        score:84, change:3},
-  {rank:4,  show:"The Signal Room",        outlet:"Independent",             cat:"technology",   score:83, change:2},
-  {rank:5,  show:"The Sprawl",             outlet:"Canadaland · Calgary",    cat:"investigative",score:82, change:0},
-  {rank:6,  show:"Civic Frequency",        outlet:"Boise Newsroom",          cat:"local",        score:81, change:1},
-  {rank:7,  show:"The Paper Chase",        outlet:"Independent",             cat:"culture",      score:79, change:-1},
-  {rank:8,  show:"Ear Worthy",             outlet:"Independent",             cat:"culture",      score:78, change:0},
-  {rank:9,  show:"The Uncertain Hour",     outlet:"Independent",             cat:"investigative",score:77, change:2},
-  {rank:10, show:"Reveal",                 outlet:"Center for Investigative Reporting", cat:"investigative",score:76,change:0},
-  {rank:11, show:"Consider This",          outlet:"NPR",                     cat:"news",         score:75, change:-2},
-  {rank:12, show:"Desert Island Discs",    outlet:"BBC Radio 4",             cat:"culture",      score:75, change:0},
-  {rank:13, show:"Throughline",            outlet:"NPR",                     cat:"politics",     score:74, change:1},
-  {rank:14, show:"Science Vs",             outlet:"Spotify",                 cat:"science",      score:73, change:0},
-  {rank:15, show:"The Daily Beans",        outlet:"Independent",             cat:"politics",     score:72, change:-1},
-  {rank:16, show:"Civic Cocktail",         outlet:"Independent",             cat:"local",        score:72, change:2},
-  {rank:17, show:"Your Own Backyard",      outlet:"Christopher Jerard",      cat:"investigative",score:71, change:0},
-  {rank:18, show:"The Big One",            outlet:"KPCC",                    cat:"science",      score:70, change:1},
-  {rank:19, show:"Ear Hustle",             outlet:"Radiotopia",              cat:"culture",      score:70, change:0},
-  {rank:20, show:"The Argument",           outlet:"New York Times",          cat:"politics",     score:69, change:-2},
-];
+var WEIGHTS = {quality:0.18, structure:0.20, relevance:0.22, clipability:0.16, consistency:0.16, vitality:0.08};
+var ALL_SHOWS = [];
+var activeCat  = 'all';
 
 var CAT_DISPLAY = {
   politics:'Politics', science:'Science', local:'Local', technology:'Technology',
   investigative:'Investigative', culture:'Culture', news:'News',
-  business:'Business', health:'Health'
+  business:'Business', health:'Health', world:'World'
 };
 
-function catClass(cat){
-  return 'cat-'+cat.replace(/\s+/g,'-').toLowerCase();
+function computeTotal(s) {
+  return Math.round(Object.keys(WEIGHTS).reduce(function(t,k){ return t + (s.scores[k]||0)*WEIGHTS[k]; }, 0));
 }
 
-function changeHtml(c){
-  if(c>0) return '<span class="rank-change up">▲'+c+'</span>';
-  if(c<0) return '<span class="rank-change down">▼'+Math.abs(c)+'</span>';
-  return '<span class="rank-change flat">—</span>';
+function catClass(cat){ return 'cat-'+(cat||'news').replace(/\s+/g,'-').toLowerCase(); }
+
+function tierHtml(tier){
+  if(tier==='indie') return '<span style="font-family:var(--font-d);font-size:10px;font-weight:700;color:var(--accent);letter-spacing:0.5px">IND</span>';
+  return '<span style="font-family:var(--font-d);font-size:10px;font-weight:700;color:rgba(232,240,232,0.35);letter-spacing:0.5px">MAJ</span>';
 }
 
-function renderRankings(shows){
-  var list=document.getElementById('rankingsList');
-  if(!shows.length){
-    list.innerHTML='<div class="empty-state">No shows in this category yet.</div>';
+function renderRankings(shows) {
+  var list = document.getElementById('rankingsList');
+  var meta = document.getElementById('rankingsMeta');
+  meta.textContent = shows.length + ' shows';
+  if (!shows.length) {
+    list.innerHTML = '<div class="empty-state">No shows match this filter.</div>';
     return;
   }
-  list.innerHTML=shows.map(function(s,i){
-    var displayRank=i+1;
-    var numClass='rank-num'+(displayRank<=3?' top3':'');
-    var catKey=s.cat.toLowerCase();
+  list.innerHTML = shows.map(function(s, i) {
+    var displayRank = i + 1;
+    var numClass = 'rank-num' + (displayRank <= 3 ? ' top3' : '');
+    var cat = Array.isArray(s.cat) ? s.cat[0] : (s.cat || 'news');
+    var catLabel = CAT_DISPLAY[cat.toLowerCase()] || cat;
     return '<div class="rank-row">'
-      +'<div class="'+numClass+'">'+displayRank+'</div>'
-      +'<div class="rank-info"><div class="rank-show">'+s.show+'</div><div class="rank-outlet">'+s.outlet+'</div></div>'
-      +'<div class="rank-cat"><span class="cat-tag '+catClass(s.cat)+'">'+CAT_DISPLAY[catKey]+'</span></div>'
-      +'<div class="rank-score">'+s.score+'</div>'
-      +'<div>'+changeHtml(s.change)+'</div>'
-      +'<div class="rank-listen"><a href="/discover">Listen</a></div>'
-      +'</div>';
+      + '<div class="' + numClass + '">' + displayRank + '</div>'
+      + '<div class="rank-info"><div class="rank-show">' + s.show + '</div><div class="rank-outlet">' + s.outlet + '</div></div>'
+      + '<div class="rank-cat"><span class="cat-tag ' + catClass(cat) + '">' + catLabel + '</span></div>'
+      + '<div class="rank-score">' + s.score + '</div>'
+      + '<div style="text-align:center">' + tierHtml(s.tier) + '</div>'
+      + '<div class="rank-listen"><a href="/discover">Listen</a></div>'
+      + '</div>';
   }).join('');
 }
 
-function filterTab(el,cat){
-  document.querySelectorAll('.cat-tab').forEach(function(t){t.classList.remove('active')});
-  el.classList.add('active');
-  var filtered=cat==='all'?SHOWS:SHOWS.filter(function(s){return s.cat.toLowerCase()===cat;});
+function applyFilters() {
+  var q = (document.getElementById('searchInput').value || '').toLowerCase().trim();
+  var filtered = ALL_SHOWS.filter(function(s) {
+    var catMatch = activeCat === 'all' || (Array.isArray(s.cat) ? s.cat : [s.cat]).some(function(c){ return c.toLowerCase() === activeCat; });
+    var textMatch = !q || s.show.toLowerCase().includes(q) || s.outlet.toLowerCase().includes(q);
+    return catMatch && textMatch;
+  });
   renderRankings(filtered);
 }
 
+function filterTab(el, cat) {
+  document.querySelectorAll('.cat-tab').forEach(function(t){ t.classList.remove('active'); });
+  el.classList.add('active');
+  activeCat = cat;
+  applyFilters();
+}
+
 function toggleMenu(){
-  var m=document.getElementById('mobileMenu');
+  var m = document.getElementById('mobileMenu');
   m.classList.toggle('open');
 }
 
-// Initial render
-renderRankings(SHOWS);
+// Load from shows.json
+fetch('/data/shows.json')
+  .then(function(r){ return r.json(); })
+  .then(function(data) {
+    ALL_SHOWS = (data.shows || []).map(function(s){
+      return { show: s.show, outlet: s.outlet, cat: s.cat, tier: s.tier, scores: s.scores, score: computeTotal(s) };
+    }).sort(function(a,b){ return b.score - a.score; });
+    applyFilters();
+  })
+  .catch(function() {
+    document.getElementById('rankingsList').innerHTML = '<div class="empty-state">Could not load rankings — try refreshing.</div>';
+  });
 </script>
 </body>
 </html>

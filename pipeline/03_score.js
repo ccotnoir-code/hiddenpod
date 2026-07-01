@@ -79,16 +79,28 @@ function scoreConsistency(last10Dates) {
     gaps.push((timestamps[i] - timestamps[i + 1]) / (1000 * 60 * 60 * 24));
   }
 
-  const mean = gaps.reduce((s, g) => s + g, 0) / gaps.length;
-  const variance = gaps.reduce((s, g) => s + Math.pow(g - mean, 2), 0) / gaps.length;
+  // Detect weekday-only schedule: all episodes land Mon–Fri and median gap ≤ 2 days.
+  // For these shows, the 3-day Fri→Mon gap is structural, not irregular — scoring it
+  // as variance would wrongly penalize shows like The Daily.
+  const daysOfWeek  = timestamps.map(t => new Date(t).getDay());
+  const weekendEps  = daysOfWeek.filter(d => d === 0 || d === 6).length;
+  const sortedGaps  = [...gaps].sort((a, b) => a - b);
+  const medianGap   = sortedGaps[Math.floor(sortedGaps.length / 2)];
+  const isWeekdayShow = weekendEps === 0 && timestamps.length >= 4 && medianGap < 2;
+
+  // For weekday-only shows, exclude the weekend-crossing gaps from variance calc
+  const scoringGaps = isWeekdayShow ? gaps.filter(g => g < 3) : gaps;
+  const effectiveGaps = scoringGaps.length >= 2 ? scoringGaps : gaps;
+
+  const mean = effectiveGaps.reduce((s, g) => s + g, 0) / effectiveGaps.length;
+  const variance = effectiveGaps.reduce((s, g) => s + Math.pow(g - mean, 2), 0) / effectiveGaps.length;
   const stddev = Math.sqrt(variance);
 
   // CV (coefficient of variation): lower = more consistent
-  const cv = mean > 0 ? stddev / mean : 1;
+  const cv = mean > 0 ? stddev / mean : 0;
 
   // Score: cv=0 → 100, cv=0.5 → 70, cv=1 → 40, cv≥2 → 10
-  const score = Math.max(10, Math.min(100, Math.round(100 - cv * 60)));
-  return score;
+  return Math.max(10, Math.min(100, Math.round(100 - cv * 60)));
 }
 
 function scoreVitality(pubDateUnix) {

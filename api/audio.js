@@ -1,4 +1,7 @@
-// RSS feeds for all 16 shows
+const fs   = require('fs');
+const path = require('path');
+
+// Legacy RSS feeds for original hand-verified shows (fetched fresh each hour for URL freshness)
 const RSS_FEEDS = {
   1:  'https://feeds.acast.com/public/shows/lawfare',
   3:  'https://podcasts.files.bbci.co.uk/p02nq0gn.rss',
@@ -13,7 +16,28 @@ const RSS_FEEDS = {
 const cache = {};
 const CACHE_TTL = 3600 * 1000; // 1 hour
 
-async function getAudioUrl(showId) {
+// Lookup table built from data/shows.json — populated on first request
+let showsUrlMap = null;
+
+function buildShowsUrlMap() {
+  if (showsUrlMap) return showsUrlMap;
+  try {
+    const raw = fs.readFileSync(path.join(process.cwd(), 'data', 'shows.json'), 'utf8');
+    const data = JSON.parse(raw);
+    showsUrlMap = {};
+    (data.shows || []).forEach(function(s) {
+      if (s._meta && s._meta.audioUrl) {
+        showsUrlMap[s.id] = s._meta.audioUrl;
+      }
+    });
+  } catch (e) {
+    console.error('shows.json load error:', e.message);
+    showsUrlMap = {};
+  }
+  return showsUrlMap;
+}
+
+async function getAudioUrlFromRss(showId) {
   const now = Date.now();
   if (cache[showId] && (now - cache[showId].ts) < CACHE_TTL) {
     return cache[showId].url;
@@ -37,7 +61,6 @@ async function getAudioUrl(showId) {
     if (!res.ok) return null;
     const text = await res.text();
 
-    // Extract first enclosure URL from RSS (handle both quote styles and media:content)
     let match = text.match(/<enclosure[^>]+url="([^"]+)"/i);
     if (!match) match = text.match(/<enclosure[^>]+url='([^']+)'/i);
     if (!match) match = text.match(/<media:content[^>]+url="([^"]+)"/i);
@@ -55,7 +78,6 @@ async function getAudioUrl(showId) {
 }
 
 module.exports = async (req, res) => {
-  // CORS headers — allow any origin for prototype
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -65,16 +87,23 @@ module.exports = async (req, res) => {
   }
 
   const showId = parseInt(req.query.show, 10);
-  if (!showId || showId < 1 || showId > 16) {
+  if (!showId || showId < 1) {
     return res.status(400).json({ error: 'Invalid show ID' });
   }
 
   try {
-    const audioUrl = await getAudioUrl(showId);
-    if (!audioUrl) {
-      return res.status(404).json({ error: 'Audio URL not found' });
+    // For legacy shows, fetch fresh URL from RSS
+    if (RSS_FEEDS[showId]) {
+      const audioUrl = await getAudioUrlFromRss(showId);
+      if (audioUrl) return res.status(200).json({ url: audioUrl });
     }
-    return res.status(200).json({ url: audioUrl });
+
+    // For pipeline shows, serve audioUrl stored in shows.json
+    const urlMap = buildShowsUrlMap();
+    const audioUrl = urlMap[showId];
+    if (audioUrl) return res.status(200).json({ url: audioUrl });
+
+    return res.status(404).json({ error: 'Audio URL not found' });
   } catch (e) {
     return res.status(500).json({ error: 'Server error' });
   }
