@@ -4,3 +4,4 @@ pipeline/ingested_shows.json
 pipeline/scored_shows.json
 pipeline/node_modules/
 pipeline/package-lock.json
+PODCASTINDEX .env
