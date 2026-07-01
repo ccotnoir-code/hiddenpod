@@ -18,10 +18,10 @@ const { piGet, sleep } = require('./utils/podcast_index');
 const API_KEY    = process.env.PODCASTINDEX_API_KEY;
 const API_SECRET = process.env.PODCASTINDEX_API_SECRET;
 
-// Podcast Index category IDs
-// 55 = News, 59 = News > Politics, also check adjacent subcategories
-const PRIMARY_CATEGORY_IDS   = [55, 59];
-const FALLBACK_CATEGORY_IDS  = [99, 109, 131]; // Government, Society & Culture, History
+// Podcast Index category names for the working endpoints (/recent/feeds, /podcasts/trending).
+// Note: /podcasts/bycategoryid does not exist in PI API v1.0 — use cat= param instead.
+const PRIMARY_CATS  = ['News', 'Politics'];
+const FALLBACK_CATS = ['Government', 'Society'];
 
 if (!API_KEY || !API_SECRET) {
   console.error('ERROR: PODCASTINDEX_API_KEY and PODCASTINDEX_API_SECRET must be set.');
@@ -88,22 +88,25 @@ async function checkFeedsForTranscripts(feeds, { batchSize = 15, delayMs = 250 }
   return results;
 }
 
-async function fetchCategoryFeeds(categoryIds) {
+async function fetchCategoryFeeds(catNames) {
   const feedMap = new Map();
 
-  for (const catId of categoryIds) {
-    process.stdout.write(`Fetching category ${catId}...`);
-    try {
-      const data = await api('/podcasts/bycategoryid', { id: catId, max: 1000, pretty: false });
-      const feeds = data.feeds || [];
-      process.stdout.write(` ${feeds.length} shows\n`);
-      for (const f of feeds) {
-        if (!feedMap.has(f.id)) feedMap.set(f.id, f);
+  // Hit both /recent/feeds and /podcasts/trending per category to maximise coverage
+  for (const cat of catNames) {
+    for (const endpoint of ['/recent/feeds', '/podcasts/trending']) {
+      process.stdout.write(`${endpoint} cat=${cat}...`);
+      try {
+        const data = await api(endpoint, { cat, max: 1000, pretty: false });
+        const feeds = data.feeds || data.items || [];
+        process.stdout.write(` ${feeds.length} shows\n`);
+        for (const f of feeds) {
+          if (!feedMap.has(f.id)) feedMap.set(f.id, f);
+        }
+      } catch (e) {
+        console.error(`\n  ERROR on ${endpoint} cat=${cat}: ${e.message}`);
       }
-    } catch (e) {
-      console.error(`\n  ERROR on category ${catId}: ${e.message}`);
+      await sleep(350);
     }
-    await sleep(400);
   }
 
   return Array.from(feedMap.values());
@@ -113,8 +116,8 @@ async function main() {
   console.log('=== HiddenPod — Podcast Index Discovery (Step 1) ===\n');
 
   // 1. Fetch show lists from primary categories
-  console.log('Primary categories (News=55, Politics=59):');
-  const primaryFeeds = await fetchCategoryFeeds(PRIMARY_CATEGORY_IDS);
+  console.log('Primary categories (News, Politics) via /recent/feeds + /podcasts/trending:');
+  const primaryFeeds = await fetchCategoryFeeds(PRIMARY_CATS);
   console.log(`\nUnique shows in primary categories: ${primaryFeeds.length}`);
 
   // 2. Check each show for transcripts
@@ -132,9 +135,9 @@ async function main() {
   // 3. If short, run fallback categories
   if (primaryEligible.length < 100) {
     console.log(`\n⚠ Only ${primaryEligible.length} eligible shows in primary categories.`);
-    console.log('Running fallback categories (Government, Society & Culture, History)...');
+    console.log('Running fallback categories (Government, Society)...');
 
-    const fallbackFeeds = await fetchCategoryFeeds(FALLBACK_CATEGORY_IDS);
+    const fallbackFeeds = await fetchCategoryFeeds(FALLBACK_CATS);
     // Exclude shows already checked
     const newFeeds = fallbackFeeds.filter(f => !primaryResults.has(f.id));
     console.log(`\nNew unique shows in fallback categories: ${newFeeds.length}`);
