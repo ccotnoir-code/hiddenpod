@@ -11,9 +11,10 @@ async function fetchTranscript(url) {
   return res.text();
 }
 
-// Parse HH:MM:SS,mmm or HH:MM:SS.mmm to fractional seconds
+// Parse H:MM:SS,mmm or HH:MM:SS,mmm or HH:MM:SS.mmm to fractional seconds
+// Handles single-digit hours (e.g. Omny WebVTT uses "0:00:00.240")
 function parseTimestampSec(ts) {
-  const m = ts.match(/(\d{2}):(\d{2}):(\d{2})[,\.](\d{3})/);
+  const m = ts.match(/(\d{1,2}):(\d{2}):(\d{2})[,\.](\d{3})/);
   if (!m) return 0;
   return parseInt(m[1]) * 3600 + parseInt(m[2]) * 60 + parseInt(m[3]) + parseInt(m[4]) / 1000;
 }
@@ -38,7 +39,8 @@ function parseSRT(text) {
 function parseSRTWithTimestamps(text) {
   const lines = text.replace(/\r\n/g, '\n').split('\n');
   const cues = [];
-  const timestampRe = /^(\d{2}:\d{2}:\d{2}[,\.]\d{3})\s*-->/;
+  // Allow 1 or 2 digit hours (e.g. Omny uses "0:00:00.240")
+  const timestampRe = /^(\d{1,2}:\d{2}:\d{2}[,\.]\d{3})\s*-->/;
   let currentStart = null;
   let currentText = [];
   for (const line of lines) {
