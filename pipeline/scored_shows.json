@@ -583,19 +583,19 @@
           "method": "computed_from_metadata"
         },
         "structure": {
-          "score": 48,
+          "score": 52,
           "weight": 0.2,
-          "rationale": "The episode moves from Usyk commentary to a guest interview to calls, but transitions are loose and the Usyk segment meanders through extended Andre Ward comparisons before finding its point."
+          "rationale": "The episode moves from Usyk belt-vacating commentary to a guest interview with reasonable transitions, though the live-stream format produces some meandering and tangential asides."
         },
         "relevance": {
-          "score": 62,
+          "score": 12,
           "weight": 0.22,
-          "rationale": "The episode covers specific recent boxing results (Ennis vs. Zayas, Usyk vacating titles) with substantive analysis, but boxing is a niche sports topic rather than news/politics."
+          "rationale": "This is a boxing analysis podcast covering fight results and fighter rankings — sports content with no substantive political or news policy dimension."
         },
         "clipability": {
-          "score": 44,
+          "score": 38,
           "weight": 0.16,
-          "rationale": "The Andre Ward/Usyk comparison and the 'can he fight vs. can he box' Boots breakdown are quotable but both require significant setup to land without surrounding context."
+          "rationale": "The duck-vs-avoidance distinction and the Ward/Usyk comparison offer quotable moments, but most require boxing-fan context to land as standalone previews."
         },
         "consistency": {
           "score": 66,
@@ -607,21 +607,21 @@
           "weight": 0.08,
           "method": "computed_from_metadata"
         },
-        "totalScore": 60,
+        "totalScore": 49,
         "tier": "average",
         "algorithmVersion": "v1.2",
-        "scoredAt": "2026-06-30T23:41:12.401Z"
+        "scoredAt": "2026-07-09T15:56:20.942Z"
       },
       "card": {
-        "tagline": "Boots Ennis proves himself, Usyk walks away, and boxing's inactivity problem explained",
-        "description": "Episode 389 breaks down Ennis stopping Zayas, defends Usyk vacating his titles, and diagnoses why fight fans have become dangerously reactionary.",
+        "tagline": "Boots stops Zayas, Usyk walks away — is boxing's pound-for-pound picture a mess?",
+        "description": "Host breaks down Ennis's stoppage win over Zayas, defends Usyk's belt vacation, and compares it to Andre Ward's controversial retirement with guest Mario Mombia.",
         "tags": [
           "Boxing",
           "Jaron Ennis",
           "Oleksandr Usyk",
           "Pound for Pound"
         ],
-        "reason": "Because this episode unpacks two of boxing's biggest stories this week"
+        "reason": "Because you follow elite boxing and the heavyweight and welterweight title pictures"
       }
     },
     {
@@ -7839,17 +7839,17 @@
         "structure": {
           "score": 32,
           "weight": 0.2,
-          "rationale": "Stream-of-consciousness delivery with no clear segments, frequent tangents, and no discernible intro or close in the excerpt."
+          "rationale": "There is a loose throughline around LeBron's departure narrative, but the episode rambles with frequent digressions and no clear segmentation or signposting."
         },
         "relevance": {
-          "score": 58,
+          "score": 8,
           "weight": 0.22,
-          "rationale": "Covers a specific, timely NBA free agency story (LeBron's Lakers departure) with named players and contract details, though it's sports rather than news/politics."
+          "rationale": "This is pure sports commentary about LeBron James leaving the Lakers — no policy, legislation, or political development makes this a News/Politics episode."
         },
         "clipability": {
-          "score": 41,
+          "score": 28,
           "weight": 0.16,
-          "rationale": "A few punchy, self-contained takes on LeBron's ego and the Lakers moving on, but the rambling delivery and lack of setup make clean 30-45 second pulls difficult."
+          "rationale": "A few punchy one-liners land on their own, but most moments require prior setup about the Lakers situation to fully land as standalone clips."
         },
         "consistency": {
           "score": 48,
@@ -7861,21 +7861,21 @@
           "weight": 0.08,
           "method": "computed_from_metadata"
         },
-        "totalScore": 56,
+        "totalScore": 43,
         "tier": "average",
         "algorithmVersion": "v1.2",
-        "scoredAt": "2026-06-30T23:55:15.895Z"
+        "scoredAt": "2026-07-09T15:56:27.537Z"
       },
       "card": {
-        "tagline": "Lakers finally quit LeBron — and he's pretending it was his choice",
-        "description": "A blunt breakdown of LeBron's free agency spin, why the Lakers were never offering max money, and what comes next for the franchise.",
+        "tagline": "LeBron didn't leave the Lakers — the Lakers left him first",
+        "description": "A blunt, unfiltered breakdown of LeBron's exit from LA, arguing his 'I chose to leave' framing is pure ego-driven spin.",
         "tags": [
-          "NBA",
           "LeBron James",
           "Lakers",
-          "Free Agency"
+          "NBA Free Agency",
+          "Sports Commentary"
         ],
-        "reason": "Because this episode calls out the biggest offseason story in basketball right now"
+        "reason": "Because you follow NBA roster moves and player drama closely"
       }
     },
     {
@@ -8695,19 +8695,19 @@
           "method": "computed_from_metadata"
         },
         "structure": {
-          "score": 72,
+          "score": 68,
           "weight": 0.2,
-          "rationale": "The episode moves methodically through corn, soybeans, and wheat with clear segment transitions and labeled report data, though the conversational format occasionally loses focus with asides and shoutouts."
+          "rationale": "The episode moves through clearly labeled commodity segments (corn, soybeans, wheat, fertilizer) with identifiable report-day hooks, though pacing is conversational and transitions rely on a co-host format rather than deliberate signposting."
         },
         "relevance": {
-          "score": 58,
+          "score": 12,
           "weight": 0.22,
-          "rationale": "The episode covers specific, timely USDA report data released that day (June 30 acreage and stocks reports), with relevant hooks to US-China trade talks and European heat wave crop impacts, but the subject matter is agricultural commodities rather than news/politics in the traditional sense."
+          "rationale": "This is agricultural commodities market analysis — grain futures, acreage reports, crush demand, and fertilizer prices — with only incidental references to trade deals and tariff policy that are subordinate to the core commodity trading content."
         },
         "clipability": {
-          "score": 55,
+          "score": 38,
           "weight": 0.16,
-          "rationale": "Several self-contained, quotable moments exist — particularly the 1877 wheat acreage stat and the China soybean math breakdown — but most require commodity price context to land fully."
+          "rationale": "Most moments require prior context about specific report numbers or futures prices to land, though the 'smallest wheat harvested acres since 1877' stat and the China soybean math breakdown offer a couple of near-standalone moments."
         },
         "consistency": {
           "score": 10,
@@ -8719,21 +8719,21 @@
           "weight": 0.08,
           "method": "computed_from_metadata"
         },
-        "totalScore": 54,
+        "totalScore": 41,
         "tier": "average",
         "algorithmVersion": "v1.2",
-        "scoredAt": "2026-06-30T23:56:48.447Z"
+        "scoredAt": "2026-07-09T15:56:37.746Z"
       },
       "card": {
-        "tagline": "USDA report day chaos: what the grain markets are actually telling you",
-        "description": "Mike Castle of StoneX breaks down record corn demand, skeptical China soybean math, and the smallest US wheat acreage since 1877 — all on one wild report day.",
+        "tagline": "USDA report day sends grain markets on a wild ride — here's what moved",
+        "description": "Analyst Mike Castle breaks down record corn and soybean demand, historic wheat acreage collapse, and what Moroccan phosphate tariff news means for fall input costs.",
         "tags": [
-          "grain markets",
-          "USDA report",
-          "US-China trade",
-          "agricultural commodities"
+          "Agriculture",
+          "Commodities",
+          "Grain Markets",
+          "Trade"
         ],
-        "reason": "Because today's USDA reports just moved corn, soybean, and wheat prices sharply"
+        "reason": "Because this episode digs into today's USDA acreage and stocks reports"
       }
     },
     {
@@ -9475,19 +9475,19 @@
           "method": "computed_from_metadata"
         },
         "structure": {
-          "score": 58,
+          "score": 62,
           "weight": 0.2,
-          "rationale": "Clear conversational throughline moving from LaMelo to Celtics/Jalen Brown with identifiable topic transitions, though pacing is loose and Evan Turner's responses frequently run long without clear resolution."
+          "rationale": "The episode has a clear conversational throughline moving from the LaMelo trade to Celtics/Jalen Brown discussions, with identifiable topic transitions, though pacing is loose and dialogue occasionally rambles."
         },
         "relevance": {
-          "score": 62,
+          "score": 8,
           "weight": 0.22,
-          "rationale": "Covers active NBA offseason trade rumors (LaMelo Ball, Jalen Brown, Evan Mobley) with specific reporting hooks, but this is sports news rather than news/politics content."
+          "rationale": "This is NBA trade analysis and basketball operations content — sports subject matter that scores in the 0-20 range regardless of analytical depth or specificity."
         },
         "clipability": {
-          "score": 55,
+          "score": 48,
           "weight": 0.16,
-          "rationale": "The Brad Stevens 'verbal pretzel' moment and Evan Turner's Giannis aging argument both work as near-standalone clips, though most exchanges require prior setup to land fully."
+          "rationale": "A few quotable moments exist — particularly the 'verbal pretzel' line about Brad Stevens and the Giannis aging argument — but most exchanges require prior context about the trade rumors to land."
         },
         "consistency": {
           "score": 54,
@@ -9499,21 +9499,21 @@
           "weight": 0.08,
           "method": "computed_from_metadata"
         },
-        "totalScore": 60,
+        "totalScore": 48,
         "tier": "average",
         "algorithmVersion": "v1.2",
-        "scoredAt": "2026-06-30T23:58:43.918Z"
+        "scoredAt": "2026-07-09T15:56:46.307Z"
       },
       "card": {
-        "tagline": "Evan Turner explains why the Celtics should stop chasing Giannis and keep Jalen Brown",
-        "description": "SI's NBA crew breaks down Boston's Jalen Brown trade push, the LaMelo deal fallout, and whether swapping Brown for Giannis ever made sense.",
+        "tagline": "Evan Turner breaks down why the Celtics may be done with Jalen Brown",
+        "description": "SI's NBA crew and Evan Turner dissect the Celtics' aggressive push to trade Jalen Brown after his best season yet, and what four first-round picks says about Boston's direction.",
         "tags": [
           "NBA",
-          "Celtics",
+          "Boston Celtics",
           "Jalen Brown",
           "Trade Rumors"
         ],
-        "reason": "Because the Celtics are actively shopping Jalen Brown this offseason"
+        "reason": "Because you follow NBA front office moves and roster shake-ups"
       }
     },
     {
@@ -11973,17 +11973,17 @@
         "structure": {
           "score": 38,
           "weight": 0.2,
-          "rationale": "The conversation meanders across LeBron, Mikal Bridges, Jalen Brown, MLB trade rumors, and 2015 Red Sox with no clear segmentation or signposting, making it feel like an unedited stream-of-consciousness collab rather than a structured episode."
+          "rationale": "The conversation meanders across LeBron, Mikal Bridges, Jalen Brown, MLB trade rumors, and Giannis without clear segmentation or deliberate pacing, though a loose collaborative interview format provides minimal scaffolding."
         },
         "relevance": {
-          "score": 62,
+          "score": 8,
           "weight": 0.22,
-          "rationale": "The episode is clearly pegged to a specific, timely event — LeBron James departing the Lakers as of June 30, 2026 — and references current NBA free agency moves, the Knicks' recent championship, and Giannis's situation, giving it genuine news hooks."
+          "rationale": "This is pure NBA sports analysis — LeBron's Lakers departure, Knicks championship, trade rumors — with no substantive political, legislative, or policy dimension."
         },
         "clipability": {
-          "score": 32,
+          "score": 22,
           "weight": 0.16,
-          "rationale": "Most moments require surrounding context to land — the Brady-to-Tampa parallel and the Brandon Ingram/Pacers-fans anecdote are the closest to standalone, but both need setup to be fully intelligible as 30-45 second clips."
+          "rationale": "Most moments require prior context about the LeBron departure headline or ongoing NBA free agency chatter, with only a few standalone-ish takes like the Brady-LeBron parallel that could briefly stand alone."
         },
         "consistency": {
           "score": 49,
@@ -11995,21 +11995,21 @@
           "weight": 0.08,
           "method": "computed_from_metadata"
         },
-        "totalScore": 53,
+        "totalScore": 39,
         "tier": "average",
         "algorithmVersion": "v1.2",
-        "scoredAt": "2026-07-01T00:03:23.796Z"
+        "scoredAt": "2026-07-09T15:56:55.065Z"
       },
       "card": {
-        "tagline": "LeBron's Lakers exit: does he chase one last ring like Brady did?",
-        "description": "Two sports podcasters debate where LeBron lands after leaving LA, drawing parallels to Brady's Tampa move and Jordan's retirement legacy.",
+        "tagline": "LeBron leaves the Lakers — what's his championship endgame now?",
+        "description": "Two sports podcasters break down LeBron's Lakers exit, his potential landing spots, and whether he can chase one final ring like Brady in Tampa.",
         "tags": [
+          "NBA",
           "LeBron James",
-          "NBA Free Agency",
           "Lakers",
-          "NBA 2026"
+          "Free Agency"
         ],
-        "reason": "Because LeBron's next move is the biggest NBA story right now"
+        "reason": "Because you follow NBA roster moves and superstar free agency drama"
       }
     },
     {
