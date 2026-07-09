@@ -369,6 +369,21 @@ async function main() {
     process.exit(1);
   }
 
+  // Warn if local branch is behind origin — a stale local copy + manual run
+  // is the most common cause of a scored_shows.json merge conflict on push.
+  // Skip check in CI (GITHUB_ACTIONS is set by the runner).
+  if (!process.env.GITHUB_ACTIONS) {
+    try {
+      execSync('git fetch origin main --quiet', { cwd: __dirname, stdio: 'pipe' });
+      const behind = execSync('git rev-list HEAD..origin/main --count', { cwd: __dirname, stdio: 'pipe' }).toString().trim();
+      if (parseInt(behind) > 0) {
+        console.warn(`\n⚠  WARNING: local branch is ${behind} commit(s) behind origin/main.`);
+        console.warn('   Run "git pull" before continuing to avoid a push conflict.\n');
+        // Not a hard exit — let the user decide. The write is still atomic.
+      }
+    } catch (_) { /* non-git environment or fetch failed — skip silently */ }
+  }
+
   const data  = JSON.parse(fs.readFileSync(SCORED_PATH, 'utf8'));
   const shows = data.scored;
   console.log(`Pool: ${shows.length} shows\n`);
