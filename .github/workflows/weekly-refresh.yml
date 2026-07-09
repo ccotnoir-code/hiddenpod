@@ -1,0 +1,48 @@
+name: Weekly Refresh
+
+on:
+  schedule:
+    - cron: '0 8 * * 1'  # Monday 08:00 UTC
+  workflow_dispatch:       # allow manual trigger from GitHub Actions UI
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write     # needed to push the updated shows.json
+
+    timeout-minutes: 90   # 120 shows × ~1.2s PI delay + LLM calls; 90 min is safe headroom
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node 18
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install pipeline dependencies
+        run: npm ci
+        working-directory: pipeline
+
+      - name: Run incremental refresh
+        run: node 05_refresh.js
+        working-directory: pipeline
+        env:
+          ANTHROPIC_API_KEY:       ${{ secrets.ANTHROPIC_API_KEY }}
+          PODCASTINDEX_API_KEY:    ${{ secrets.PODCASTINDEX_API_KEY }}
+          PODCASTINDEX_API_SECRET: ${{ secrets.PODCASTINDEX_API_SECRET }}
+
+      - name: Commit updated data
+        run: |
+          git config user.name  "HiddenPod Bot"
+          git config user.email "bot@hiddenpod.vercel.app"
+          git add data/shows.json pipeline/scored_shows.json
+          # Only commit if something actually changed
+          if git diff --cached --quiet; then
+            echo "No changes — nothing to commit."
+          else
+            git commit -m "chore: weekly refresh $(date -u +%Y-%m-%d)"
+            git push
+          fi

@@ -1,7 +1,10 @@
-# Pipeline intermediate artifacts
+# Pipeline intermediate artifacts (large/noisy — not needed in repo)
 pipeline/eligible_shows.json
 pipeline/ingested_shows.json
-pipeline/scored_shows.json
+# scored_shows.json IS committed — GitHub Actions needs it as the refresh state store
+# package-lock.json IS committed — needed for `npm ci` in GitHub Actions
+
 pipeline/node_modules/
-pipeline/package-lock.json
-PODCASTINDEX .env
+
+# Secrets — never commit
+pipeline/.env
