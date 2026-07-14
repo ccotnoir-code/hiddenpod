@@ -10,8 +10,8 @@
 // Designed for monthly re-runs. Each run appends a dated row to coverage_history.json.
 //
 // Usage:
-//   cd pipeline
-//   PODCASTINDEX_API_KEY=xxx PODCASTINDEX_API_SECRET=yyy node 06_coverage_audit.js
+//   cd pipeline && node 06_coverage_audit.js
+//   (credentials auto-loaded from pipeline/.env; no env vars needed on the command line)
 //
 // Options:
 //   --sample N   verify N randomly-sampled transcript URLs (default 250)
@@ -25,10 +25,25 @@ const fs   = require('fs');
 const path = require('path');
 const { piGet, sleep } = require('./utils/podcast_index');
 
+// Auto-load pipeline/.env when running locally so no secrets need to appear
+// in the command line. In CI, secrets are injected via workflow env: block.
+(function loadDotEnv() {
+  if (process.env.PODCASTINDEX_API_KEY) return; // already set (CI or explicit export)
+  try {
+    const envPath = path.join(__dirname, '.env');
+    if (!fs.existsSync(envPath)) return;
+    fs.readFileSync(envPath, 'utf8').split('\n').forEach(line => {
+      const m = line.match(/^([A-Z][A-Z0-9_]*)=(.+)$/);
+      if (m && !process.env[m[1]]) process.env[m[1]] = m[2].trim();
+    });
+  } catch (_) {}
+})();
+
 const PI_KEY    = process.env.PODCASTINDEX_API_KEY;
 const PI_SECRET = process.env.PODCASTINDEX_API_SECRET;
 if (!PI_KEY || !PI_SECRET) {
-  console.error('ERROR: Set PODCASTINDEX_API_KEY and PODCASTINDEX_API_SECRET.');
+  console.error('ERROR: PODCASTINDEX_API_KEY and PODCASTINDEX_API_SECRET not found.');
+  console.error('       Set them in pipeline/.env or export them before running.');
   process.exit(1);
 }
 
