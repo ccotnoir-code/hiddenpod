@@ -1,0 +1,50 @@
+name: Monthly Coverage Audit
+
+on:
+  schedule:
+    - cron: '0 10 1-7 * 3'
+  workflow_dispatch:
+
+concurrency:
+  group: hiddenpod-pipeline
+  cancel-in-progress: false
+
+jobs:
+  coverage-audit:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    timeout-minutes: 60
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node 18
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install pipeline dependencies
+        run: npm ci
+        working-directory: pipeline
+
+      - name: Run coverage audit
+        run: node 06_coverage_audit.js
+        working-directory: pipeline
+        env:
+          PODCASTINDEX_API_KEY:    ${{ secrets.PODCASTINDEX_API_KEY }}
+          PODCASTINDEX_API_SECRET: ${{ secrets.PODCASTINDEX_API_SECRET }}
+
+      - name: Commit coverage results
+        run: |
+          git config user.name  "HiddenPod Bot"
+          git config user.email "bot@hiddenpod.vercel.app"
+          git add pipeline/coverage_latest.json pipeline/coverage_history.json
+          if git diff --cached --quiet; then
+            echo "No changes — nothing to commit."
+          else
+            git commit -m "chore: monthly coverage audit $(date -u +%Y-%m-%d)"
+            git push
+          fi
