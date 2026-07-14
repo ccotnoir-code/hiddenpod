@@ -17,6 +17,7 @@
 //   --sample N   verify N randomly-sampled transcript URLs (default 250)
 //   --no-verify  skip URL verification entirely (faster, tag-presence only)
 //   --dry-run    report to console only, do not write history
+//   --resume     skip feeds already checked in coverage_checkpoint.json (survives rate-limit kills)
 
 'use strict';
 
@@ -38,9 +39,11 @@ const args        = process.argv.slice(2);
 const SAMPLE_SIZE = parseInt(args[args.indexOf('--sample') + 1] || '250', 10) || 250;
 const NO_VERIFY   = args.includes('--no-verify');
 const DRY_RUN     = args.includes('--dry-run');
+const RESUME      = args.includes('--resume');
 
-const HISTORY_PATH = path.join(__dirname, 'coverage_history.json');
-const LATEST_PATH  = path.join(__dirname, 'coverage_latest.json');
+const HISTORY_PATH    = path.join(__dirname, 'coverage_history.json');
+const LATEST_PATH     = path.join(__dirname, 'coverage_latest.json');
+const CHECKPOINT_PATH = path.join(__dirname, 'coverage_checkpoint.json');
 
 // 90 days expressed in seconds (Unix timestamp threshold)
 const NINETY_DAYS_AGO = Math.floor(Date.now() / 1000) - 90 * 24 * 3600;
@@ -102,13 +105,26 @@ async function fetchCategoryFeeds(catNames) {
 // Returns Map<feedId, { hasTag, transcriptUrl, transcriptType, audioUrl }>
 // batchSize=1 (sequential) is intentional — free PI tier rate-limits at ~2 req/s sustained.
 // At 400ms/call this is ~18 min for 2700 shows; fine for a monthly diagnostic.
+// Checkpoints to disk every 100 feeds so --resume can pick up after a rate-limit kill.
 async function checkFeedsForTranscripts(feeds, { batchSize = 1, delayMs = 400 } = {}) {
   const results = new Map();
+
+  // Load checkpoint if --resume flag set
+  if (RESUME && fs.existsSync(CHECKPOINT_PATH)) {
+    try {
+      const ckpt = JSON.parse(fs.readFileSync(CHECKPOINT_PATH, 'utf8'));
+      for (const r of ckpt.results || []) results.set(r.feedId, r);
+      console.log(`  Resumed from checkpoint: ${results.size} feeds already checked`);
+    } catch (_) {}
+  }
 
   for (let i = 0; i < feeds.length; i += batchSize) {
     const batch = feeds.slice(i, i + batchSize);
 
     for (const feed of batch) {
+      // Skip feeds already in checkpoint
+      if (results.has(feed.id)) continue;
+
       try {
         const data     = await api('/episodes/byfeedid', { id: feed.id, max: 5 });
         const episodes = data.items || [];
@@ -152,9 +168,20 @@ async function checkFeedsForTranscripts(feeds, { batchSize = 1, delayMs = 400 } 
       }
     }
 
-    const checked = Math.min(i + batchSize, feeds.length);
+    const checked = results.size;
     if (checked % 50 === 0 || checked === feeds.length) {
       process.stdout.write(`  ${checked}/${feeds.length} checked\r`);
+    }
+    // Checkpoint every 100 feeds so --resume can recover from rate-limit kills
+    if (!DRY_RUN && checked % 100 === 0 && checked > 0) {
+      const existing = fs.existsSync(CHECKPOINT_PATH)
+        ? JSON.parse(fs.readFileSync(CHECKPOINT_PATH, 'utf8')) : {};
+      fs.writeFileSync(CHECKPOINT_PATH, JSON.stringify({
+        ...existing,
+        checkpointedAt: new Date().toISOString(),
+        checkedCount: checked,
+        results: Array.from(results.values()),
+      }, null, 2));
     }
     if (i + batchSize < feeds.length) await sleep(delayMs);
   }
@@ -298,9 +325,31 @@ async function main() {
   console.log(`Sample size for URL verification: ${NO_VERIFY ? 'SKIPPED' : SAMPLE_SIZE}\n`);
 
   // 1. Enumerate all News + Politics feeds from Podcast Index
-  console.log('1. Fetching News + Politics feeds from Podcast Index...');
-  const allFeeds = await fetchCategoryFeeds(['News', 'Politics']);
+  // If --resume, reuse feeds from checkpoint (skip the 4 API calls)
+  let allFeeds;
+  if (RESUME && fs.existsSync(CHECKPOINT_PATH)) {
+    try {
+      const ckpt = JSON.parse(fs.readFileSync(CHECKPOINT_PATH, 'utf8'));
+      allFeeds = ckpt.feeds || null;
+      if (allFeeds) console.log(`1. Feeds loaded from checkpoint (${allFeeds.length} feeds, skipping API fetch)`);
+    } catch (_) {}
+  }
+  if (!allFeeds) {
+    console.log('1. Fetching News + Politics feeds from Podcast Index...');
+    allFeeds = await fetchCategoryFeeds(['News', 'Politics']);
+  }
   console.log(`   Raw unique feeds: ${allFeeds.length}`);
+
+  // Save feeds to checkpoint so --resume can skip this fetch on restart
+  if (!DRY_RUN && !RESUME) {
+    fs.writeFileSync(CHECKPOINT_PATH, JSON.stringify({
+      checkpointedAt: new Date().toISOString(),
+      totalFeeds: allFeeds.length,
+      checkedCount: 0,
+      feeds: allFeeds,
+      results: [],
+    }, null, 2));
+  }
 
   // 2. Filter to 90-day active
   const activeFeeds = allFeeds.filter(f =>
@@ -401,6 +450,8 @@ async function main() {
   if (!DRY_RUN) {
     fs.writeFileSync(LATEST_PATH, JSON.stringify(resultRow, null, 2));
     appendHistory(resultRow);
+    // Clean up checkpoint on successful completion
+    if (fs.existsSync(CHECKPOINT_PATH)) fs.unlinkSync(CHECKPOINT_PATH);
     console.log(`\nResults saved → coverage_latest.json`);
     console.log(`History row appended → coverage_history.json`);
   } else {
