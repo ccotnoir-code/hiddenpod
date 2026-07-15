@@ -72,8 +72,9 @@ async function llmFallbackCheck(show, categoryKey, anthropic) {
       rationale: text,
     };
   } catch (e) {
-    // On LLM error, default to pass (fail-open) to avoid silently dropping shows
-    return { pass: true, signal: 'llm', rationale: 'LLM error — defaulting to pass: ' + e.message };
+    // Fail-closed on LLM error: consistent with "under-include over contaminate" philosophy.
+    // An unresolvable verdict is uncertainty; uncertain shows don't pass the gate.
+    return { pass: false, signal: 'llm-error', rationale: 'LLM error — failing closed: ' + e.message };
   }
 }
 
