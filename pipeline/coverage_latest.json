@@ -1,0 +1,143 @@
+{
+  "date": "2026-07-15",
+  "runAt": "2026-07-15T11:53:35.237Z",
+  "totalActiveShows": 2718,
+  "withTranscriptTag": 577,
+  "tagCoverageRate": 0.2123,
+  "transcriptTypes": {
+    "text/vtt": 62,
+    "text/html": 455,
+    "application/srt": 13,
+    "application/json": 47
+  },
+  "verificationSampleSize": 250,
+  "verificationTally": {
+    "ok": 199,
+    "html": 47,
+    "broken": 3,
+    "empty": 1
+  },
+  "verifiedOkRate": 0.796,
+  "effectiveCoverageRate": 0.169,
+  "byHost": {
+    "Other/Unknown": {
+      "total": 1142,
+      "withTag": 107,
+      "tagCoverageRate": 0.094,
+      "verifiedSampleN": 44,
+      "verifiedOkRate": 0.909
+    },
+    "Spreaker": {
+      "total": 363,
+      "withTag": 255,
+      "tagCoverageRate": 0.702,
+      "verifiedSampleN": 112,
+      "verifiedOkRate": 0.991
+    },
+    "Transistor": {
+      "total": 97,
+      "withTag": 23,
+      "tagCoverageRate": 0.237,
+      "verifiedSampleN": 13,
+      "verifiedOkRate": 0.923
+    },
+    "Simplecast": {
+      "total": 120,
+      "withTag": 0,
+      "tagCoverageRate": 0,
+      "verifiedSampleN": 0,
+      "verifiedOkRate": null
+    },
+    "RSS.com": {
+      "total": 71,
+      "withTag": 22,
+      "tagCoverageRate": 0.31,
+      "verifiedSampleN": 11,
+      "verifiedOkRate": 1
+    },
+    "Captivate": {
+      "total": 91,
+      "withTag": 9,
+      "tagCoverageRate": 0.099,
+      "verifiedSampleN": 4,
+      "verifiedOkRate": 0
+    },
+    "Omny": {
+      "total": 200,
+      "withTag": 65,
+      "tagCoverageRate": 0.325,
+      "verifiedSampleN": 22,
+      "verifiedOkRate": 1
+    },
+    "Megaphone": {
+      "total": 155,
+      "withTag": 0,
+      "tagCoverageRate": 0,
+      "verifiedSampleN": 0,
+      "verifiedOkRate": null
+    },
+    "Libsyn": {
+      "total": 64,
+      "withTag": 4,
+      "tagCoverageRate": 0.063,
+      "verifiedSampleN": 1,
+      "verifiedOkRate": 1
+    },
+    "Buzzsprout": {
+      "total": 183,
+      "withTag": 86,
+      "tagCoverageRate": 0.47,
+      "verifiedSampleN": 41,
+      "verifiedOkRate": 0
+    },
+    "Castos": {
+      "total": 6,
+      "withTag": 0,
+      "tagCoverageRate": 0,
+      "verifiedSampleN": 0,
+      "verifiedOkRate": null
+    },
+    "Acast": {
+      "total": 109,
+      "withTag": 0,
+      "tagCoverageRate": 0,
+      "verifiedSampleN": 0,
+      "verifiedOkRate": null
+    },
+    "Podbean": {
+      "total": 55,
+      "withTag": 4,
+      "tagCoverageRate": 0.073,
+      "verifiedSampleN": 2,
+      "verifiedOkRate": 1
+    },
+    "Podhome": {
+      "total": 2,
+      "withTag": 2,
+      "tagCoverageRate": 1,
+      "verifiedSampleN": 0,
+      "verifiedOkRate": null
+    },
+    "Anchor/Spotify": {
+      "total": 43,
+      "withTag": 0,
+      "tagCoverageRate": 0,
+      "verifiedSampleN": 0,
+      "verifiedOkRate": null
+    },
+    "SoundCloud": {
+      "total": 16,
+      "withTag": 0,
+      "tagCoverageRate": 0,
+      "verifiedSampleN": 0,
+      "verifiedOkRate": null
+    },
+    "Podcastics": {
+      "total": 1,
+      "withTag": 0,
+      "tagCoverageRate": 0,
+      "verifiedSampleN": 0,
+      "verifiedOkRate": null
+    }
+  }
+}
