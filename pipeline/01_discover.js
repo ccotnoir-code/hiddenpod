@@ -20,8 +20,7 @@ const API_SECRET = process.env.PODCASTINDEX_API_SECRET;
 
 // Podcast Index category names for the working endpoints (/recent/feeds, /podcasts/trending).
 // Note: /podcasts/bycategoryid does not exist in PI API v1.0 — use cat= param instead.
-const PRIMARY_CATS  = ['News', 'Politics'];
-const FALLBACK_CATS = ['Government', 'Society'];
+const DISCOVERY_CATS = ['News', 'Politics'];
 
 if (!API_KEY || !API_SECRET) {
   console.error('ERROR: PODCASTINDEX_API_KEY and PODCASTINDEX_API_SECRET must be set.');
@@ -116,45 +115,21 @@ async function fetchCategoryFeeds(catNames) {
 async function main() {
   console.log('=== HiddenPod — Podcast Index Discovery (Step 1) ===\n');
 
-  // 1. Fetch show lists from primary categories
-  console.log('Primary categories (News, Politics) via /recent/feeds + /podcasts/trending:');
-  const primaryFeeds = await fetchCategoryFeeds(PRIMARY_CATS);
-  console.log(`\nUnique shows in primary categories: ${primaryFeeds.length}`);
+  // 1. Fetch show lists — News + Politics only, no conditional expansion
+  console.log('Discovery categories (News, Politics) via /recent/feeds + /podcasts/trending:');
+  const allFeeds = await fetchCategoryFeeds(DISCOVERY_CATS);
+  console.log(`\nUnique shows in discovery scope: ${allFeeds.length}`);
 
   // 2. Check each show for transcripts
   console.log('\nChecking recent episodes for publisher transcripts...');
-  const primaryResults = await checkFeedsForTranscripts(primaryFeeds);
-  const primaryEligible = Array.from(primaryResults.values()).filter(r => r.hasTranscript);
+  const allResults  = await checkFeedsForTranscripts(allFeeds);
+  const allEligible = Array.from(allResults.values()).filter(r => r.hasTranscript);
 
-  console.log('\n=== PRIMARY CATEGORY RESULTS ===');
-  console.log(`  Total checked:       ${primaryFeeds.length}`);
-  console.log(`  With transcripts:    ${primaryEligible.length}`);
+  console.log('\n=== RESULTS ===');
+  console.log(`  Total checked:    ${allFeeds.length}`);
+  console.log(`  With transcripts: ${allEligible.length}`);
 
-  let allEligible = primaryEligible;
-  let usedFallback = false;
-
-  // 3. If short, run fallback categories
-  if (primaryEligible.length < 100) {
-    console.log(`\n⚠ Only ${primaryEligible.length} eligible shows in primary categories.`);
-    console.log('Running fallback categories (Government, Society)...');
-
-    const fallbackFeeds = await fetchCategoryFeeds(FALLBACK_CATS);
-    // Exclude shows already checked
-    const newFeeds = fallbackFeeds.filter(f => !primaryResults.has(f.id));
-    console.log(`\nNew unique shows in fallback categories: ${newFeeds.length}`);
-
-    const fallbackResults = await checkFeedsForTranscripts(newFeeds);
-    const fallbackEligible = Array.from(fallbackResults.values()).filter(r => r.hasTranscript);
-
-    console.log('\n=== FALLBACK CATEGORY RESULTS ===');
-    console.log(`  Additional checked:   ${newFeeds.length}`);
-    console.log(`  Additional eligible:  ${fallbackEligible.length}`);
-
-    allEligible = [...primaryEligible, ...fallbackEligible];
-    usedFallback = true;
-  }
-
-  // 4. Breakdown by transcript type
+  // 3. Breakdown by transcript type
   const byType = {};
   for (const r of allEligible) {
     byType[r.transcriptType] = (byType[r.transcriptType] || 0) + 1;
@@ -162,7 +137,6 @@ async function main() {
 
   console.log('\n=== FINAL SUMMARY ===');
   console.log(`Total eligible shows: ${allEligible.length}`);
-  console.log(`Fallback used:        ${usedFallback ? 'yes' : 'no'}`);
   console.log('\nTranscript types:');
   Object.entries(byType).sort((a, b) => b[1] - a[1]).forEach(([type, count]) => {
     console.log(`  ${type.padEnd(20)} ${count}`);
@@ -178,20 +152,20 @@ async function main() {
   if (allEligible.length >= 100) {
     console.log(`\n✓ Pool confirmed: ${allEligible.length} shows — proceed to Step 2 (ingest).`);
   } else if (allEligible.length >= 50) {
-    console.log(`\n⚠ Pool size ${allEligible.length} — below 100 target. Consider widening further or proceeding with smaller set.`);
+    console.log(`\n⚠ Pool size ${allEligible.length} — below 100 target. Investigate transcript coverage before proceeding.`);
   } else {
-    console.log(`\n✗ Pool size ${allEligible.length} — too small. Must widen categories. Do not proceed until resolved.`);
+    console.log(`\n✗ Pool size ${allEligible.length} — too small. Do not proceed until resolved.`);
   }
 
   // 7. Write eligible_shows.json for Step 2
   const outPath = path.join(__dirname, 'eligible_shows.json');
   fs.writeFileSync(outPath, JSON.stringify({
-    generatedAt:    new Date().toISOString(),
-    totalChecked:   primaryFeeds.length + (usedFallback ? 0 : 0),
-    eligibleCount:  allEligible.length,
-    usedFallback,
+    generatedAt:     new Date().toISOString(),
+    discoveryCats:   DISCOVERY_CATS,
+    totalChecked:    allFeeds.length,
+    eligibleCount:   allEligible.length,
     transcriptTypes: byType,
-    shows: allEligible
+    shows:           allEligible
   }, null, 2));
   console.log(`\nEligible show list → pipeline/eligible_shows.json`);
 }
