@@ -21,7 +21,11 @@ const ITUNES_DELAY_MS   = 1000;
 function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
 
 // Batch-fetch primaryGenreName for a list of itunesIds.
-// Returns Map<itunesId, primaryGenreName|null>
+// Returns Map<itunesId, string|null> where:
+//   string  — Apple resolved this ID, value is primaryGenreName
+//   null    — Apple was queried but returned no result (stale/delisted ID)
+//   absent  — ID was never looked up (show had no itunesId)
+// This three-way distinction lets checkOne emit a precise signal for auditing.
 async function fetchAppleGenres(itunesIds) {
   const result = new Map();
   const ids = itunesIds.filter(Boolean);
@@ -29,6 +33,10 @@ async function fetchAppleGenres(itunesIds) {
 
   for (let i = 0; i < ids.length; i += ITUNES_BATCH_SIZE) {
     const batch = ids.slice(i, i + ITUNES_BATCH_SIZE);
+    // Pre-seed all IDs in this batch as null (stale sentinel).
+    // Any that resolve will overwrite with their genre string.
+    for (const id of batch) result.set(String(id), null);
+
     const url = 'https://itunes.apple.com/lookup?id=' + batch.join(',') + '&entity=podcast&media=podcast';
     try {
       const res = await fetch(url, { headers: { 'User-Agent': 'HiddenPod/1.0' } });
@@ -47,8 +55,8 @@ async function fetchAppleGenres(itunesIds) {
 }
 
 // Run LLM fallback check for a single show against a category.
-// Requires an Anthropic client to be passed in.
-async function llmFallbackCheck(show, categoryKey, anthropic) {
+// signal: caller-supplied signal tag for audit trail ('llm-no-itunes' or 'llm-stale-itunes').
+async function llmFallbackCheck(show, categoryKey, anthropic, signal = 'llm-no-itunes') {
   const config  = GATE_CONFIG[categoryKey];
   const prompt  =
     `You are evaluating whether a podcast belongs in the "${categoryKey}" category on a discovery platform.\n\n` +
@@ -68,7 +76,7 @@ async function llmFallbackCheck(show, categoryKey, anthropic) {
     const passes = text.toUpperCase().startsWith('PASS');
     return {
       pass:      passes,
-      signal:    'llm',
+      signal,
       rationale: text,
     };
   } catch (e) {
@@ -87,10 +95,12 @@ function checkOne(show, categoryKey, appleGenreMap, anthropic) {
     return Promise.resolve({ pass: true, signal: 'no-config', rationale: `No gate config for category "${categoryKey}" — defaulting to pass` });
   }
 
-  const itunesId      = show.itunesId ? String(show.itunesId) : null;
-  const appleGenre    = itunesId ? appleGenreMap.get(itunesId) : null;
+  const itunesId   = show.itunesId ? String(show.itunesId) : null;
+  const inMap      = itunesId ? appleGenreMap.has(itunesId) : false;
+  const appleGenre = inMap ? appleGenreMap.get(itunesId) : undefined;
 
   if (appleGenre) {
+    // Apple resolved this ID and returned a genre.
     const passes = config.applePass.includes(appleGenre);
     return Promise.resolve({
       pass:      passes,
@@ -99,8 +109,14 @@ function checkOne(show, categoryKey, appleGenreMap, anthropic) {
     });
   }
 
-  // No Apple data — fall back to LLM
-  if (anthropic) return llmFallbackCheck(show, categoryKey, anthropic);
+  if (inMap && appleGenre === null) {
+    // itunesId was queried but Apple returned no result — stale or delisted ID.
+    // Treat as no Apple coverage and fall through to LLM, but flag distinctly for auditing.
+    if (anthropic) return llmFallbackCheck(show, categoryKey, anthropic, 'llm-stale-itunes');
+  }
+
+  // No itunesId at all — show never had Apple Podcasts presence.
+  if (anthropic) return llmFallbackCheck(show, categoryKey, anthropic, 'llm-no-itunes');
 
   return Promise.resolve({ pass: true, signal: 'no-data', rationale: 'No Apple data and no LLM client — defaulting to pass' });
 }
