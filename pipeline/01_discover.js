@@ -54,6 +54,7 @@ async function checkFeedsForTranscripts(feeds, { batchSize = 15, delayMs = 250 }
               feedId:       feed.id,
               feedTitle:    feed.title,
               feedUrl:      feed.url,
+              itunesId:     feed.itunesId || null,
               imageUrl:     feed.image || feed.artwork || '',
               author:       feed.author || '',
               description:  feed.description || '',
@@ -70,10 +71,10 @@ async function checkFeedsForTranscripts(feeds, { batchSize = 15, delayMs = 250 }
             return;
           }
         }
-        results.set(feed.id, { feedId: feed.id, feedTitle: feed.title, hasTranscript: false });
+        results.set(feed.id, { feedId: feed.id, feedTitle: feed.title, itunesId: feed.itunesId || null, hasTranscript: false });
       } catch (e) {
         results.set(feed.id, {
-          feedId: feed.id, feedTitle: feed.title,
+          feedId: feed.id, feedTitle: feed.title, itunesId: feed.itunesId || null,
           hasTranscript: false, error: e.message
         });
       }

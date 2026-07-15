@@ -1,0 +1,25 @@
+{
+  "News/Politics": {
+    "podcastIndexCategories": ["News", "Politics", "Government", "Society"],
+    "applePass": [
+      "News",
+      "News Commentary",
+      "Daily News",
+      "Politics",
+      "Government",
+      "Entertainment News"
+    ]
+  },
+  "True Crime": {
+    "podcastIndexCategories": ["True Crime"],
+    "applePass": ["True Crime", "Crime", "Documentary"]
+  },
+  "Business": {
+    "podcastIndexCategories": ["Business"],
+    "applePass": ["Business", "Investing", "Entrepreneurship", "Management", "Marketing"]
+  },
+  "Technology": {
+    "podcastIndexCategories": ["Technology"],
+    "applePass": ["Technology", "Tech News", "Science"]
+  }
+}
