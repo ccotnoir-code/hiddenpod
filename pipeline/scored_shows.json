@@ -93,7 +93,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T11:58:27Z"
+        "scoredAt": "2026-07-16T14:33:10Z"
       }
     },
     {
@@ -189,7 +189,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T11:58:32Z"
+        "scoredAt": "2026-07-16T14:33:15Z"
       }
     },
     {
@@ -285,7 +285,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T11:58:43Z"
+        "scoredAt": "2026-07-16T14:33:32Z"
       }
     },
     {
@@ -370,18 +370,18 @@
         "lastChecked": "2026-07-13T10:48:25.637Z"
       },
       "productionScore": {
-        "totalScore": 62,
+        "totalScore": 63,
         "audioTechnical": 100,
         "loudnessCompliance": 100,
         "recordingQuality": 100,
         "consistency": 10,
         "vitality": 97,
         "pacingFlow": 35,
-        "metadataComplete": 61,
+        "metadataComplete": 64,
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T11:59:02Z"
+        "scoredAt": "2026-07-16T14:33:47Z"
       }
     },
     {
@@ -477,7 +477,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T11:59:27Z"
+        "scoredAt": "2026-07-16T14:34:12Z"
       }
     },
     {
@@ -562,18 +562,18 @@
         "lastChecked": "2026-07-13T10:48:38.619Z"
       },
       "productionScore": {
-        "totalScore": 63,
-        "audioTechnical": 69,
+        "totalScore": 59,
+        "audioTechnical": 61,
         "loudnessCompliance": 37,
-        "recordingQuality": 91,
+        "recordingQuality": 78,
         "consistency": 65,
         "vitality": 91,
         "pacingFlow": 35,
-        "metadataComplete": 56,
+        "metadataComplete": 44,
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T11:59:40Z"
+        "scoredAt": "2026-07-16T14:34:35Z"
       }
     },
     {
@@ -658,10 +658,10 @@
         "lastChecked": "2026-07-13T10:48:50.610Z"
       },
       "productionScore": {
-        "totalScore": 77,
-        "audioTechnical": 100,
+        "totalScore": 76,
+        "audioTechnical": 96,
         "loudnessCompliance": 100,
-        "recordingQuality": 100,
+        "recordingQuality": 94,
         "consistency": 83,
         "vitality": 96,
         "pacingFlow": 35,
@@ -669,7 +669,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T11:59:46Z"
+        "scoredAt": "2026-07-16T14:34:43Z"
       }
     },
     {
@@ -765,7 +765,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:00:06Z"
+        "scoredAt": "2026-07-16T14:34:58Z"
       }
     },
     {
@@ -861,7 +861,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:00:28Z"
+        "scoredAt": "2026-07-16T14:35:18Z"
       }
     },
     {
@@ -946,10 +946,10 @@
         "lastChecked": "2026-07-13T10:49:13.716Z"
       },
       "productionScore": {
-        "totalScore": 48,
-        "audioTechnical": 63,
+        "totalScore": 46,
+        "audioTechnical": 58,
         "loudnessCompliance": 37,
-        "recordingQuality": 81,
+        "recordingQuality": 73,
         "consistency": 13,
         "vitality": 81,
         "pacingFlow": 35,
@@ -957,7 +957,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:00:43Z"
+        "scoredAt": "2026-07-16T14:35:31Z"
       }
     },
     {
@@ -1045,7 +1045,7 @@
         "totalScore": 49,
         "audioTechnical": 71,
         "loudnessCompliance": 82,
-        "recordingQuality": 65,
+        "recordingQuality": 64,
         "consistency": 10,
         "vitality": 80,
         "pacingFlow": 35,
@@ -1053,7 +1053,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:00:56Z"
+        "scoredAt": "2026-07-16T14:35:41Z"
       }
     },
     {
@@ -1138,10 +1138,10 @@
         "lastChecked": "2026-07-13T10:49:24.415Z"
       },
       "productionScore": {
-        "totalScore": 56,
-        "audioTechnical": 84,
+        "totalScore": 59,
+        "audioTechnical": 94,
         "loudnessCompliance": 100,
-        "recordingQuality": 74,
+        "recordingQuality": 90,
         "consistency": 10,
         "vitality": 90,
         "pacingFlow": 44,
@@ -1149,7 +1149,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:01:10Z"
+        "scoredAt": "2026-07-16T14:35:57Z"
       }
     },
     {
@@ -1245,7 +1245,7 @@
         "feedCompliance": 40,
         "slicesFetched": 0,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:01:13Z"
+        "scoredAt": "2026-07-16T14:35:59Z"
       }
     },
     {
@@ -1330,18 +1330,18 @@
         "lastChecked": "2026-07-13T10:49:36.977Z"
       },
       "productionScore": {
-        "totalScore": 80,
+        "totalScore": 81,
         "audioTechnical": 100,
         "loudnessCompliance": 100,
         "recordingQuality": 100,
         "consistency": 100,
         "vitality": 96,
         "pacingFlow": 35,
-        "metadataComplete": 61,
+        "metadataComplete": 64,
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:01:33Z"
+        "scoredAt": "2026-07-16T14:36:14Z"
       }
     },
     {
@@ -1437,7 +1437,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:01:57Z"
+        "scoredAt": "2026-07-16T14:36:28Z"
       }
     },
     {
@@ -1533,7 +1533,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:02:20Z"
+        "scoredAt": "2026-07-16T14:36:55Z"
       }
     },
     {
@@ -1629,7 +1629,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:02:38Z"
+        "scoredAt": "2026-07-16T14:37:10Z"
       }
     },
     {
@@ -1715,9 +1715,9 @@
       },
       "productionScore": {
         "totalScore": 58,
-        "audioTechnical": 73,
+        "audioTechnical": 72,
         "loudnessCompliance": 81,
-        "recordingQuality": 69,
+        "recordingQuality": 66,
         "consistency": 34,
         "vitality": 80,
         "pacingFlow": 35,
@@ -1725,7 +1725,7 @@
         "feedCompliance": 60,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:02:49Z"
+        "scoredAt": "2026-07-16T14:37:16Z"
       }
     },
     {
@@ -1810,10 +1810,10 @@
         "lastChecked": "2026-07-13T10:50:05.160Z"
       },
       "productionScore": {
-        "totalScore": 52,
-        "audioTechnical": 77,
+        "totalScore": 54,
+        "audioTechnical": 86,
         "loudnessCompliance": 100,
-        "recordingQuality": 63,
+        "recordingQuality": 78,
         "consistency": 23,
         "vitality": 93,
         "pacingFlow": 35,
@@ -1821,7 +1821,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:03:00Z"
+        "scoredAt": "2026-07-16T14:37:25Z"
       }
     },
     {
@@ -1917,7 +1917,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:03:31Z"
+        "scoredAt": "2026-07-16T14:37:52Z"
       }
     },
     {
@@ -2002,10 +2002,10 @@
         "lastChecked": "2026-07-13T10:50:16.694Z"
       },
       "productionScore": {
-        "totalScore": 46,
-        "audioTechnical": 68,
+        "totalScore": 47,
+        "audioTechnical": 71,
         "loudnessCompliance": 100,
-        "recordingQuality": 47,
+        "recordingQuality": 52,
         "consistency": 10,
         "vitality": 74,
         "pacingFlow": 53,
@@ -2013,7 +2013,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:03:46Z"
+        "scoredAt": "2026-07-16T14:38:02Z"
       }
     },
     {
@@ -2109,7 +2109,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:04:06Z"
+        "scoredAt": "2026-07-16T14:38:15Z"
       }
     },
     {
@@ -2194,18 +2194,18 @@
         "lastChecked": "2026-07-13T10:50:30.841Z"
       },
       "productionScore": {
-        "totalScore": 76,
+        "totalScore": 78,
         "audioTechnical": 86,
         "loudnessCompliance": 67,
         "recordingQuality": 100,
         "consistency": 100,
         "vitality": 91,
         "pacingFlow": 35,
-        "metadataComplete": 71,
+        "metadataComplete": 82,
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:04:17Z"
+        "scoredAt": "2026-07-16T14:38:25Z"
       }
     },
     {
@@ -2290,10 +2290,10 @@
         "lastChecked": "2026-07-13T10:50:40.499Z"
       },
       "productionScore": {
-        "totalScore": 44,
-        "audioTechnical": 36,
+        "totalScore": 47,
+        "audioTechnical": 46,
         "loudnessCompliance": 36,
-        "recordingQuality": 37,
+        "recordingQuality": 54,
         "consistency": 40,
         "vitality": 96,
         "pacingFlow": 35,
@@ -2301,7 +2301,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:05:04Z"
+        "scoredAt": "2026-07-16T14:38:59Z"
       }
     },
     {
@@ -2386,10 +2386,10 @@
         "lastChecked": "2026-07-13T10:50:41.999Z"
       },
       "productionScore": {
-        "totalScore": 76,
-        "audioTechnical": 100,
+        "totalScore": 74,
+        "audioTechnical": 92,
         "loudnessCompliance": 100,
-        "recordingQuality": 100,
+        "recordingQuality": 88,
         "consistency": 100,
         "vitality": 92,
         "pacingFlow": 35,
@@ -2397,7 +2397,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:05:21Z"
+        "scoredAt": "2026-07-16T14:39:16Z"
       }
     },
     {
@@ -2493,7 +2493,7 @@
         "feedCompliance": 40,
         "slicesFetched": 0,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:05:23Z"
+        "scoredAt": "2026-07-16T14:39:18Z"
       }
     },
     {
@@ -2589,7 +2589,7 @@
         "feedCompliance": 40,
         "slicesFetched": 0,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:05:25Z"
+        "scoredAt": "2026-07-16T14:39:20Z"
       }
     },
     {
@@ -2685,7 +2685,7 @@
         "feedCompliance": 60,
         "slicesFetched": 0,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:05:26Z"
+        "scoredAt": "2026-07-16T14:39:22Z"
       }
     },
     {
@@ -2781,7 +2781,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:05:39Z"
+        "scoredAt": "2026-07-16T14:39:29Z"
       }
     },
     {
@@ -2877,7 +2877,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:05:49Z"
+        "scoredAt": "2026-07-16T14:39:40Z"
       }
     },
     {
@@ -2973,7 +2973,7 @@
         "feedCompliance": 60,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:05:57Z"
+        "scoredAt": "2026-07-16T14:39:46Z"
       }
     },
     {
@@ -3069,7 +3069,7 @@
         "feedCompliance": 80,
         "slicesFetched": 0,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:06:01Z"
+        "scoredAt": "2026-07-16T14:39:50Z"
       }
     },
     {
@@ -3157,7 +3157,7 @@
         "totalScore": 59,
         "audioTechnical": 58,
         "loudnessCompliance": 90,
-        "recordingQuality": 38,
+        "recordingQuality": 37,
         "consistency": 39,
         "vitality": 82,
         "pacingFlow": 78,
@@ -3165,7 +3165,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:06:18Z"
+        "scoredAt": "2026-07-16T14:40:05Z"
       }
     },
     {
@@ -3250,10 +3250,10 @@
         "lastChecked": "2026-07-13T10:51:29.114Z"
       },
       "productionScore": {
-        "totalScore": 49,
-        "audioTechnical": 82,
+        "totalScore": 44,
+        "audioTechnical": 67,
         "loudnessCompliance": 100,
-        "recordingQuality": 70,
+        "recordingQuality": 46,
         "consistency": 10,
         "vitality": 83,
         "pacingFlow": 35,
@@ -3261,7 +3261,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:06:34Z"
+        "scoredAt": "2026-07-16T14:40:14Z"
       }
     },
     {
@@ -3346,10 +3346,10 @@
         "lastChecked": "2026-07-13T10:51:30.744Z"
       },
       "productionScore": {
-        "totalScore": 66,
-        "audioTechnical": 43,
+        "totalScore": 64,
+        "audioTechnical": 36,
         "loudnessCompliance": 57,
-        "recordingQuality": 34,
+        "recordingQuality": 22,
         "consistency": 100,
         "vitality": 97,
         "pacingFlow": 87,
@@ -3357,7 +3357,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:06:57Z"
+        "scoredAt": "2026-07-16T14:40:29Z"
       }
     },
     {
@@ -3453,7 +3453,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:07:09Z"
+        "scoredAt": "2026-07-16T14:40:38Z"
       }
     },
     {
@@ -3549,7 +3549,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:07:21Z"
+        "scoredAt": "2026-07-16T14:40:46Z"
       }
     },
     {
@@ -3634,10 +3634,10 @@
         "lastChecked": "2026-07-13T10:52:03.447Z"
       },
       "productionScore": {
-        "totalScore": 56,
-        "audioTechnical": 64,
+        "totalScore": 55,
+        "audioTechnical": 61,
         "loudnessCompliance": 99,
-        "recordingQuality": 42,
+        "recordingQuality": 36,
         "consistency": 29,
         "vitality": 94,
         "pacingFlow": 71,
@@ -3645,7 +3645,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:07:36Z"
+        "scoredAt": "2026-07-16T14:40:57Z"
       }
     },
     {
@@ -3741,7 +3741,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:08:01Z"
+        "scoredAt": "2026-07-16T14:41:16Z"
       }
     },
     {
@@ -3837,7 +3837,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:08:22Z"
+        "scoredAt": "2026-07-16T14:41:28Z"
       }
     },
     {
@@ -3933,7 +3933,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:08:44Z"
+        "scoredAt": "2026-07-16T14:41:44Z"
       }
     },
     {
@@ -4029,7 +4029,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:09:11Z"
+        "scoredAt": "2026-07-16T14:41:58Z"
       }
     },
     {
@@ -4125,7 +4125,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:09:27Z"
+        "scoredAt": "2026-07-16T14:42:12Z"
       }
     },
     {
@@ -4221,7 +4221,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:09:38Z"
+        "scoredAt": "2026-07-16T14:42:21Z"
       }
     },
     {
@@ -4317,7 +4317,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:09:47Z"
+        "scoredAt": "2026-07-16T14:42:29Z"
       }
     },
     {
@@ -4413,7 +4413,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:10:09Z"
+        "scoredAt": "2026-07-16T14:42:52Z"
       }
     },
     {
@@ -4498,10 +4498,10 @@
         "lastChecked": "2026-07-13T10:53:28.453Z"
       },
       "productionScore": {
-        "totalScore": 57,
-        "audioTechnical": 56,
+        "totalScore": 58,
+        "audioTechnical": 61,
         "loudnessCompliance": 96,
-        "recordingQuality": 30,
+        "recordingQuality": 38,
         "consistency": 58,
         "vitality": 70,
         "pacingFlow": 87,
@@ -4509,7 +4509,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:10:19Z"
+        "scoredAt": "2026-07-16T14:43:01Z"
       }
     },
     {
@@ -4605,7 +4605,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:10:33Z"
+        "scoredAt": "2026-07-16T14:43:14Z"
       }
     },
     {
@@ -4701,7 +4701,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:10:47Z"
+        "scoredAt": "2026-07-16T14:43:23Z"
       }
     },
     {
@@ -4786,10 +4786,10 @@
         "lastChecked": "2026-07-13T10:53:58.023Z"
       },
       "productionScore": {
-        "totalScore": 52,
-        "audioTechnical": 83,
+        "totalScore": 51,
+        "audioTechnical": 79,
         "loudnessCompliance": 71,
-        "recordingQuality": 92,
+        "recordingQuality": 85,
         "consistency": 15,
         "vitality": 94,
         "pacingFlow": 35,
@@ -4797,7 +4797,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:10:57Z"
+        "scoredAt": "2026-07-16T14:43:30Z"
       }
     },
     {
@@ -4883,9 +4883,9 @@
       },
       "productionScore": {
         "totalScore": 59,
-        "audioTechnical": 73,
+        "audioTechnical": 72,
         "loudnessCompliance": 100,
-        "recordingQuality": 55,
+        "recordingQuality": 54,
         "consistency": 52,
         "vitality": 93,
         "pacingFlow": 35,
@@ -4893,7 +4893,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:11:02Z"
+        "scoredAt": "2026-07-16T14:43:34Z"
       }
     },
     {
@@ -4978,10 +4978,10 @@
         "lastChecked": "2026-07-13T10:54:01.141Z"
       },
       "productionScore": {
-        "totalScore": 62,
-        "audioTechnical": 47,
+        "totalScore": 63,
+        "audioTechnical": 51,
         "loudnessCompliance": 93,
-        "recordingQuality": 17,
+        "recordingQuality": 23,
         "consistency": 65,
         "vitality": 90,
         "pacingFlow": 100,
@@ -4989,7 +4989,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:11:10Z"
+        "scoredAt": "2026-07-16T14:43:43Z"
       }
     },
     {
@@ -5074,10 +5074,10 @@
         "lastChecked": "2026-07-13T10:54:13.420Z"
       },
       "productionScore": {
-        "totalScore": 55,
-        "audioTechnical": 83,
+        "totalScore": 52,
+        "audioTechnical": 71,
         "loudnessCompliance": 100,
-        "recordingQuality": 73,
+        "recordingQuality": 52,
         "consistency": 48,
         "vitality": 74,
         "pacingFlow": 35,
@@ -5085,7 +5085,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:11:21Z"
+        "scoredAt": "2026-07-16T14:43:50Z"
       }
     },
     {
@@ -5170,10 +5170,10 @@
         "lastChecked": "2026-07-13T10:54:14.724Z"
       },
       "productionScore": {
-        "totalScore": 65,
-        "audioTechnical": 92,
+        "totalScore": 64,
+        "audioTechnical": 91,
         "loudnessCompliance": 100,
-        "recordingQuality": 88,
+        "recordingQuality": 85,
         "consistency": 26,
         "vitality": 90,
         "pacingFlow": 45,
@@ -5181,7 +5181,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:11:31Z"
+        "scoredAt": "2026-07-16T14:43:57Z"
       }
     },
     {
@@ -5277,7 +5277,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:11:47Z"
+        "scoredAt": "2026-07-16T14:44:33Z"
       }
     },
     {
@@ -5362,10 +5362,10 @@
         "lastChecked": "2026-07-13T10:54:33.991Z"
       },
       "productionScore": {
-        "totalScore": 53,
-        "audioTechnical": 45,
+        "totalScore": 51,
+        "audioTechnical": 39,
         "loudnessCompliance": 99,
-        "recordingQuality": 10,
+        "recordingQuality": 0,
         "consistency": 27,
         "vitality": 98,
         "pacingFlow": 100,
@@ -5373,7 +5373,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:11:58Z"
+        "scoredAt": "2026-07-16T14:44:41Z"
       }
     },
     {
@@ -5458,10 +5458,10 @@
         "lastChecked": "2026-07-13T10:54:44.229Z"
       },
       "productionScore": {
-        "totalScore": 49,
-        "audioTechnical": 75,
+        "totalScore": 46,
+        "audioTechnical": 67,
         "loudnessCompliance": 87,
-        "recordingQuality": 67,
+        "recordingQuality": 54,
         "consistency": 10,
         "vitality": 95,
         "pacingFlow": 35,
@@ -5469,7 +5469,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:12:11Z"
+        "scoredAt": "2026-07-16T14:44:51Z"
       }
     },
     {
@@ -5554,10 +5554,10 @@
         "lastChecked": "2026-07-13T10:54:55.683Z"
       },
       "productionScore": {
-        "totalScore": 50,
-        "audioTechnical": 43,
-        "loudnessCompliance": 81,
-        "recordingQuality": 18,
+        "totalScore": 49,
+        "audioTechnical": 40,
+        "loudnessCompliance": 77,
+        "recordingQuality": 16,
         "consistency": 10,
         "vitality": 92,
         "pacingFlow": 100,
@@ -5565,7 +5565,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:12:35Z"
+        "scoredAt": "2026-07-16T14:45:08Z"
       }
     },
     {
@@ -5661,7 +5661,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:12:49Z"
+        "scoredAt": "2026-07-16T14:45:24Z"
       }
     },
     {
@@ -5746,10 +5746,10 @@
         "lastChecked": "2026-07-13T10:55:16.377Z"
       },
       "productionScore": {
-        "totalScore": 72,
-        "audioTechnical": 53,
+        "totalScore": 70,
+        "audioTechnical": 46,
         "loudnessCompliance": 100,
-        "recordingQuality": 23,
+        "recordingQuality": 11,
         "consistency": 100,
         "vitality": 92,
         "pacingFlow": 88,
@@ -5757,7 +5757,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:12:56Z"
+        "scoredAt": "2026-07-16T14:45:30Z"
       }
     },
     {
@@ -5849,11 +5849,11 @@
         "consistency": 10,
         "vitality": 95,
         "pacingFlow": 35,
-        "metadataComplete": 36,
+        "metadataComplete": 40,
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:13:03Z"
+        "scoredAt": "2026-07-16T14:45:35Z"
       }
     },
     {
@@ -5939,9 +5939,9 @@
       },
       "productionScore": {
         "totalScore": 68,
-        "audioTechnical": 100,
+        "audioTechnical": 99,
         "loudnessCompliance": 100,
-        "recordingQuality": 100,
+        "recordingQuality": 99,
         "consistency": 62,
         "vitality": 94,
         "pacingFlow": 35,
@@ -5949,7 +5949,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:13:24Z"
+        "scoredAt": "2026-07-16T14:45:48Z"
       }
     },
     {
@@ -6034,10 +6034,10 @@
         "lastChecked": "2026-07-13T10:55:47.555Z"
       },
       "productionScore": {
-        "totalScore": 61,
-        "audioTechnical": 65,
+        "totalScore": 59,
+        "audioTechnical": 59,
         "loudnessCompliance": 100,
-        "recordingQuality": 42,
+        "recordingQuality": 32,
         "consistency": 15,
         "vitality": 96,
         "pacingFlow": 73,
@@ -6045,7 +6045,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:13:41Z"
+        "scoredAt": "2026-07-16T14:46:00Z"
       }
     },
     {
@@ -6141,7 +6141,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:13:59Z"
+        "scoredAt": "2026-07-16T14:46:13Z"
       }
     },
     {
@@ -6237,7 +6237,7 @@
         "feedCompliance": 40,
         "slicesFetched": 0,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:14:01Z"
+        "scoredAt": "2026-07-16T14:46:15Z"
       }
     },
     {
@@ -6333,7 +6333,7 @@
         "feedCompliance": 60,
         "slicesFetched": 0,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:14:03Z"
+        "scoredAt": "2026-07-16T14:46:17Z"
       }
     },
     {
@@ -6429,7 +6429,7 @@
         "feedCompliance": 40,
         "slicesFetched": 0,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:14:04Z"
+        "scoredAt": "2026-07-16T14:46:18Z"
       }
     },
     {
@@ -6525,7 +6525,7 @@
         "feedCompliance": 60,
         "slicesFetched": 0,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:14:06Z"
+        "scoredAt": "2026-07-16T14:46:20Z"
       }
     },
     {
@@ -6610,10 +6610,10 @@
         "lastChecked": "2026-07-13T10:56:22.099Z"
       },
       "productionScore": {
-        "totalScore": 74,
-        "audioTechnical": 100,
+        "totalScore": 71,
+        "audioTechnical": 92,
         "loudnessCompliance": 100,
-        "recordingQuality": 100,
+        "recordingQuality": 88,
         "consistency": 100,
         "vitality": 93,
         "pacingFlow": 35,
@@ -6621,7 +6621,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:14:23Z"
+        "scoredAt": "2026-07-16T14:46:33Z"
       }
     },
     {
@@ -6717,7 +6717,7 @@
         "feedCompliance": 60,
         "slicesFetched": 0,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:14:25Z"
+        "scoredAt": "2026-07-16T14:46:35Z"
       }
     },
     {
@@ -6813,7 +6813,7 @@
         "feedCompliance": 80,
         "slicesFetched": 0,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:14:27Z"
+        "scoredAt": "2026-07-16T14:46:37Z"
       }
     },
     {
@@ -6909,7 +6909,7 @@
         "feedCompliance": 60,
         "slicesFetched": 0,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:14:29Z"
+        "scoredAt": "2026-07-16T14:46:39Z"
       }
     },
     {
@@ -7005,7 +7005,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:14:42Z"
+        "scoredAt": "2026-07-16T14:46:47Z"
       }
     },
     {
@@ -7090,10 +7090,10 @@
         "lastChecked": "2026-07-13T10:56:57.980Z"
       },
       "productionScore": {
-        "totalScore": 71,
-        "audioTechnical": 79,
+        "totalScore": 67,
+        "audioTechnical": 64,
         "loudnessCompliance": 100,
-        "recordingQuality": 65,
+        "recordingQuality": 40,
         "consistency": 66,
         "vitality": 95,
         "pacingFlow": 46,
@@ -7101,7 +7101,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:15:01Z"
+        "scoredAt": "2026-07-16T14:46:59Z"
       }
     },
     {
@@ -7186,18 +7186,18 @@
         "lastChecked": "2026-07-13T10:57:09.416Z"
       },
       "productionScore": {
-        "totalScore": 61,
+        "totalScore": 59,
         "audioTechnical": 53,
         "loudnessCompliance": 100,
         "recordingQuality": 23,
         "consistency": 44,
         "vitality": 90,
         "pacingFlow": 98,
-        "metadataComplete": 39,
+        "metadataComplete": 23,
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:15:24Z"
+        "scoredAt": "2026-07-16T14:47:23Z"
       }
     },
     {
@@ -7293,7 +7293,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:15:44Z"
+        "scoredAt": "2026-07-16T14:47:37Z"
       }
     },
     {
@@ -7389,7 +7389,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:16:00Z"
+        "scoredAt": "2026-07-16T14:48:07Z"
       }
     },
     {
@@ -7474,10 +7474,10 @@
         "lastChecked": "2026-07-13T10:57:45.158Z"
       },
       "productionScore": {
-        "totalScore": 58,
-        "audioTechnical": 74,
+        "totalScore": 60,
+        "audioTechnical": 82,
         "loudnessCompliance": 94,
-        "recordingQuality": 62,
+        "recordingQuality": 74,
         "consistency": 15,
         "vitality": 95,
         "pacingFlow": 35,
@@ -7485,7 +7485,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:16:33Z"
+        "scoredAt": "2026-07-16T14:48:55Z"
       }
     },
     {
@@ -7570,18 +7570,18 @@
         "lastChecked": "2026-07-13T10:57:56.316Z"
       },
       "productionScore": {
-        "totalScore": 55,
+        "totalScore": 53,
         "audioTechnical": 53,
         "loudnessCompliance": 100,
         "recordingQuality": 23,
         "consistency": 15,
         "vitality": 92,
         "pacingFlow": 98,
-        "metadataComplete": 39,
+        "metadataComplete": 23,
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:16:56Z"
+        "scoredAt": "2026-07-16T14:49:30Z"
       }
     },
     {
@@ -7677,7 +7677,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:16:59Z"
+        "scoredAt": "2026-07-16T14:49:37Z"
       }
     },
     {
@@ -7762,10 +7762,10 @@
         "lastChecked": "2026-07-13T10:58:17.258Z"
       },
       "productionScore": {
-        "totalScore": 64,
-        "audioTechnical": 64,
+        "totalScore": 63,
+        "audioTechnical": 62,
         "loudnessCompliance": 100,
-        "recordingQuality": 40,
+        "recordingQuality": 38,
         "consistency": 79,
         "vitality": 93,
         "pacingFlow": 55,
@@ -7773,7 +7773,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:17:09Z"
+        "scoredAt": "2026-07-16T14:49:53Z"
       }
     },
     {
@@ -7858,18 +7858,18 @@
         "lastChecked": "2026-07-13T10:58:26.475Z"
       },
       "productionScore": {
-        "totalScore": 79,
+        "totalScore": 80,
         "audioTechnical": 100,
         "loudnessCompliance": 100,
         "recordingQuality": 100,
         "consistency": 100,
         "vitality": 90,
         "pacingFlow": 35,
-        "metadataComplete": 61,
+        "metadataComplete": 64,
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:17:24Z"
+        "scoredAt": "2026-07-16T14:50:23Z"
       }
     },
     {
@@ -7954,10 +7954,10 @@
         "lastChecked": "2026-07-13T10:58:37.118Z"
       },
       "productionScore": {
-        "totalScore": 54,
-        "audioTechnical": 84,
-        "loudnessCompliance": 78,
-        "recordingQuality": 89,
+        "totalScore": 52,
+        "audioTechnical": 77,
+        "loudnessCompliance": 79,
+        "recordingQuality": 77,
         "consistency": 10,
         "vitality": 92,
         "pacingFlow": 35,
@@ -7965,7 +7965,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:17:38Z"
+        "scoredAt": "2026-07-16T14:51:01Z"
       }
     },
     {
@@ -8061,7 +8061,7 @@
         "feedCompliance": 80,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:17:47Z"
+        "scoredAt": "2026-07-16T14:51:14Z"
       }
     },
     {
@@ -8149,7 +8149,7 @@
         "totalScore": 54,
         "audioTechnical": 74,
         "loudnessCompliance": 80,
-        "recordingQuality": 71,
+        "recordingQuality": 70,
         "consistency": 55,
         "vitality": 70,
         "pacingFlow": 35,
@@ -8157,7 +8157,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:18:05Z"
+        "scoredAt": "2026-07-16T14:51:34Z"
       }
     },
     {
@@ -8253,7 +8253,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:18:20Z"
+        "scoredAt": "2026-07-16T14:51:48Z"
       }
     },
     {
@@ -8338,18 +8338,18 @@
         "lastChecked": "2026-07-13T10:59:03.269Z"
       },
       "productionScore": {
-        "totalScore": 80,
+        "totalScore": 81,
         "audioTechnical": 100,
         "loudnessCompliance": 100,
         "recordingQuality": 100,
         "consistency": 100,
         "vitality": 95,
         "pacingFlow": 35,
-        "metadataComplete": 64,
+        "metadataComplete": 68,
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:18:37Z"
+        "scoredAt": "2026-07-16T14:52:00Z"
       }
     },
     {
@@ -8445,7 +8445,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:18:58Z"
+        "scoredAt": "2026-07-16T14:52:14Z"
       }
     },
     {
@@ -8541,7 +8541,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:19:11Z"
+        "scoredAt": "2026-07-16T14:52:24Z"
       }
     },
     {
@@ -8637,7 +8637,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:19:19Z"
+        "scoredAt": "2026-07-16T14:52:33Z"
       }
     },
     {
@@ -8722,10 +8722,10 @@
         "lastChecked": "2026-07-13T10:59:27.610Z"
       },
       "productionScore": {
-        "totalScore": 62,
-        "audioTechnical": 62,
+        "totalScore": 63,
+        "audioTechnical": 67,
         "loudnessCompliance": 43,
-        "recordingQuality": 76,
+        "recordingQuality": 83,
         "consistency": 59,
         "vitality": 95,
         "pacingFlow": 35,
@@ -8733,7 +8733,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:19:28Z"
+        "scoredAt": "2026-07-16T14:52:42Z"
       }
     },
     {
@@ -8829,7 +8829,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:19:36Z"
+        "scoredAt": "2026-07-16T14:52:50Z"
       }
     },
     {
@@ -8925,7 +8925,7 @@
         "feedCompliance": 80,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:19:55Z"
+        "scoredAt": "2026-07-16T14:53:09Z"
       }
     },
     {
@@ -9011,9 +9011,9 @@
       },
       "productionScore": {
         "totalScore": 57,
-        "audioTechnical": 61,
+        "audioTechnical": 59,
         "loudnessCompliance": 63,
-        "recordingQuality": 60,
+        "recordingQuality": 57,
         "consistency": 41,
         "vitality": 83,
         "pacingFlow": 35,
@@ -9021,7 +9021,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:20:32Z"
+        "scoredAt": "2026-07-16T14:53:47Z"
       }
     },
     {
@@ -9117,7 +9117,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:20:48Z"
+        "scoredAt": "2026-07-16T14:53:57Z"
       }
     },
     {
@@ -9202,18 +9202,18 @@
         "lastChecked": "2026-07-13T11:00:11.437Z"
       },
       "productionScore": {
-        "totalScore": 47,
+        "totalScore": 51,
         "audioTechnical": 60,
-        "loudnessCompliance": 69,
-        "recordingQuality": 55,
+        "loudnessCompliance": 65,
+        "recordingQuality": 58,
         "consistency": 10,
         "vitality": 97,
         "pacingFlow": 35,
-        "metadataComplete": 37,
+        "metadataComplete": 64,
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:21:06Z"
+        "scoredAt": "2026-07-16T14:54:18Z"
       }
     },
     {
@@ -9305,11 +9305,11 @@
         "consistency": 10,
         "vitality": 96,
         "pacingFlow": 0,
-        "metadataComplete": 31,
+        "metadataComplete": 27,
         "feedCompliance": 40,
         "slicesFetched": 0,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:21:10Z"
+        "scoredAt": "2026-07-16T14:54:20Z"
       }
     },
     {
@@ -9405,7 +9405,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:21:19Z"
+        "scoredAt": "2026-07-16T14:54:28Z"
       }
     },
     {
@@ -9501,7 +9501,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:21:32Z"
+        "scoredAt": "2026-07-16T14:54:37Z"
       }
     },
     {
@@ -9586,10 +9586,10 @@
         "lastChecked": "2026-07-13T11:00:52.311Z"
       },
       "productionScore": {
-        "totalScore": 47,
-        "audioTechnical": 52,
+        "totalScore": 49,
+        "audioTechnical": 57,
         "loudnessCompliance": 52,
-        "recordingQuality": 52,
+        "recordingQuality": 61,
         "consistency": 48,
         "vitality": 80,
         "pacingFlow": 35,
@@ -9597,7 +9597,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:21:45Z"
+        "scoredAt": "2026-07-16T14:54:46Z"
       }
     },
     {
@@ -9693,7 +9693,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:21:55Z"
+        "scoredAt": "2026-07-16T14:54:52Z"
       }
     },
     {
@@ -9789,7 +9789,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:22:05Z"
+        "scoredAt": "2026-07-16T14:55:02Z"
       }
     },
     {
@@ -9885,7 +9885,7 @@
         "feedCompliance": 60,
         "slicesFetched": 0,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:22:07Z"
+        "scoredAt": "2026-07-16T14:55:05Z"
       }
     },
     {
@@ -9981,7 +9981,7 @@
         "feedCompliance": 60,
         "slicesFetched": 0,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:22:10Z"
+        "scoredAt": "2026-07-16T14:55:07Z"
       }
     },
     {
@@ -10077,7 +10077,7 @@
         "feedCompliance": 40,
         "slicesFetched": 0,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:22:13Z"
+        "scoredAt": "2026-07-16T14:55:09Z"
       }
     },
     {
@@ -10162,10 +10162,10 @@
         "lastChecked": "2026-07-13T11:01:37.257Z"
       },
       "productionScore": {
-        "totalScore": 51,
-        "audioTechnical": 64,
+        "totalScore": 52,
+        "audioTechnical": 67,
         "loudnessCompliance": 56,
-        "recordingQuality": 70,
+        "recordingQuality": 75,
         "consistency": 10,
         "vitality": 95,
         "pacingFlow": 35,
@@ -10173,7 +10173,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:22:22Z"
+        "scoredAt": "2026-07-16T14:55:17Z"
       }
     },
     {
@@ -10269,7 +10269,7 @@
         "feedCompliance": 40,
         "slicesFetched": 0,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:22:23Z"
+        "scoredAt": "2026-07-16T14:55:18Z"
       }
     },
     {
@@ -10365,7 +10365,7 @@
         "feedCompliance": 40,
         "slicesFetched": 0,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:22:25Z"
+        "scoredAt": "2026-07-16T14:55:20Z"
       }
     },
     {
@@ -10461,7 +10461,7 @@
         "feedCompliance": 60,
         "slicesFetched": 0,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:22:26Z"
+        "scoredAt": "2026-07-16T14:55:21Z"
       }
     },
     {
@@ -10557,7 +10557,7 @@
         "feedCompliance": 40,
         "slicesFetched": 0,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:22:28Z"
+        "scoredAt": "2026-07-16T14:55:23Z"
       }
     },
     {
@@ -10649,11 +10649,11 @@
         "consistency": 10,
         "vitality": 93,
         "pacingFlow": 0,
-        "metadataComplete": 60,
+        "metadataComplete": 61,
         "feedCompliance": 80,
         "slicesFetched": 0,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:22:30Z"
+        "scoredAt": "2026-07-16T14:55:24Z"
       }
     },
     {
@@ -10739,8 +10739,8 @@
       },
       "productionScore": {
         "totalScore": 58,
-        "audioTechnical": 84,
-        "loudnessCompliance": 98,
+        "audioTechnical": 83,
+        "loudnessCompliance": 96,
         "recordingQuality": 75,
         "consistency": 40,
         "vitality": 95,
@@ -10749,7 +10749,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:22:53Z"
+        "scoredAt": "2026-07-16T14:55:39Z"
       }
     },
     {
@@ -10834,10 +10834,10 @@
         "lastChecked": "2026-07-13T11:02:26.924Z"
       },
       "productionScore": {
-        "totalScore": 54,
-        "audioTechnical": 80,
+        "totalScore": 53,
+        "audioTechnical": 77,
         "loudnessCompliance": 83,
-        "recordingQuality": 79,
+        "recordingQuality": 74,
         "consistency": 15,
         "vitality": 97,
         "pacingFlow": 35,
@@ -10845,7 +10845,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:23:23Z"
+        "scoredAt": "2026-07-16T14:56:08Z"
       }
     },
     {
@@ -10941,7 +10941,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:23:35Z"
+        "scoredAt": "2026-07-16T14:56:20Z"
       }
     },
     {
@@ -11026,10 +11026,10 @@
         "lastChecked": "2026-07-13T11:02:37.849Z"
       },
       "productionScore": {
-        "totalScore": 67,
-        "audioTechnical": 82,
+        "totalScore": 68,
+        "audioTechnical": 84,
         "loudnessCompliance": 99,
-        "recordingQuality": 71,
+        "recordingQuality": 74,
         "consistency": 60,
         "vitality": 96,
         "pacingFlow": 35,
@@ -11037,7 +11037,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:23:50Z"
+        "scoredAt": "2026-07-16T14:56:33Z"
       }
     },
     {
@@ -11122,9 +11122,9 @@
         "lastChecked": "2026-07-13T11:02:47.682Z"
       },
       "productionScore": {
-        "totalScore": 64,
-        "audioTechnical": 74,
-        "loudnessCompliance": 35,
+        "totalScore": 67,
+        "audioTechnical": 84,
+        "loudnessCompliance": 61,
         "recordingQuality": 100,
         "consistency": 59,
         "vitality": 94,
@@ -11133,7 +11133,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:24:07Z"
+        "scoredAt": "2026-07-16T14:56:50Z"
       }
     },
     {
@@ -11229,7 +11229,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:24:21Z"
+        "scoredAt": "2026-07-16T14:57:04Z"
       }
     },
     {
@@ -11325,7 +11325,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:24:33Z"
+        "scoredAt": "2026-07-16T14:57:15Z"
       }
     },
     {
@@ -11411,9 +11411,9 @@
       },
       "productionScore": {
         "totalScore": 63,
-        "audioTechnical": 62,
-        "loudnessCompliance": 53,
-        "recordingQuality": 69,
+        "audioTechnical": 59,
+        "loudnessCompliance": 54,
+        "recordingQuality": 63,
         "consistency": 65,
         "vitality": 90,
         "pacingFlow": 50,
@@ -11421,7 +11421,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:24:53Z"
+        "scoredAt": "2026-07-16T14:57:33Z"
       }
     },
     {
@@ -11517,7 +11517,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:25:08Z"
+        "scoredAt": "2026-07-16T14:57:43Z"
       }
     },
     {
@@ -11613,7 +11613,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:25:27Z"
+        "scoredAt": "2026-07-16T14:58:02Z"
       }
     },
     {
@@ -11709,7 +11709,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:25:32Z"
+        "scoredAt": "2026-07-16T14:58:07Z"
       }
     },
     {
@@ -11805,7 +11805,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:25:45Z"
+        "scoredAt": "2026-07-16T14:58:16Z"
       }
     },
     {
@@ -11890,10 +11890,10 @@
         "lastChecked": "2026-07-13T11:04:00.780Z"
       },
       "productionScore": {
-        "totalScore": 59,
-        "audioTechnical": 73,
+        "totalScore": 60,
+        "audioTechnical": 76,
         "loudnessCompliance": 87,
-        "recordingQuality": 64,
+        "recordingQuality": 70,
         "consistency": 65,
         "vitality": 74,
         "pacingFlow": 35,
@@ -11901,7 +11901,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:26:02Z"
+        "scoredAt": "2026-07-16T14:58:30Z"
       }
     },
     {
@@ -11997,7 +11997,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:26:12Z"
+        "scoredAt": "2026-07-16T14:58:38Z"
       }
     },
     {
@@ -12093,7 +12093,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:26:27Z"
+        "scoredAt": "2026-07-16T14:58:49Z"
       }
     },
     {
@@ -12189,7 +12189,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:26:50Z"
+        "scoredAt": "2026-07-16T14:59:02Z"
       }
     },
     {
@@ -12275,9 +12275,9 @@
       },
       "productionScore": {
         "totalScore": 52,
-        "audioTechnical": 33,
+        "audioTechnical": 34,
         "loudnessCompliance": 28,
-        "recordingQuality": 37,
+        "recordingQuality": 38,
         "consistency": 65,
         "vitality": 95,
         "pacingFlow": 57,
@@ -12285,7 +12285,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:27:09Z"
+        "scoredAt": "2026-07-16T14:59:16Z"
       }
     },
     {
@@ -12370,10 +12370,10 @@
         "lastChecked": "2026-07-13T11:04:43.069Z"
       },
       "productionScore": {
-        "totalScore": 60,
-        "audioTechnical": 76,
+        "totalScore": 62,
+        "audioTechnical": 83,
         "loudnessCompliance": 100,
-        "recordingQuality": 60,
+        "recordingQuality": 72,
         "consistency": 65,
         "vitality": 98,
         "pacingFlow": 35,
@@ -12381,7 +12381,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:27:35Z"
+        "scoredAt": "2026-07-16T14:59:31Z"
       }
     },
     {
@@ -12477,7 +12477,7 @@
         "feedCompliance": 40,
         "slicesFetched": 0,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:27:38Z"
+        "scoredAt": "2026-07-16T14:59:34Z"
       }
     },
     {
@@ -12562,18 +12562,18 @@
         "lastChecked": "2026-07-13T11:05:00.589Z"
       },
       "productionScore": {
-        "totalScore": 56,
+        "totalScore": 57,
         "audioTechnical": 97,
         "loudnessCompliance": 94,
         "recordingQuality": 100,
         "consistency": 10,
         "vitality": 92,
         "pacingFlow": 35,
-        "metadataComplete": 22,
+        "metadataComplete": 33,
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:27:56Z"
+        "scoredAt": "2026-07-16T14:59:50Z"
       }
     },
     {
@@ -12669,7 +12669,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:28:16Z"
+        "scoredAt": "2026-07-16T15:00:03Z"
       }
     },
     {
@@ -12765,7 +12765,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:28:31Z"
+        "scoredAt": "2026-07-16T15:00:17Z"
       }
     },
     {
@@ -12850,18 +12850,18 @@
         "lastChecked": "2026-07-13T11:05:13.079Z"
       },
       "productionScore": {
-        "totalScore": 26,
+        "totalScore": 27,
         "audioTechnical": 0,
         "loudnessCompliance": 0,
         "recordingQuality": 0,
         "consistency": 15,
         "vitality": 92,
         "pacingFlow": 0,
-        "metadataComplete": 54,
+        "metadataComplete": 58,
         "feedCompliance": 40,
         "slicesFetched": 0,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:28:40Z"
+        "scoredAt": "2026-07-16T15:00:27Z"
       }
     },
     {
@@ -12957,7 +12957,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:28:44Z"
+        "scoredAt": "2026-07-16T15:00:31Z"
       }
     },
     {
@@ -13042,10 +13042,10 @@
         "lastChecked": "2026-07-13T11:05:32.822Z"
       },
       "productionScore": {
-        "totalScore": 69,
-        "audioTechnical": 55,
+        "totalScore": 68,
+        "audioTechnical": 51,
         "loudnessCompliance": 71,
-        "recordingQuality": 45,
+        "recordingQuality": 38,
         "consistency": 100,
         "vitality": 94,
         "pacingFlow": 52,
@@ -13053,7 +13053,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:28:56Z"
+        "scoredAt": "2026-07-16T15:00:37Z"
       }
     },
     {
@@ -13149,7 +13149,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:29:15Z"
+        "scoredAt": "2026-07-16T15:00:50Z"
       }
     },
     {
@@ -13245,7 +13245,7 @@
         "feedCompliance": 60,
         "slicesFetched": 0,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:29:17Z"
+        "scoredAt": "2026-07-16T15:00:52Z"
       }
     },
     {
@@ -13341,7 +13341,7 @@
         "feedCompliance": 40,
         "slicesFetched": 0,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:29:19Z"
+        "scoredAt": "2026-07-16T15:00:53Z"
       }
     },
     {
@@ -13437,7 +13437,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:29:43Z"
+        "scoredAt": "2026-07-16T15:01:08Z"
       }
     },
     {
@@ -13522,10 +13522,10 @@
         "lastChecked": "2026-07-13T11:06:19.055Z"
       },
       "productionScore": {
-        "totalScore": 60,
-        "audioTechnical": 67,
+        "totalScore": 62,
+        "audioTechnical": 73,
         "loudnessCompliance": 100,
-        "recordingQuality": 45,
+        "recordingQuality": 55,
         "consistency": 42,
         "vitality": 79,
         "pacingFlow": 35,
@@ -13533,7 +13533,7 @@
         "feedCompliance": 60,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:29:50Z"
+        "scoredAt": "2026-07-16T15:01:14Z"
       }
     },
     {
@@ -13618,10 +13618,10 @@
         "lastChecked": "2026-07-13T11:06:20.568Z"
       },
       "productionScore": {
-        "totalScore": 70,
-        "audioTechnical": 81,
+        "totalScore": 76,
+        "audioTechnical": 100,
         "loudnessCompliance": 100,
-        "recordingQuality": 69,
+        "recordingQuality": 100,
         "consistency": 100,
         "vitality": 92,
         "pacingFlow": 35,
@@ -13629,7 +13629,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:30:01Z"
+        "scoredAt": "2026-07-16T15:01:21Z"
       }
     },
     {
@@ -13717,7 +13717,7 @@
         "totalScore": 70,
         "audioTechnical": 77,
         "loudnessCompliance": 100,
-        "recordingQuality": 63,
+        "recordingQuality": 62,
         "consistency": 79,
         "vitality": 80,
         "pacingFlow": 42,
@@ -13725,7 +13725,7 @@
         "feedCompliance": 60,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:30:12Z"
+        "scoredAt": "2026-07-16T15:01:30Z"
       }
     },
     {
@@ -13821,7 +13821,7 @@
         "feedCompliance": 80,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:30:22Z"
+        "scoredAt": "2026-07-16T15:01:39Z"
       }
     },
     {
@@ -13906,10 +13906,10 @@
         "lastChecked": "2026-07-13T11:06:32.585Z"
       },
       "productionScore": {
-        "totalScore": 57,
-        "audioTechnical": 74,
+        "totalScore": 58,
+        "audioTechnical": 77,
         "loudnessCompliance": 84,
-        "recordingQuality": 68,
+        "recordingQuality": 73,
         "consistency": 19,
         "vitality": 93,
         "pacingFlow": 35,
@@ -13917,7 +13917,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:30:36Z"
+        "scoredAt": "2026-07-16T15:01:47Z"
       }
     },
     {
@@ -14005,7 +14005,7 @@
         "totalScore": 66,
         "audioTechnical": 62,
         "loudnessCompliance": 100,
-        "recordingQuality": 37,
+        "recordingQuality": 38,
         "consistency": 59,
         "vitality": 82,
         "pacingFlow": 75,
@@ -14013,7 +14013,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:30:49Z"
+        "scoredAt": "2026-07-16T15:01:57Z"
       }
     },
     {
@@ -14109,7 +14109,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:30:59Z"
+        "scoredAt": "2026-07-16T15:02:03Z"
       }
     },
     {
@@ -14194,10 +14194,10 @@
         "lastChecked": "2026-07-13T11:06:45.966Z"
       },
       "productionScore": {
-        "totalScore": 56,
-        "audioTechnical": 76,
+        "totalScore": 59,
+        "audioTechnical": 87,
         "loudnessCompliance": 100,
-        "recordingQuality": 60,
+        "recordingQuality": 79,
         "consistency": 23,
         "vitality": 85,
         "pacingFlow": 35,
@@ -14205,7 +14205,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:31:08Z"
+        "scoredAt": "2026-07-16T15:02:10Z"
       }
     },
     {
@@ -14290,10 +14290,10 @@
         "lastChecked": "2026-07-13T11:06:56.134Z"
       },
       "productionScore": {
-        "totalScore": 64,
-        "audioTechnical": 78,
+        "totalScore": 63,
+        "audioTechnical": 77,
         "loudnessCompliance": 100,
-        "recordingQuality": 64,
+        "recordingQuality": 62,
         "consistency": 74,
         "vitality": 91,
         "pacingFlow": 35,
@@ -14301,7 +14301,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:31:27Z"
+        "scoredAt": "2026-07-16T15:02:23Z"
       }
     },
     {
@@ -14397,7 +14397,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:31:35Z"
+        "scoredAt": "2026-07-16T15:02:30Z"
       }
     },
     {
@@ -14493,7 +14493,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:31:53Z"
+        "scoredAt": "2026-07-16T15:02:41Z"
       }
     },
     {
@@ -14589,7 +14589,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:32:10Z"
+        "scoredAt": "2026-07-16T15:03:01Z"
       }
     },
     {
@@ -14685,7 +14685,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:32:27Z"
+        "scoredAt": "2026-07-16T15:03:15Z"
       }
     },
     {
@@ -14770,10 +14770,10 @@
         "lastChecked": "2026-07-13T11:07:20.211Z"
       },
       "productionScore": {
-        "totalScore": 55,
-        "audioTechnical": 68,
+        "totalScore": 52,
+        "audioTechnical": 58,
         "loudnessCompliance": 41,
-        "recordingQuality": 86,
+        "recordingQuality": 70,
         "consistency": 56,
         "vitality": 85,
         "pacingFlow": 35,
@@ -14781,7 +14781,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:32:38Z"
+        "scoredAt": "2026-07-16T15:03:21Z"
       }
     },
     {
@@ -14867,9 +14867,9 @@
       },
       "productionScore": {
         "totalScore": 57,
-        "audioTechnical": 69,
+        "audioTechnical": 70,
         "loudnessCompliance": 100,
-        "recordingQuality": 49,
+        "recordingQuality": 50,
         "consistency": 65,
         "vitality": 90,
         "pacingFlow": 35,
@@ -14877,7 +14877,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:32:45Z"
+        "scoredAt": "2026-07-16T15:03:28Z"
       }
     },
     {
@@ -14962,10 +14962,10 @@
         "lastChecked": "2026-07-13T11:07:44.844Z"
       },
       "productionScore": {
-        "totalScore": 49,
-        "audioTechnical": 59,
+        "totalScore": 50,
+        "audioTechnical": 63,
         "loudnessCompliance": 18,
-        "recordingQuality": 87,
+        "recordingQuality": 94,
         "consistency": 26,
         "vitality": 98,
         "pacingFlow": 35,
@@ -14973,7 +14973,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:32:59Z"
+        "scoredAt": "2026-07-16T15:03:38Z"
       }
     },
     {
@@ -15058,10 +15058,10 @@
         "lastChecked": "2026-07-13T11:07:56.331Z"
       },
       "productionScore": {
-        "totalScore": 78,
-        "audioTechnical": 94,
+        "totalScore": 77,
+        "audioTechnical": 91,
         "loudnessCompliance": 100,
-        "recordingQuality": 90,
+        "recordingQuality": 85,
         "consistency": 100,
         "vitality": 94,
         "pacingFlow": 35,
@@ -15069,7 +15069,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:33:08Z"
+        "scoredAt": "2026-07-16T15:03:48Z"
       }
     },
     {
@@ -15154,10 +15154,10 @@
         "lastChecked": "2026-07-13T11:08:07.424Z"
       },
       "productionScore": {
-        "totalScore": 60,
-        "audioTechnical": 86,
+        "totalScore": 62,
+        "audioTechnical": 91,
         "loudnessCompliance": 82,
-        "recordingQuality": 89,
+        "recordingQuality": 97,
         "consistency": 20,
         "vitality": 95,
         "pacingFlow": 35,
@@ -15165,7 +15165,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:33:19Z"
+        "scoredAt": "2026-07-16T15:03:55Z"
       }
     },
     {
@@ -15261,7 +15261,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:33:51Z"
+        "scoredAt": "2026-07-16T15:04:27Z"
       }
     },
     {
@@ -15357,7 +15357,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:34:18Z"
+        "scoredAt": "2026-07-16T15:04:50Z"
       }
     },
     {
@@ -15442,10 +15442,10 @@
         "lastChecked": "2026-07-13T11:08:37.687Z"
       },
       "productionScore": {
-        "totalScore": 75,
-        "audioTechnical": 95,
+        "totalScore": 74,
+        "audioTechnical": 94,
         "loudnessCompliance": 100,
-        "recordingQuality": 92,
+        "recordingQuality": 90,
         "consistency": 80,
         "vitality": 94,
         "pacingFlow": 35,
@@ -15453,7 +15453,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:34:37Z"
+        "scoredAt": "2026-07-16T15:05:10Z"
       }
     },
     {
@@ -15538,18 +15538,18 @@
         "lastChecked": "2026-07-13T11:08:46.119Z"
       },
       "productionScore": {
-        "totalScore": 52,
-        "audioTechnical": 35,
+        "totalScore": 54,
+        "audioTechnical": 40,
         "loudnessCompliance": 61,
-        "recordingQuality": 18,
+        "recordingQuality": 26,
         "consistency": 10,
         "vitality": 94,
         "pacingFlow": 100,
-        "metadataComplete": 56,
+        "metadataComplete": 64,
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:35:09Z"
+        "scoredAt": "2026-07-16T15:05:48Z"
       }
     },
     {
@@ -15645,7 +15645,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:35:31Z"
+        "scoredAt": "2026-07-16T15:06:05Z"
       }
     },
     {
@@ -15741,7 +15741,7 @@
         "feedCompliance": 60,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:35:43Z"
+        "scoredAt": "2026-07-16T15:06:16Z"
       }
     },
     {
@@ -15833,11 +15833,11 @@
         "consistency": 10,
         "vitality": 84,
         "pacingFlow": 35,
-        "metadataComplete": 48,
+        "metadataComplete": 46,
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:35:52Z"
+        "scoredAt": "2026-07-16T15:06:22Z"
       }
     },
     {
@@ -15923,9 +15923,9 @@
       },
       "productionScore": {
         "totalScore": 75,
-        "audioTechnical": 98,
+        "audioTechnical": 97,
         "loudnessCompliance": 100,
-        "recordingQuality": 97,
+        "recordingQuality": 95,
         "consistency": 70,
         "vitality": 97,
         "pacingFlow": 35,
@@ -15933,7 +15933,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:36:03Z"
+        "scoredAt": "2026-07-16T15:06:37Z"
       }
     },
     {
@@ -16029,7 +16029,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:36:28Z"
+        "scoredAt": "2026-07-16T15:06:56Z"
       }
     },
     {
@@ -16114,10 +16114,10 @@
         "lastChecked": "2026-07-13T11:09:22.127Z"
       },
       "productionScore": {
-        "totalScore": 57,
-        "audioTechnical": 65,
+        "totalScore": 51,
+        "audioTechnical": 43,
         "loudnessCompliance": 94,
-        "recordingQuality": 47,
+        "recordingQuality": 9,
         "consistency": 59,
         "vitality": 95,
         "pacingFlow": 35,
@@ -16125,7 +16125,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:36:41Z"
+        "scoredAt": "2026-07-16T15:07:03Z"
       }
     },
     {
@@ -16211,8 +16211,8 @@
       },
       "productionScore": {
         "totalScore": 61,
-        "audioTechnical": 97,
-        "loudnessCompliance": 94,
+        "audioTechnical": 98,
+        "loudnessCompliance": 95,
         "recordingQuality": 100,
         "consistency": 15,
         "vitality": 93,
@@ -16221,7 +16221,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:37:06Z"
+        "scoredAt": "2026-07-16T15:07:30Z"
       }
     },
     {
@@ -16306,10 +16306,10 @@
         "lastChecked": "2026-07-13T11:09:40.661Z"
       },
       "productionScore": {
-        "totalScore": 66,
-        "audioTechnical": 86,
+        "totalScore": 65,
+        "audioTechnical": 83,
         "loudnessCompliance": 92,
-        "recordingQuality": 82,
+        "recordingQuality": 77,
         "consistency": 41,
         "vitality": 92,
         "pacingFlow": 35,
@@ -16317,7 +16317,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:37:34Z"
+        "scoredAt": "2026-07-16T15:07:51Z"
       }
     },
     {
@@ -16402,10 +16402,10 @@
         "lastChecked": "2026-07-13T11:09:52.964Z"
       },
       "productionScore": {
-        "totalScore": 73,
-        "audioTechnical": 88,
+        "totalScore": 74,
+        "audioTechnical": 91,
         "loudnessCompliance": 99,
-        "recordingQuality": 81,
+        "recordingQuality": 87,
         "consistency": 76,
         "vitality": 91,
         "pacingFlow": 35,
@@ -16413,7 +16413,7 @@
         "feedCompliance": 60,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:37:39Z"
+        "scoredAt": "2026-07-16T15:07:56Z"
       }
     },
     {
@@ -16498,10 +16498,10 @@
         "lastChecked": "2026-07-13T11:10:03.614Z"
       },
       "productionScore": {
-        "totalScore": 68,
-        "audioTechnical": 91,
+        "totalScore": 65,
+        "audioTechnical": 81,
         "loudnessCompliance": 91,
-        "recordingQuality": 91,
+        "recordingQuality": 75,
         "consistency": 41,
         "vitality": 98,
         "pacingFlow": 35,
@@ -16509,7 +16509,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:38:05Z"
+        "scoredAt": "2026-07-16T15:08:18Z"
       }
     },
     {
@@ -16595,9 +16595,9 @@
       },
       "productionScore": {
         "totalScore": 50,
-        "audioTechnical": 69,
+        "audioTechnical": 67,
         "loudnessCompliance": 100,
-        "recordingQuality": 49,
+        "recordingQuality": 46,
         "consistency": 10,
         "vitality": 95,
         "pacingFlow": 51,
@@ -16605,7 +16605,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:38:09Z"
+        "scoredAt": "2026-07-16T15:08:24Z"
       }
     },
     {
@@ -16690,10 +16690,10 @@
         "lastChecked": "2026-07-13T11:10:27.039Z"
       },
       "productionScore": {
-        "totalScore": 66,
-        "audioTechnical": 52,
+        "totalScore": 65,
+        "audioTechnical": 49,
         "loudnessCompliance": 100,
-        "recordingQuality": 20,
+        "recordingQuality": 15,
         "consistency": 100,
         "vitality": 75,
         "pacingFlow": 96,
@@ -16701,7 +16701,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:38:19Z"
+        "scoredAt": "2026-07-16T15:08:35Z"
       }
     },
     {
@@ -16787,9 +16787,9 @@
       },
       "productionScore": {
         "totalScore": 59,
-        "audioTechnical": 66,
+        "audioTechnical": 68,
         "loudnessCompliance": 100,
-        "recordingQuality": 44,
+        "recordingQuality": 48,
         "consistency": 63,
         "vitality": 91,
         "pacingFlow": 35,
@@ -16797,7 +16797,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:38:34Z"
+        "scoredAt": "2026-07-16T15:08:48Z"
       }
     },
     {
@@ -16893,7 +16893,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:39:05Z"
+        "scoredAt": "2026-07-16T15:09:11Z"
       }
     },
     {
@@ -16978,10 +16978,10 @@
         "lastChecked": "2026-07-13T11:10:53.936Z"
       },
       "productionScore": {
-        "totalScore": 59,
-        "audioTechnical": 58,
+        "totalScore": 57,
+        "audioTechnical": 52,
         "loudnessCompliance": 100,
-        "recordingQuality": 31,
+        "recordingQuality": 21,
         "consistency": 55,
         "vitality": 80,
         "pacingFlow": 93,
@@ -16989,7 +16989,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:39:13Z"
+        "scoredAt": "2026-07-16T15:09:20Z"
       }
     },
     {
@@ -17085,7 +17085,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:39:25Z"
+        "scoredAt": "2026-07-16T15:09:31Z"
       }
     },
     {
@@ -17181,7 +17181,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:39:38Z"
+        "scoredAt": "2026-07-16T15:09:40Z"
       }
     },
     {
@@ -17277,7 +17277,7 @@
         "feedCompliance": 40,
         "slicesFetched": 0,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:39:39Z"
+        "scoredAt": "2026-07-16T15:09:41Z"
       }
     },
     {
@@ -17373,7 +17373,7 @@
         "feedCompliance": 40,
         "slicesFetched": 0,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:39:41Z"
+        "scoredAt": "2026-07-16T15:09:43Z"
       }
     },
     {
@@ -17469,7 +17469,7 @@
         "feedCompliance": 60,
         "slicesFetched": 0,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:39:43Z"
+        "scoredAt": "2026-07-16T15:09:45Z"
       }
     },
     {
@@ -17565,7 +17565,7 @@
         "feedCompliance": 80,
         "slicesFetched": 0,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:39:45Z"
+        "scoredAt": "2026-07-16T15:09:47Z"
       }
     },
     {
@@ -17661,7 +17661,7 @@
         "feedCompliance": 80,
         "slicesFetched": 0,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:39:47Z"
+        "scoredAt": "2026-07-16T15:09:50Z"
       }
     },
     {
@@ -17746,18 +17746,18 @@
         "lastChecked": "2026-07-13T11:11:14.009Z"
       },
       "productionScore": {
-        "totalScore": 53,
-        "audioTechnical": 41,
+        "totalScore": 52,
+        "audioTechnical": 36,
         "loudnessCompliance": 86,
-        "recordingQuality": 11,
+        "recordingQuality": 3,
         "consistency": 10,
         "vitality": 93,
         "pacingFlow": 92,
-        "metadataComplete": 64,
+        "metadataComplete": 68,
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:40:02Z"
+        "scoredAt": "2026-07-16T15:10:04Z"
       }
     },
     {
@@ -17842,10 +17842,10 @@
         "lastChecked": "2026-07-13T11:11:24.521Z"
       },
       "productionScore": {
-        "totalScore": 48,
-        "audioTechnical": 60,
+        "totalScore": 49,
+        "audioTechnical": 63,
         "loudnessCompliance": 84,
-        "recordingQuality": 45,
+        "recordingQuality": 49,
         "consistency": 10,
         "vitality": 91,
         "pacingFlow": 60,
@@ -17853,7 +17853,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:40:18Z"
+        "scoredAt": "2026-07-16T15:10:14Z"
       }
     },
     {
@@ -17949,7 +17949,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:40:28Z"
+        "scoredAt": "2026-07-16T15:10:22Z"
       }
     },
     {
@@ -18035,9 +18035,9 @@
       },
       "productionScore": {
         "totalScore": 59,
-        "audioTechnical": 80,
+        "audioTechnical": 78,
         "loudnessCompliance": 86,
-        "recordingQuality": 76,
+        "recordingQuality": 74,
         "consistency": 10,
         "vitality": 95,
         "pacingFlow": 35,
@@ -18045,7 +18045,7 @@
         "feedCompliance": 80,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:40:55Z"
+        "scoredAt": "2026-07-16T15:10:51Z"
       }
     },
     {
@@ -18141,7 +18141,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:41:14Z"
+        "scoredAt": "2026-07-16T15:11:02Z"
       }
     },
     {
@@ -18237,7 +18237,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:41:36Z"
+        "scoredAt": "2026-07-16T15:11:18Z"
       }
     },
     {
@@ -18323,9 +18323,9 @@
       },
       "productionScore": {
         "totalScore": 55,
-        "audioTechnical": 60,
+        "audioTechnical": 63,
         "loudnessCompliance": 97,
-        "recordingQuality": 36,
+        "recordingQuality": 41,
         "consistency": 65,
         "vitality": 91,
         "pacingFlow": 35,
@@ -18333,7 +18333,7 @@
         "feedCompliance": 40,
         "slicesFetched": 3,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:41:46Z"
+        "scoredAt": "2026-07-16T15:11:28Z"
       }
     },
     {
@@ -18429,7 +18429,7 @@
         "feedCompliance": 40,
         "slicesFetched": 0,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:41:54Z"
+        "scoredAt": "2026-07-16T15:11:35Z"
       }
     },
     {
@@ -18525,7 +18525,7 @@
         "feedCompliance": 40,
         "slicesFetched": 0,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:41:56Z"
+        "scoredAt": "2026-07-16T15:11:36Z"
       }
     },
     {
@@ -18621,7 +18621,7 @@
         "feedCompliance": 40,
         "slicesFetched": 0,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:41:58Z"
+        "scoredAt": "2026-07-16T15:11:38Z"
       }
     },
     {
@@ -18706,18 +18706,18 @@
         "lastChecked": "2026-07-13T11:12:32.474Z"
       },
       "productionScore": {
-        "totalScore": 25,
+        "totalScore": 28,
         "audioTechnical": 0,
         "loudnessCompliance": 0,
         "recordingQuality": 0,
         "consistency": 15,
         "vitality": 97,
         "pacingFlow": 0,
-        "metadataComplete": 37,
+        "metadataComplete": 64,
         "feedCompliance": 40,
         "slicesFetched": 0,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:42:04Z"
+        "scoredAt": "2026-07-16T15:11:44Z"
       }
     },
     {
@@ -18813,7 +18813,7 @@
         "feedCompliance": 40,
         "slicesFetched": 0,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:42:10Z"
+        "scoredAt": "2026-07-16T15:11:49Z"
       }
     },
     {
@@ -18909,7 +18909,7 @@
         "feedCompliance": 40,
         "slicesFetched": 0,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:42:16Z"
+        "scoredAt": "2026-07-16T15:11:52Z"
       }
     },
     {
@@ -19005,7 +19005,7 @@
         "feedCompliance": 40,
         "slicesFetched": 0,
         "algorithmVersion": "production_score_v1",
-        "scoredAt": "2026-07-16T12:42:45Z"
+        "scoredAt": "2026-07-16T15:12:18Z"
       }
     }
   ],
