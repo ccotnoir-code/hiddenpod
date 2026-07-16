@@ -30,6 +30,13 @@ import urllib.request
 from pathlib import Path
 from typing import Optional, List
 
+# Add static_ffmpeg to PATH if available (local dev fallback; CI installs ffmpeg via apt)
+try:
+    import static_ffmpeg
+    static_ffmpeg.add_paths()
+except ImportError:
+    pass
+
 # ── Optional DSP imports ─────────────────────────────────────────────────────
 try:
     import numpy as np
@@ -143,10 +150,9 @@ def score_audio_technical(slices: List[str]) -> int:
     else:
         lufs_score = int(100 * (1 - (delta - LUFS_TOLERANCE) / (LUFS_FLOOR_DELTA - LUFS_TOLERANCE)))
 
-    # Noise floor: quieter floor = better. -60 dBFS or below = perfect.
+    # Noise floor: quieter floor = better. -60 dBFS or below = perfect, -30 dBFS = 0.
     avg_noise = float(np.mean(noise_floors)) if noise_floors else -30.0
-    # -60 → 100, -30 → 0, linear
-    noise_score = clamp(int((avg_noise + 60) / 30 * 100))
+    noise_score = clamp(int((-30.0 - avg_noise) / 30.0 * 100))
 
     return clamp(int(lufs_score * 0.65 + noise_score * 0.35))
 
