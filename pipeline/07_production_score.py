@@ -67,8 +67,10 @@ W_PACING       = 0.15
 W_METADATA     = 0.12
 W_COMPLIANCE   = 0.08
 
-SLICE_OFFSETS_S  = [120, 900, 1800]   # ~2min, ~15min, ~30min
-SLICE_DURATION_S = 30
+SLICE_PROPORTIONS = [0.10, 0.50, 0.90]  # 10/50/90% of episode length
+SLICE_MIN_OFFSET_S = 30                  # always skip first 30s (cold opens)
+SLICE_DURATION_S   = 30
+SLICE_MIN_EPISODE_S = 90                 # skip DSP entirely for episodes < 90s
 SILENCE_THRESHOLD_DB  = -40.0         # dBFS below which a frame is considered silent
 SILENCE_MAX_RATIO     = 0.03          # >3% silence → score penalty
 TARGET_LUFS_STEREO    = -16.0
@@ -85,6 +87,22 @@ def clamp(v, lo=0, hi=100):
 
 
 # ── Audio helpers ─────────────────────────────────────────────────────────────
+
+def compute_slice_offsets(episode_duration_s: int) -> List[int]:
+    """Proportional offsets at 10/50/90% of episode length.
+    Returns empty list if the episode is too short to sample reliably."""
+    if episode_duration_s < SLICE_MIN_EPISODE_S:
+        return []
+    max_offset = max(0, episode_duration_s - SLICE_DURATION_S - 5)
+    offsets = []
+    seen: set = set()
+    for p in SLICE_PROPORTIONS:
+        o = max(SLICE_MIN_OFFSET_S, min(int(episode_duration_s * p), max_offset))
+        if o not in seen:
+            offsets.append(o)
+            seen.add(o)
+    return offsets
+
 
 def fetch_audio_slice(audio_url: str, offset_s: int, duration_s: int, tmp_dir: str) -> Optional[str]:
     """Download a time slice via ffmpeg. Returns path to WAV file or None on failure."""
@@ -304,9 +322,11 @@ def compute_production_score(show: dict, dry_run: bool = False) -> dict:
     slices_fetched = 0
 
     if HAS_DSP and audio_url and not dry_run:
+        episode_duration_s = (show.get('latestEpisode') or {}).get('durationSeconds', 0) or 0
+        slice_offsets = compute_slice_offsets(episode_duration_s)
         with tempfile.TemporaryDirectory() as tmp:
             slices = []
-            for offset in SLICE_OFFSETS_S:
+            for offset in slice_offsets:
                 path = fetch_audio_slice(audio_url, offset, SLICE_DURATION_S, tmp)
                 if path:
                     slices.append(path)
