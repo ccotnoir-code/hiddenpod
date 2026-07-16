@@ -111,26 +111,29 @@ async function main() {
   const { scored } = JSON.parse(fs.readFileSync(inPath, 'utf8'));
 
   // 1. Filter below-threshold
+  const getLatestCS = s => (s.episodeScores || [])[0]?.contentScore || {};
   const getRelevance = s => {
-    const r = s.scores.relevance;
+    const r = getLatestCS(s).topicRelevance;
     return typeof r === 'object' ? (r.score || 0) : (r || 0);
   };
   const surfaceable = scored
-    .filter(s => s.scores.totalScore >= SCORE_FLOOR && getRelevance(s) >= RELEVANCE_FLOOR)
-    .sort((a, b) => b.scores.totalScore - a.scores.totalScore);
+    .filter(s => (getLatestCS(s).totalScore || 0) >= SCORE_FLOOR && getRelevance(s) >= RELEVANCE_FLOOR)
+    .sort((a, b) => (getLatestCS(b).totalScore || 0) - (getLatestCS(a).totalScore || 0));
 
-  const aboveScore = scored.filter(s => s.scores.totalScore >= SCORE_FLOOR).length;
+  const aboveScore = scored.filter(s => (getLatestCS(s).totalScore || 0) >= SCORE_FLOOR).length;
   console.log(`Scored: ${scored.length} | Total≥${SCORE_FLOOR}: ${aboveScore} | +Relevance≥${RELEVANCE_FLOOR}: ${surfaceable.length} (all surfaced)`);
 
   // 2. Build DATA-compatible show objects
   const shows = surfaceable.map((show, idx) => {
-    const id     = show.feedId;
-    const major  = isMajor(show);
-    const colors = idToColor(id);
-    const sc     = show.scores;
-    const stats  = makeSocialStats(sc.totalScore, major);
-    const cats   = inferCats(show);
-    const dur    = show.clip.durationSeconds || 30;
+    const id      = show.feedId;
+    const major   = isMajor(show);
+    const colors  = idToColor(id);
+    const latestEp = (show.episodeScores || [])[0] || null;
+    const sc      = latestEp?.contentScore || {};
+    const slp     = show.showLevelProduction || {};
+    const stats   = makeSocialStats(sc.totalScore || 0, major);
+    const cats    = inferCats(show);
+    const dur     = show.clip?.durationSeconds || 30;
 
     return {
       // Core identity
@@ -148,14 +151,14 @@ async function main() {
       szLbl:   major ? 'Major' : 'Independent',
 
       // Match/social display (prototype values)
-      match: Math.min(99, sc.totalScore + Math.round(Math.random() * 5)),
+      match: Math.min(99, (sc.totalScore || 0) + Math.round(Math.random() * 5)),
       lk:    stats.lk,
       sh:    stats.sh,
       sv:    stats.sv,
 
       // Episode
-      ep:    show.latestEpisode.title,
-      q:     show.clip.text,
+      ep:    show.latestEpisode?.title  || '',
+      q:     show.clip?.text            || '',
       ts:    '0:00',
       dur:   '0:' + String(dur).padStart(2, '0'),
       prog:  0,
@@ -168,38 +171,44 @@ async function main() {
 
       // Scores (flat object matching current DIM_NAMES keys, no geofit)
       scores: {
-        quality:     sc.quality.score,
-        structure:   sc.structure.score,
-        relevance:   sc.relevance.score,
-        clipability: sc.clipability.score,
-        consistency: sc.consistency.score,
-        vitality:    sc.vitality.score,
+        quality:     typeof sc.bitrateQuality === 'number' ? sc.bitrateQuality : 65,
+        structure:   typeof sc.contentStructure  === 'object' ? (sc.contentStructure.score  || 0) : (sc.contentStructure  || 0),
+        relevance:   typeof sc.topicRelevance    === 'object' ? (sc.topicRelevance.score    || 0) : (sc.topicRelevance    || 0),
+        clipability: typeof sc.clipAbility       === 'object' ? (sc.clipAbility.score       || 0) : (sc.clipAbility       || 0),
+        consistency: slp.consistency || 0,
+        vitality:    slp.vitality    || 0,
       },
 
-      momentum: makeMomentum(sc.vitality.score, sc.consistency.score),
+      momentum: makeMomentum(slp.vitality || 0, slp.consistency || 0),
 
       // Clip timing — consumed by CLIP_STARTS/CLIP_DURATIONS in index.html fetch callback
       clip: {
-        startSeconds:       show.clip.startSeconds,
-        durationSeconds:    show.clip.durationSeconds,
+        startSeconds:        show.clip?.startSeconds       || 0,
+        durationSeconds:     show.clip?.durationSeconds    || 30,
         speechOffsetSeconds: 0,
       },
 
       // Audit fields (not used by frontend)
       _meta: {
         feedUrl:          show.feedUrl,
-        audioUrl:         show.latestEpisode.audioUrl,
-        transcriptUrl:    show.transcript.url,
-        transcriptType:   show.transcript.type,
-        totalScore:       sc.totalScore,
-        scoreTier:        sc.tier,
-        algorithmVersion: sc.algorithmVersion,
-        scoredAt:         sc.scoredAt,
-        productionScore:  show.productionScore || null,
+        audioUrl:         show.latestEpisode?.audioUrl    || null,
+        transcriptUrl:    show.transcript?.url             || null,
+        transcriptType:   show.transcript?.type            || null,
+        episodeId:        latestEp?.episodeId              || null,
+        episodeTitle:     latestEp?.episodeTitle           || null,
+        episodePubDate:   latestEp?.pubDate                || null,
+        appleEpisodeUrl:  latestEp?.appleEpisodeUrl        || null,
+        itunesId:         show.itunesId                    || null,
+        totalScore:       sc.totalScore                    || 0,
+        scoreTier:        sc.tier                          || null,
+        algorithmVersion: sc.algorithmVersion              || null,
+        scoredAt:         sc.scoredAt                      || null,
+        productionAudio:  latestEp?.productionAudio        || null,
+        showLevelProduction: show.showLevelProduction      || null,
         rationales: {
-          relevance:   sc.relevance.rationale,
-          structure:   sc.structure.rationale,
-          clipability: sc.clipability.rationale,
+          relevance:   typeof sc.topicRelevance   === 'object' ? sc.topicRelevance.rationale   : null,
+          structure:   typeof sc.contentStructure === 'object' ? sc.contentStructure.rationale : null,
+          clipability: typeof sc.clipAbility      === 'object' ? sc.clipAbility.rationale      : null,
         },
         bonusSignals: {
           discoveryMomentum: null,

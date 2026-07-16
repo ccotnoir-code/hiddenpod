@@ -37,15 +37,16 @@ if (!ANT_KEY)              { console.error('ERROR: Set ANTHROPIC_API_KEY.'); pro
 
 const client = new Anthropic.default({ apiKey: ANT_KEY });
 
-const SCORED_PATH       = path.join(__dirname, 'scored_shows.json');
-const SCORED_TMP        = SCORED_PATH + '.tmp';
-const ALGORITHM_VERSION = 'v1.2';
-const DEAD_THRESHOLD    = 3;   // consecutive API failures before marking feed inactive
-const WEIGHTS           = { quality:0.18, structure:0.20, relevance:0.22, clipability:0.16, consistency:0.16, vitality:0.08 };
-const MIN_WORDS         = 150;
-const CLIP_WORDS        = 110;
-const PI_DELAY          = 1200; // ms between Podcast Index calls
-const CHECKPOINT_EVERY  = 20;
+const SCORED_PATH         = path.join(__dirname, 'scored_shows.json');
+const SCORED_TMP          = SCORED_PATH + '.tmp';
+const ALGORITHM_VERSION   = 'v1.2';
+const DEAD_THRESHOLD      = 3;   // consecutive API failures before marking feed inactive
+const EPISODE_SCORES_CAP  = 26;  // max episodeScores entries per show (~6 months weekly)
+const WEIGHTS             = { quality:0.18, structure:0.20, relevance:0.22, clipability:0.16, consistency:0.16, vitality:0.08 };
+const MIN_WORDS           = 150;
+const CLIP_WORDS          = 110;
+const PI_DELAY            = 1200; // ms between Podcast Index calls
+const CHECKPOINT_EVERY    = 20;
 
 const EN_WORDS = new Set(['the','and','is','in','to','of','a','that','it','was','he','she','for','on','are','with','as','at','be','this','from','or','by','an','they','we','his','her','have','were','been','has','had','not','but','what','which','when','their','there','so','if','about','up','out','who','would','can','will','said','all','some','more','one','do','into','no','our','i','you','your','just','like','also']);
 
@@ -73,20 +74,39 @@ function scoreAudioQuality(bytes, dur) {
 }
 
 function getScore(s, k) {
-  const v = s.scores[k];
-  return typeof v === 'object' ? (v.score || 0) : (v || 0);
+  if (k === 'consistency' || k === 'vitality') {
+    return s.showLevelProduction?.[k] || 0;
+  }
+  const cs = (s.episodeScores || [])[0]?.contentScore;
+  if (!cs) return 0;
+  if (k === 'quality')     return cs.bitrateQuality || 0;
+  if (k === 'structure')   return typeof cs.contentStructure  === 'object' ? (cs.contentStructure.score  || 0) : (cs.contentStructure  || 0);
+  if (k === 'relevance')   return typeof cs.topicRelevance    === 'object' ? (cs.topicRelevance.score    || 0) : (cs.topicRelevance    || 0);
+  if (k === 'clipability') return typeof cs.clipAbility       === 'object' ? (cs.clipAbility.score       || 0) : (cs.clipAbility       || 0);
+  return 0;
 }
 
 function setScore(s, k, val) {
-  if (typeof s.scores[k] === 'object') s.scores[k].score = val;
-  else s.scores[k] = val;
+  if (k === 'consistency' || k === 'vitality') {
+    if (!s.showLevelProduction) s.showLevelProduction = {};
+    s.showLevelProduction[k] = val;
+    return;
+  }
+  const ep = (s.episodeScores || [])[0];
+  if (!ep) return;
+  if (!ep.contentScore) ep.contentScore = {};
+  const cs = ep.contentScore;
+  if (k === 'quality')     { cs.bitrateQuality = val; return; }
+  if (k === 'structure')   { if (typeof cs.contentStructure  === 'object') cs.contentStructure.score  = val; else cs.contentStructure  = val; return; }
+  if (k === 'relevance')   { if (typeof cs.topicRelevance    === 'object') cs.topicRelevance.score    = val; else cs.topicRelevance    = val; return; }
+  if (k === 'clipability') { if (typeof cs.clipAbility       === 'object') cs.clipAbility.score       = val; else cs.clipAbility       = val; return; }
 }
 
 function recomputeTotal(s) {
-  s.scores.totalScore = Math.round(
-    Object.keys(WEIGHTS).reduce((t, k) => t + getScore(s, k) * WEIGHTS[k], 0)
-  );
-  s.scores.algorithmVersion = ALGORITHM_VERSION;
+  const ep = (s.episodeScores || [])[0];
+  if (!ep || !ep.contentScore) return;
+  ep.contentScore.totalScore       = Math.round(Object.keys(WEIGHTS).reduce((t, k) => t + getScore(s, k) * WEIGHTS[k], 0));
+  ep.contentScore.algorithmVersion = ALGORITHM_VERSION;
 }
 
 // ── Transcript helpers ────────────────────────────────────────────────────────
@@ -147,6 +167,75 @@ function getContentLength(url, redirectsLeft = 6) {
     req.on('error', () => resolve(null));
     req.end();
   });
+}
+
+// ── Apple episode link helpers ────────────────────────────────────────────────
+
+function httpGet(url) {
+  return new Promise((resolve, reject) => {
+    const lib = url.startsWith('https') ? https : http;
+    let body = '';
+    const req = lib.get(url, { headers: { 'User-Agent': 'HiddenPodPipeline/1.0' } }, (res) => {
+      res.on('data', chunk => body += chunk);
+      res.on('end', () => resolve(body));
+    });
+    req.setTimeout(10000, () => { req.destroy(); reject(new Error('timeout')); });
+    req.on('error', reject);
+  });
+}
+
+function titleSimilarity(a, b) {
+  const wa = new Set(a.split(/\W+/).filter(Boolean));
+  const wb = new Set(b.split(/\W+/).filter(Boolean));
+  if (wa.size === 0 && wb.size === 0) return 1;
+  const intersection = [...wa].filter(w => wb.has(w)).length;
+  const union = new Set([...wa, ...wb]).size;
+  return union === 0 ? 0 : intersection / union;
+}
+
+async function lookupItunesId(feedTitle) {
+  try {
+    const url = `https://itunes.apple.com/search?term=${encodeURIComponent(feedTitle)}&media=podcast&limit=5`;
+    const body = await httpGet(url);
+    const results = JSON.parse(body).results || [];
+    const titleLow = feedTitle.toLowerCase();
+    // Exact match first
+    for (const r of results) {
+      if ((r.collectionName || '').toLowerCase() === titleLow) return r.collectionId;
+    }
+    // Accept best result if similarity is high enough to be unambiguous
+    if (results.length > 0) {
+      const sim = titleSimilarity(titleLow, (results[0].collectionName || '').toLowerCase());
+      if (sim >= 0.7) return results[0].collectionId;
+    }
+    return null;
+  } catch (_) { return null; }
+}
+
+async function matchAppleEpisode(itunesId, guid, pubDateUnix, episodeTitle) {
+  try {
+    const url = `https://itunes.apple.com/lookup?id=${itunesId}&entity=podcastEpisode&limit=200`;
+    const body = await httpGet(url);
+    const episodes = JSON.parse(body).results.filter(r => r.kind === 'podcast-episode');
+
+    // Primary: exact RSS guid match
+    if (guid) {
+      const exact = episodes.find(e => e.episodeGuid === guid);
+      if (exact) return { trackId: exact.trackId, url: exact.trackViewUrl.replace('&uo=4', '') };
+    }
+
+    // Fallback: date within 48h AND title Jaccard ≥ 0.3
+    const titleLow = (episodeTitle || '').toLowerCase();
+    for (const e of episodes) {
+      const epUnix = Math.floor(new Date(e.releaseDate).getTime() / 1000);
+      if (Math.abs(epUnix - pubDateUnix) <= 172800) {
+        if (titleSimilarity((e.trackName || '').toLowerCase(), titleLow) >= 0.3) {
+          return { trackId: e.trackId, url: e.trackViewUrl.replace('&uo=4', '') };
+        }
+      }
+    }
+    return null;
+  } catch (_) { return null; }
 }
 
 // ── LLM scoring ──────────────────────────────────────────────────────────────
@@ -238,7 +327,7 @@ async function refreshShow(show) {
   // Always recompute Vitality (free — just a date math function)
   const newVitality = scoreVitality(ep.datePublished || show.latestEpisode?.pubDateUnix);
   setScore(show, 'vitality', newVitality);
-  if (typeof show.scores.vitality === 'object') show.scores.vitality.method = 'computed_from_metadata';
+  if (show.showLevelProduction) show.showLevelProduction.computedAt = new Date().toISOString();
 
   const storedPub = show.latestEpisode?.pubDateUnix || 0;
   if (ep.datePublished <= storedPub) {
@@ -259,29 +348,77 @@ async function refreshShow(show) {
   }
   if (!txEntry && transcripts.length > 0) txEntry = transcripts[0];
 
-  // Update episode metadata unconditionally
   const dur = ep.duration || show.latestEpisode?.durationSeconds || 1800;
+  const epPubDate = new Date(ep.datePublished * 1000).toISOString();
+  const newEpisodeId = `pi_${ep.id || (String(ep.datePublished) + '_' + show.feedId)}`;
+  const epGuid = ep.guid || null;
+
+  // Build the new episode score entry (contentScore will be filled after LLM)
+  const newEpScore = {
+    episodeId:       newEpisodeId,
+    episodeTitle:    ep.title,
+    pubDate:         epPubDate,
+    pubDateUnix:     ep.datePublished,
+    audioUrl:        ep.enclosureUrl,
+    durationSeconds: dur,
+    guid:            epGuid,
+    contentScore: {
+      bitrateQuality:   null,
+      topicRelevance:   null,
+      contentStructure: null,
+      clipAbility:      null,
+      totalScore:       0,
+      tier:             'below_threshold',
+      algorithmVersion: ALGORITHM_VERSION,
+      scoredAt:         null,
+    },
+    productionAudio:  null,  // set by 07_production_score.py on next production score run
+    appleEpisodeId:   null,
+    appleEpisodeUrl:  null,
+  };
+
+  // Prepend new episode and cap history
+  show.episodeScores = [newEpScore, ...(show.episodeScores || [])].slice(0, EPISODE_SCORES_CAP);
+  show.latestEpisodeId = newEpisodeId;
+
+  // Update latestEpisode runtime metadata
   show.latestEpisode = {
     ...(show.latestEpisode || {}),
     title:           ep.title,
     audioUrl:        ep.enclosureUrl,
     enclosureBytes:  ep.enclosureLength || 0,
     pubDateUnix:     ep.datePublished,
-    pubDate:         new Date(ep.datePublished * 1000).toISOString(),
+    pubDate:         epPubDate,
     durationSeconds: dur,
+    guid:            epGuid,
   };
 
-  // Update Audio Quality from enclosure length if available
+  // Bitrate quality score
+  let bitrateQuality = 65;
   if (ep.enclosureLength && dur) {
-    setScore(show, 'quality', scoreAudioQuality(ep.enclosureLength, dur));
+    bitrateQuality = scoreAudioQuality(ep.enclosureLength, dur);
   } else {
-    // Try HTTP HEAD as fallback
     const bytes = await getContentLength(ep.enclosureUrl);
-    if (bytes) setScore(show, 'quality', scoreAudioQuality(bytes, dur));
+    if (bytes) bitrateQuality = scoreAudioQuality(bytes, dur);
+  }
+  newEpScore.contentScore.bitrateQuality = bitrateQuality;
+
+  // Apple episode link (itunesId lookup if not already stored, then episode match)
+  if (!show.itunesId) {
+    show.itunesId = await lookupItunesId(show.feedTitle);
+    await sleep(300);
+  }
+  if (show.itunesId) {
+    const appleMatch = await matchAppleEpisode(show.itunesId, epGuid, ep.datePublished, ep.title);
+    await sleep(300);
+    if (appleMatch) {
+      newEpScore.appleEpisodeId  = appleMatch.trackId;
+      newEpScore.appleEpisodeUrl = appleMatch.url;
+    }
   }
 
   if (!txEntry) {
-    // No transcript — keep old LLM scores, update metadata + quality + vitality
+    // No transcript — keep bitrate quality, skip LLM
     recomputeTotal(show);
     return { status: 'new_ep_no_transcript' };
   }
@@ -338,7 +475,7 @@ async function refreshShow(show) {
     scoringWindow,
   };
 
-  // LLM re-score
+  // LLM re-score — writes directly into the new episode entry
   let llm;
   try {
     llm = await llmScore(show);
@@ -348,11 +485,12 @@ async function refreshShow(show) {
   }
 
   if (llm) {
-    if (typeof show.scores.relevance   === 'object') { show.scores.relevance.score   = llm.topic_relevance.score;   show.scores.relevance.rationale   = llm.topic_relevance.rationale; }
-    if (typeof show.scores.structure   === 'object') { show.scores.structure.score   = llm.content_structure.score; show.scores.structure.rationale   = llm.content_structure.rationale; }
-    if (typeof show.scores.clipability === 'object') { show.scores.clipability.score = llm.clip_ability.score;      show.scores.clipability.rationale = llm.clip_ability.rationale; }
-    show.card           = llm.card;
-    show.scores.scoredAt = new Date().toISOString();
+    const cs = newEpScore.contentScore;
+    cs.topicRelevance    = { score: llm.topic_relevance.score,    rationale: llm.topic_relevance.rationale };
+    cs.contentStructure  = { score: llm.content_structure.score,  rationale: llm.content_structure.rationale };
+    cs.clipAbility       = { score: llm.clip_ability.score,       rationale: llm.clip_ability.rationale };
+    cs.scoredAt          = new Date().toISOString();
+    show.card            = llm.card;
   }
 
   recomputeTotal(show);

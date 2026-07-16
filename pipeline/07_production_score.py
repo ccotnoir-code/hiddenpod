@@ -307,7 +307,10 @@ def score_compliance(feed_url: str) -> int:
 # ── Carry-over helpers ────────────────────────────────────────────────────────
 
 def extract_existing_score(show: dict, key: str) -> int:
-    """Pull an integer score from the existing PodSignal scores object."""
+    """Pull an integer score — reads showLevelProduction first, falls back to legacy scores."""
+    slp_val = (show.get('showLevelProduction') or {}).get(key)
+    if slp_val is not None:
+        return int(slp_val)
     val = show.get('scores', {}).get(key, 0)
     if isinstance(val, dict):
         return int(val.get('score', 0))
@@ -353,29 +356,65 @@ def compute_production_score(show: dict, dry_run: bool = False) -> dict:
                 c_audio_tech, c_loudness, c_quality = score_audio_technical(slices)
                 c_pacing = score_pacing(slices)
 
-    total = (
-        c_audio_tech  * W_AUDIO_TECH  +
-        c_consistency * W_CONSISTENCY +
-        c_vitality    * W_VITALITY    +
-        c_pacing      * W_PACING      +
-        c_metadata    * W_METADATA    +
-        c_compliance  * W_COMPLIANCE
-    )
+    scored_at = time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime())
+
+    # Show-level signals (publish-pattern / feed-level — not tied to one episode)
+    show['showLevelProduction'] = {
+        'consistency':         c_consistency,
+        'vitality':            c_vitality,
+        'metadataCompleteness': c_metadata,
+        'feedCompliance':      c_compliance,
+        'computedAt':          scored_at,
+    }
+
+    # Episode-level audio (sampled from the latest episode's audio)
+    production_audio = {
+        'loudnessCompliance':  c_loudness,
+        'recordingQuality':    c_quality,
+        'audioTechnicalScore': c_audio_tech,
+        'pacingFlow':          c_pacing,
+        'slicesFetched':       slices_fetched,
+        'algorithmVersion':    ALGO_VERSION,
+        'scoredAt':            scored_at,
+    }
+
+    # Write into the latest episodeScores entry if it exists; fall back to legacy field
+    ep_scores = show.get('episodeScores') or []
+    if ep_scores:
+        ep_scores[0]['productionAudio'] = production_audio
+    else:
+        # Legacy fallback for shows not yet migrated
+        total = (
+            c_audio_tech  * W_AUDIO_TECH  +
+            c_consistency * W_CONSISTENCY +
+            c_vitality    * W_VITALITY    +
+            c_pacing      * W_PACING      +
+            c_metadata    * W_METADATA    +
+            c_compliance  * W_COMPLIANCE
+        )
+        show['productionScore'] = {
+            'totalScore':        round(total),
+            'audioTechnical':    c_audio_tech,
+            'loudnessCompliance': c_loudness,
+            'recordingQuality':  c_quality,
+            'consistency':       c_consistency,
+            'vitality':          c_vitality,
+            'pacingFlow':        c_pacing,
+            'metadataComplete':  c_metadata,
+            'feedCompliance':    c_compliance,
+            'slicesFetched':     slices_fetched,
+            'algorithmVersion':  ALGO_VERSION,
+            'scoredAt':          scored_at,
+        }
 
     return {
-        'totalScore':        round(total),
         'audioTechnical':    c_audio_tech,
         'loudnessCompliance': c_loudness,
         'recordingQuality':  c_quality,
-        'consistency':       c_consistency,
-        'vitality':          c_vitality,
         'pacingFlow':        c_pacing,
         'metadataComplete':  c_metadata,
         'feedCompliance':    c_compliance,
         'slicesFetched':     slices_fetched,
-        'scoredEpisodeId':   (show.get('latestEpisode') or {}).get('id'),
-        'algorithmVersion':  ALGO_VERSION,
-        'scoredAt':          time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime()),
     }
 
 
@@ -409,9 +448,8 @@ def main():
 
         try:
             ps = compute_production_score(show, dry_run=args.dry_run)
-            show['productionScore'] = ps
             updated += 1
-            print(f'→ {ps["totalScore"]} (audio:{ps["audioTechnical"]} loud:{ps["loudnessCompliance"]} qual:{ps["recordingQuality"]} meta:{ps["metadataComplete"]} comply:{ps["feedCompliance"]} slices:{ps["slicesFetched"]})')
+            print(f'→ audio:{ps["audioTechnical"]} loud:{ps["loudnessCompliance"]} qual:{ps["recordingQuality"]} pacing:{ps["pacingFlow"]} meta:{ps["metadataComplete"]} comply:{ps["feedCompliance"]} slices:{ps["slicesFetched"]}')
         except Exception as e:
             print(f'→ ERROR: {e}')
 

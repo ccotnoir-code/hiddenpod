@@ -220,21 +220,44 @@ async function main() {
     );
 
     const tier = totalScore >= 85 ? 'exceptional' : totalScore >= 70 ? 'strong' : totalScore >= 40 ? 'average' : 'below_threshold';
+    const scoredAt = new Date().toISOString();
+    const ep = show.latestEpisode;
+    const episodeId = `ep_${(ep.pubDate || '').slice(0,10).replace(/-/g,'')||'unknown'}_${show.feedId}`;
 
     scored.push({
       ...show,
-      scores: {
-        quality:      { score: quality,      weight: WEIGHTS.quality,      method: 'computed_from_metadata' },
-        structure:    { score: structure,     weight: WEIGHTS.structure,    rationale: llm.content_structure.rationale },
-        relevance:    { score: relevance,     weight: WEIGHTS.relevance,    rationale: llm.topic_relevance.rationale },
-        clipability:  { score: clipability,   weight: WEIGHTS.clipability,  rationale: llm.clip_ability.rationale },
-        consistency:  { score: consistency,   weight: WEIGHTS.consistency,  method: 'computed_from_metadata' },
-        vitality:     { score: vitality,      weight: WEIGHTS.vitality,     method: 'computed_from_metadata' },
-        totalScore,
-        tier,
-        algorithmVersion: 'v1.2',
-        scoredAt: new Date().toISOString(),
+      itunesId:        show.itunesId || null,
+      discoveryCats:   show.discoveryCats || null,
+      latestEpisodeId: episodeId,
+      showLevelProduction: {
+        consistency,
+        vitality,
+        metadataCompleteness: null,  // set by 07_production_score.py
+        feedCompliance:       null,  // set by 07_production_score.py
+        computedAt:           scoredAt,
       },
+      episodeScores: [{
+        episodeId,
+        episodeTitle:    ep.title,
+        pubDate:         ep.pubDate,
+        pubDateUnix:     ep.pubDateUnix,
+        audioUrl:        ep.audioUrl,
+        durationSeconds: ep.durationSeconds,
+        guid:            ep.guid || null,
+        contentScore: {
+          bitrateQuality:   quality,
+          topicRelevance:   { score: relevance,    rationale: llm.topic_relevance.rationale },
+          contentStructure: { score: structure,    rationale: llm.content_structure.rationale },
+          clipAbility:      { score: clipability,  rationale: llm.clip_ability.rationale },
+          totalScore,
+          tier,
+          algorithmVersion: 'v1.2',
+          scoredAt,
+        },
+        productionAudio:  null,  // set by 07_production_score.py
+        appleEpisodeId:   null,
+        appleEpisodeUrl:  null,
+      }],
       card: llm.card,
     });
 
