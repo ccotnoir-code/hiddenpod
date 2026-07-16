@@ -195,6 +195,7 @@ async function main() {
         scoreTier:        sc.tier,
         algorithmVersion: sc.algorithmVersion,
         scoredAt:         sc.scoredAt,
+        productionScore:  show.productionScore || null,
         rationales: {
           relevance:   sc.relevance.rationale,
           structure:   sc.structure.rationale,
