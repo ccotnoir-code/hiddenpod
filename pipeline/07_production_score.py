@@ -175,8 +175,10 @@ def score_audio_technical(slices: List[str]) -> Tuple[int, int, int]:
 
     # ── Recording quality / noise floor (60% of audio_tech) ──────────────────
     # -60 dBFS or quieter = 100 (clean studio), -30 dBFS = 0 (noisy).
-    avg_noise = float(np.mean(noise_floors)) if noise_floors else -30.0
-    quality_score = clamp(int((-30.0 - avg_noise) / 30.0 * 100))
+    # Median across slices: robust to one outlier segment (e.g. phone interview)
+    # without ignoring persistent problems (2-of-3 bad slices still gives bad median).
+    median_noise = float(np.median(noise_floors)) if noise_floors else -30.0
+    quality_score = clamp(int((-30.0 - median_noise) / 30.0 * 100))
 
     audio_tech = clamp(int(loudness_score * W_AUDIO_LOUDNESS + quality_score * W_AUDIO_QUALITY))
     return audio_tech, loudness_score, quality_score
