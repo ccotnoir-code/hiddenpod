@@ -28,7 +28,7 @@ import tempfile
 import time
 import urllib.request
 from pathlib import Path
-from typing import Optional, List
+from typing import Optional, List, Tuple
 
 # Add static_ffmpeg to PATH if available (local dev fallback; CI installs ffmpeg via apt)
 try:
@@ -75,8 +75,11 @@ SILENCE_THRESHOLD_DB  = -40.0         # dBFS below which a frame is considered s
 SILENCE_MAX_RATIO     = 0.03          # >3% silence → score penalty
 TARGET_LUFS_STEREO    = -16.0
 TARGET_LUFS_MONO      = -19.0
-LUFS_TOLERANCE        = 2.0           # ±2 LUFS before score degrades
-LUFS_FLOOR_DELTA      = 6.0          # beyond ±6 LUFS → score = 0
+LUFS_TOLERANCE        = 2.0           # ±2 LUFS → loudness compliance = 100
+LUFS_FLOOR_DELTA      = 12.0         # ±12 LUFS → loudness compliance = 0 (was 6; softened to not hard-zero quiet-but-clean shows)
+# Within Audio Technical (30% of total), two sub-signals:
+W_AUDIO_LOUDNESS = 0.40   # loudness compliance: distance from broadcast LUFS target
+W_AUDIO_QUALITY  = 0.60   # recording quality: noise floor / how clean the capture is
 
 SCORED_PATH   = Path(__file__).parent / 'scored_shows.json'
 ALGO_VERSION  = 'production_score_v1'
@@ -127,10 +130,15 @@ def fetch_audio_slice(audio_url: str, offset_s: int, duration_s: int, tmp_dir: s
     return None
 
 
-def score_audio_technical(slices: List[str]) -> int:
-    """LUFS loudness + noise floor across collected slices. Returns 0–100."""
+def score_audio_technical(slices: List[str]) -> Tuple[int, int, int]:
+    """Two sub-signals combined into one Audio Technical score (0–100).
+
+    Returns (audio_tech, loudness_compliance, recording_quality) for logging.
+    Loudness compliance: distance from broadcast LUFS target (40% weight).
+    Recording quality:   noise floor cleanliness (60% weight).
+    """
     if not HAS_DSP or not slices:
-        return 0
+        return 0, 0, 0
 
     lufs_vals, noise_floors = [], []
     meter = pyln.Meter(22050)
@@ -138,15 +146,13 @@ def score_audio_technical(slices: List[str]) -> int:
     for path in slices:
         try:
             y, sr = librosa.load(path, sr=22050, mono=True)
-            if len(y) < sr:     # less than 1s — skip
+            if len(y) < sr:
                 continue
 
-            # Integrated loudness
             loud = meter.integrated_loudness(y.astype(np.float64))
             if math.isfinite(loud):
                 lufs_vals.append(loud)
 
-            # Noise floor: RMS of the quietest 5% of frames
             frame_rms = librosa.feature.rms(y=y, frame_length=2048, hop_length=512)[0]
             if len(frame_rms) > 0:
                 threshold = np.percentile(frame_rms, 5)
@@ -155,24 +161,25 @@ def score_audio_technical(slices: List[str]) -> int:
             continue
 
     if not lufs_vals:
-        return 0
+        return 0, 0, 0
 
+    # ── Loudness compliance (40% of audio_tech) ───────────────────────────────
     avg_lufs = float(np.mean(lufs_vals))
-    # Assume mono (most indie podcasts); stereo shows would have slightly different target
-    target  = TARGET_LUFS_MONO
-    delta   = abs(avg_lufs - target)
+    delta = abs(avg_lufs - TARGET_LUFS_MONO)
     if delta <= LUFS_TOLERANCE:
-        lufs_score = 100
+        loudness_score = 100
     elif delta >= LUFS_FLOOR_DELTA:
-        lufs_score = 0
+        loudness_score = 0
     else:
-        lufs_score = int(100 * (1 - (delta - LUFS_TOLERANCE) / (LUFS_FLOOR_DELTA - LUFS_TOLERANCE)))
+        loudness_score = int(100 * (1 - (delta - LUFS_TOLERANCE) / (LUFS_FLOOR_DELTA - LUFS_TOLERANCE)))
 
-    # Noise floor: quieter floor = better. -60 dBFS or below = perfect, -30 dBFS = 0.
+    # ── Recording quality / noise floor (60% of audio_tech) ──────────────────
+    # -60 dBFS or quieter = 100 (clean studio), -30 dBFS = 0 (noisy).
     avg_noise = float(np.mean(noise_floors)) if noise_floors else -30.0
-    noise_score = clamp(int((-30.0 - avg_noise) / 30.0 * 100))
+    quality_score = clamp(int((-30.0 - avg_noise) / 30.0 * 100))
 
-    return clamp(int(lufs_score * 0.65 + noise_score * 0.35))
+    audio_tech = clamp(int(loudness_score * W_AUDIO_LOUDNESS + quality_score * W_AUDIO_QUALITY))
+    return audio_tech, loudness_score, quality_score
 
 
 def score_pacing(slices: List[str]) -> int:
@@ -318,6 +325,8 @@ def compute_production_score(show: dict, dry_run: bool = False) -> dict:
 
     # DSP sub-components — download slices
     c_audio_tech = 0
+    c_loudness   = 0
+    c_quality    = 0
     c_pacing     = 0
     slices_fetched = 0
 
@@ -333,8 +342,8 @@ def compute_production_score(show: dict, dry_run: bool = False) -> dict:
                     slices_fetched += 1
 
             if slices:
-                c_audio_tech = score_audio_technical(slices)
-                c_pacing     = score_pacing(slices)
+                c_audio_tech, c_loudness, c_quality = score_audio_technical(slices)
+                c_pacing = score_pacing(slices)
 
     total = (
         c_audio_tech  * W_AUDIO_TECH  +
@@ -346,16 +355,18 @@ def compute_production_score(show: dict, dry_run: bool = False) -> dict:
     )
 
     return {
-        'totalScore':    round(total),
-        'audioTechnical': c_audio_tech,
-        'consistency':    c_consistency,
-        'vitality':       c_vitality,
-        'pacingFlow':     c_pacing,
-        'metadataComplete': c_metadata,
-        'feedCompliance': c_compliance,
-        'slicesFetched':  slices_fetched,
-        'algorithmVersion': ALGO_VERSION,
-        'scoredAt':       time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime()),
+        'totalScore':        round(total),
+        'audioTechnical':    c_audio_tech,
+        'loudnessCompliance': c_loudness,
+        'recordingQuality':  c_quality,
+        'consistency':       c_consistency,
+        'vitality':          c_vitality,
+        'pacingFlow':        c_pacing,
+        'metadataComplete':  c_metadata,
+        'feedCompliance':    c_compliance,
+        'slicesFetched':     slices_fetched,
+        'algorithmVersion':  ALGO_VERSION,
+        'scoredAt':          time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime()),
     }
 
 
@@ -389,7 +400,7 @@ def main():
             ps = compute_production_score(show, dry_run=args.dry_run)
             show['productionScore'] = ps
             updated += 1
-            print(f'→ {ps["totalScore"]} (audio:{ps["audioTechnical"]} meta:{ps["metadataComplete"]} comply:{ps["feedCompliance"]} slices:{ps["slicesFetched"]})')
+            print(f'→ {ps["totalScore"]} (audio:{ps["audioTechnical"]} loud:{ps["loudnessCompliance"]} qual:{ps["recordingQuality"]} meta:{ps["metadataComplete"]} comply:{ps["feedCompliance"]} slices:{ps["slicesFetched"]})')
         except Exception as e:
             print(f'→ ERROR: {e}')
 
