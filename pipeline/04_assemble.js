@@ -12,9 +12,8 @@
 const fs   = require('fs');
 const path = require('path');
 
-const SCORE_FLOOR      = 40;  // below this = not surfaced
-const RELEVANCE_FLOOR  = 30;  // topic relevance below this = not surfaced (blocks sports/entertainment)
-const TARGET_SHOWS     = 120; // take top N before any further filtering
+const SCORE_FLOOR     = 40;  // below this = not surfaced
+const RELEVANCE_FLOOR = 30;  // topic relevance below this = not surfaced (blocks sports/entertainment)
 
 // ── Network affiliation heuristics ──────────────────────────────────────────
 // Shows from major networks → tier:'major' (excluded from Discover default tab)
@@ -118,12 +117,10 @@ async function main() {
   };
   const surfaceable = scored
     .filter(s => s.scores.totalScore >= SCORE_FLOOR && getRelevance(s) >= RELEVANCE_FLOOR)
-    .sort((a, b) => b.scores.totalScore - a.scores.totalScore)
-    .slice(0, TARGET_SHOWS);
+    .sort((a, b) => b.scores.totalScore - a.scores.totalScore);
 
   const aboveScore = scored.filter(s => s.scores.totalScore >= SCORE_FLOOR).length;
-  const aboveBoth  = scored.filter(s => s.scores.totalScore >= SCORE_FLOOR && getRelevance(s) >= RELEVANCE_FLOOR).length;
-  console.log(`Scored: ${scored.length} | Total≥${SCORE_FLOOR}: ${aboveScore} | +Relevance≥${RELEVANCE_FLOOR}: ${aboveBoth} | Taking top ${Math.min(TARGET_SHOWS, surfaceable.length)}`);
+  console.log(`Scored: ${scored.length} | Total≥${SCORE_FLOOR}: ${aboveScore} | +Relevance≥${RELEVANCE_FLOOR}: ${surfaceable.length} (all surfaced)`);
 
   // 2. Build DATA-compatible show objects
   const shows = surfaceable.map((show, idx) => {

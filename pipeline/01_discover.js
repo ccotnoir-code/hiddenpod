@@ -50,14 +50,15 @@ async function checkFeedsForTranscripts(feeds, { batchSize = 15, delayMs = 250 }
           if (transcripts.length > 0 || transcriptUrl) {
             const t = transcripts[0] || {};
             results.set(feed.id, {
-              feedId:       feed.id,
-              feedTitle:    feed.title,
-              feedUrl:      feed.url,
-              itunesId:     feed.itunesId || null,
-              imageUrl:     feed.image || feed.artwork || '',
-              author:       feed.author || '',
-              description:  feed.description || '',
-              link:         feed.link || '',
+              feedId:        feed.id,
+              feedTitle:     feed.title,
+              feedUrl:       feed.url,
+              itunesId:      feed.itunesId || null,
+              discoveryCats: DISCOVERY_CATS,
+              imageUrl:      feed.image || feed.artwork || '',
+              author:        feed.author || '',
+              description:   feed.description || '',
+              link:          feed.link || '',
               hasTranscript: true,
               transcriptUrl:  t.url || transcriptUrl,
               transcriptType: (t.type || 'unknown').toLowerCase(),
@@ -70,10 +71,10 @@ async function checkFeedsForTranscripts(feeds, { batchSize = 15, delayMs = 250 }
             return;
           }
         }
-        results.set(feed.id, { feedId: feed.id, feedTitle: feed.title, itunesId: feed.itunesId || null, hasTranscript: false });
+        results.set(feed.id, { feedId: feed.id, feedTitle: feed.title, itunesId: feed.itunesId || null, discoveryCats: DISCOVERY_CATS, hasTranscript: false });
       } catch (e) {
         results.set(feed.id, {
-          feedId: feed.id, feedTitle: feed.title, itunesId: feed.itunesId || null,
+          feedId: feed.id, feedTitle: feed.title, itunesId: feed.itunesId || null, discoveryCats: DISCOVERY_CATS,
           hasTranscript: false, error: e.message
         });
       }
