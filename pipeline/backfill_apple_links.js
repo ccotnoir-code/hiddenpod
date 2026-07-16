@@ -4,21 +4,26 @@
 // One-time backfill: look up itunesId and Apple episode links for all existing
 // shows in scored_shows.json that don't already have them.
 //
-// Existing episodeScores[0] entries were migrated with guid: null, so guid-based
-// exact matching isn't available. Falls back to date-within-48h + title-Jaccard≥0.3.
+// itunesId strategy: PI-first (feedId → /podcasts/byfeedid → feed.itunesId),
+// iTunes title-search fallback for shows PI doesn't have mapped.
 //
-// Rate strategy: 500ms between iTunes calls, 1s between show batches.
-// Expected runtime: ~3-5 minutes for 198 shows.
+// Existing episodeScores[0] entries were migrated with guid: null, so guid-based
+// exact matching isn't available for pre-migration episodes. Falls back to
+// date-within-48h + title-Jaccard≥0.3.
 //
 // Usage:
-//   node backfill_apple_links.js [--dry-run] [--feed-id ID]
+//   PODCASTINDEX_API_KEY=xxx PODCASTINDEX_API_SECRET=yyy node backfill_apple_links.js [--dry-run] [--feed-id ID]
 
 'use strict';
 
-const fs    = require('fs');
-const path  = require('path');
-const http  = require('http');
-const https = require('https');
+const fs     = require('fs');
+const path   = require('path');
+const http   = require('http');
+const https  = require('https');
+const { piGet } = require('./utils/podcast_index');
+
+const PI_KEY    = process.env.PODCASTINDEX_API_KEY;
+const PI_SECRET = process.env.PODCASTINDEX_API_SECRET;
 
 const SCORED_PATH = path.join(__dirname, 'scored_shows.json');
 const SCORED_TMP  = SCORED_PATH + '.tmp';
@@ -49,7 +54,17 @@ function titleSimilarity(a, b) {
   return union === 0 ? 0 : intersection / union;
 }
 
-async function lookupItunesId(feedTitle) {
+async function lookupItunesId(feedId, feedTitle) {
+  // Primary: Podcast Index already maps PI feedId → Apple itunesId
+  if (PI_KEY && PI_SECRET) {
+    try {
+      const piData = await piGet(PI_KEY, PI_SECRET, '/podcasts/byfeedid', { id: feedId });
+      const piId = piData?.feed?.itunesId;
+      if (piId && piId !== 0) return piId;
+    } catch (_) {}
+  }
+
+  // Fallback: iTunes title search (covers shows PI doesn't have mapped)
   try {
     const url = `https://itunes.apple.com/search?term=${encodeURIComponent(feedTitle)}&media=podcast&limit=5`;
     const body = await httpGet(url);
@@ -62,8 +77,9 @@ async function lookupItunesId(feedTitle) {
       const sim = titleSimilarity(titleLow, (results[0].collectionName || '').toLowerCase());
       if (sim >= 0.7) return results[0].collectionId;
     }
-    return null;
-  } catch (_) { return null; }
+  } catch (_) {}
+
+  return null;
 }
 
 async function matchAppleEpisode(itunesId, guid, pubDateUnix, episodeTitle) {
@@ -133,7 +149,7 @@ async function main() {
     // Step 1: itunesId — resolve locally so Step 2 can use it even in dry-run
     let resolvedItunesId = show.itunesId;
     if (!resolvedItunesId) {
-      resolvedItunesId = await lookupItunesId(show.feedTitle);
+      resolvedItunesId = await lookupItunesId(show.feedId, show.feedTitle);
       await sleep(500);
       if (resolvedItunesId) {
         if (!dryRun) show.itunesId = resolvedItunesId;

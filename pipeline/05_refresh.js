@@ -193,23 +193,30 @@ function titleSimilarity(a, b) {
   return union === 0 ? 0 : intersection / union;
 }
 
-async function lookupItunesId(feedTitle) {
+async function lookupItunesId(feedId, feedTitle) {
+  // Primary: Podcast Index already maps PI feedId → Apple itunesId
+  try {
+    const piData = await piGet(PI_KEY, PI_SECRET, '/podcasts/byfeedid', { id: feedId });
+    const piId = piData?.feed?.itunesId;
+    if (piId && piId !== 0) return piId;
+  } catch (_) {}
+
+  // Fallback: iTunes title search (covers shows PI doesn't have mapped)
   try {
     const url = `https://itunes.apple.com/search?term=${encodeURIComponent(feedTitle)}&media=podcast&limit=5`;
     const body = await httpGet(url);
     const results = JSON.parse(body).results || [];
     const titleLow = feedTitle.toLowerCase();
-    // Exact match first
     for (const r of results) {
       if ((r.collectionName || '').toLowerCase() === titleLow) return r.collectionId;
     }
-    // Accept best result if similarity is high enough to be unambiguous
     if (results.length > 0) {
       const sim = titleSimilarity(titleLow, (results[0].collectionName || '').toLowerCase());
       if (sim >= 0.7) return results[0].collectionId;
     }
-    return null;
-  } catch (_) { return null; }
+  } catch (_) {}
+
+  return null;
 }
 
 async function matchAppleEpisode(itunesId, guid, pubDateUnix, episodeTitle) {
@@ -405,7 +412,7 @@ async function refreshShow(show) {
 
   // Apple episode link (itunesId lookup if not already stored, then episode match)
   if (!show.itunesId) {
-    show.itunesId = await lookupItunesId(show.feedTitle);
+    show.itunesId = await lookupItunesId(show.feedId, show.feedTitle);
     await sleep(300);
   }
   if (show.itunesId) {
