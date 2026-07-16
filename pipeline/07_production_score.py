@@ -28,6 +28,7 @@ import tempfile
 import time
 import urllib.request
 from pathlib import Path
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import Optional, List, Tuple
 
 # Add static_ffmpeg to PATH if available (local dev fallback; CI installs ffmpeg via apt)
@@ -337,11 +338,16 @@ def compute_production_score(show: dict, dry_run: bool = False) -> dict:
         slice_offsets = compute_slice_offsets(episode_duration_s)
         with tempfile.TemporaryDirectory() as tmp:
             slices = []
-            for offset in slice_offsets:
-                path = fetch_audio_slice(audio_url, offset, SLICE_DURATION_S, tmp)
-                if path:
-                    slices.append(path)
-                    slices_fetched += 1
+            with ThreadPoolExecutor(max_workers=len(slice_offsets)) as executor:
+                futures = {
+                    executor.submit(fetch_audio_slice, audio_url, offset, SLICE_DURATION_S, tmp): offset
+                    for offset in slice_offsets
+                }
+                for future in as_completed(futures):
+                    path = future.result()
+                    if path:
+                        slices.append(path)
+                        slices_fetched += 1
 
             if slices:
                 c_audio_tech, c_loudness, c_quality = score_audio_technical(slices)
@@ -367,6 +373,7 @@ def compute_production_score(show: dict, dry_run: bool = False) -> dict:
         'metadataComplete':  c_metadata,
         'feedCompliance':    c_compliance,
         'slicesFetched':     slices_fetched,
+        'scoredEpisodeId':   (show.get('latestEpisode') or {}).get('id'),
         'algorithmVersion':  ALGO_VERSION,
         'scoredAt':          time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime()),
     }
@@ -391,6 +398,8 @@ def main():
         shows = shows[:args.limit]
 
     print(f'=== HiddenPod — Production Score (Step 7) ===')
+    if len(shows) > 2500:
+        print(f'WARNING: {len(shows)} shows — consider matrix sharding (see architecture doc)\n')
     print(f'Processing {len(shows)} shows | DSP: {"yes" if HAS_DSP else "no (install requirements)"} | dry-run: {args.dry_run}\n')
 
     updated = 0
