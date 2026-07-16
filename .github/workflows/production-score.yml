@@ -1,0 +1,35 @@
+name: Production Score
+on:
+  schedule:
+    - cron: '0 2 * * 2'  # Tuesday 02:00 UTC
+  workflow_dispatch:
+concurrency:
+  group: hiddenpod-pipeline
+  cancel-in-progress: false
+jobs:
+  score:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install system dependencies
+        run: sudo apt-get install -y ffmpeg libsndfile1 && ffmpeg -version
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.11' }
+      - run: pip install -r requirements.txt
+        working-directory: pipeline
+      - run: python3 07_production_score.py
+        working-directory: pipeline
+      - name: Commit updated scores
+        run: |
+          git config user.name "HiddenPod Bot"
+          git config user.email "bot@hiddenpod.vercel.app"
+          git add pipeline/scored_shows.json
+          if git diff --cached --quiet; then
+            echo "No changes — nothing to commit."
+          else
+            git commit -m "chore: production score run $(date -u +%Y-%m-%d)"
+            git push
+          fi
