@@ -1,19 +1,22 @@
 'use strict';
 
-// Relevance Gate — two-signal hard exclusion filter.
+// Category Resolver — replaces the per-category allowlist gate.
 //
-// Primary signal: Apple's primaryGenreName via iTunes lookup (free, authoritative).
-// Fallback: LLM check against title + description + Podcast Index tags (for shows
-// with no Apple Podcasts presence).
+// Primary signal: Apple primaryGenreName → apple_genre_category_map.json lookup.
+// Fallback: LLM classification (which category?) for shows Apple doesn't cover.
 //
-// Returns: { pass: boolean, signal: 'apple'|'llm'|'no-data', rationale: string }
+// Returns: { category: string, signal: 'apple'|'llm-stale-itunes'|'llm-no-itunes'|'llm-error' }
+// category is a HiddenPod category name or "unsupported".
 
 const path = require('path');
 const fs   = require('fs');
 
-const GATE_CONFIG = JSON.parse(
-  fs.readFileSync(path.join(__dirname, '..', 'relevance_gate_config.json'), 'utf8')
+const GENRE_MAP = JSON.parse(
+  fs.readFileSync(path.join(__dirname, '..', 'apple_genre_category_map.json'), 'utf8')
 );
+
+// Live set of HiddenPod categories — derived from map values, deduped, insertion order.
+const LIVE_CATEGORIES = [...new Set(Object.values(GENRE_MAP).filter(Boolean))];
 
 const ITUNES_BATCH_SIZE = 200;
 const ITUNES_DELAY_MS   = 1000;
@@ -22,20 +25,17 @@ function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
 
 // Batch-fetch primaryGenreName for a list of itunesIds.
 // Returns Map<itunesId, string|null> where:
-//   string  — Apple resolved this ID, value is primaryGenreName
-//   null    — Apple was queried but returned no result (stale/delisted ID)
-//   absent  — ID was never looked up (show had no itunesId)
-// This three-way distinction lets checkOne emit a precise signal for auditing.
+//   string  — Apple resolved the ID; value is primaryGenreName
+//   null    — ID was queried but Apple returned no result (stale/delisted)
+//   absent  — ID was never queried (show had no itunesId)
 async function fetchAppleGenres(itunesIds) {
   const result = new Map();
-  const ids = itunesIds.filter(Boolean);
+  const ids = [...new Set(itunesIds.filter(Boolean).map(String))];
   if (!ids.length) return result;
 
   for (let i = 0; i < ids.length; i += ITUNES_BATCH_SIZE) {
     const batch = ids.slice(i, i + ITUNES_BATCH_SIZE);
-    // Pre-seed all IDs in this batch as null (stale sentinel).
-    // Any that resolve will overwrite with their genre string.
-    for (const id of batch) result.set(String(id), null);
+    for (const id of batch) result.set(id, null); // pre-seed as stale sentinel
 
     const url = 'https://itunes.apple.com/lookup?id=' + batch.join(',') + '&entity=podcast&media=podcast';
     try {
@@ -54,95 +54,86 @@ async function fetchAppleGenres(itunesIds) {
   return result;
 }
 
-// Run LLM fallback check for a single show against a category.
-// signal: caller-supplied signal tag for audit trail ('llm-no-itunes' or 'llm-stale-itunes').
-async function llmFallbackCheck(show, categoryKey, anthropic, signal = 'llm-no-itunes') {
-  const config  = GATE_CONFIG[categoryKey];
-  const prompt  =
-    `You are evaluating whether a podcast belongs in the "${categoryKey}" category on a discovery platform.\n\n` +
-    `Show title: ${show.feedTitle || show.title}\n` +
-    `Description: ${(show.description || '').slice(0, 500)}\n` +
+// LLM classification fallback: returns which live category fits best, or "unsupported".
+async function llmClassify(show, anthropic, signal) {
+  const cats = LIVE_CATEGORIES.join(', ');
+  const prompt =
+    `You are classifying a podcast into one of these HiddenPod categories: ${cats}\n\n` +
+    `Show title: ${show.feedTitle || show.title || ''}\n` +
+    `Author: ${show.author || ''}\n` +
+    `Description: ${(show.description || '').slice(0, 400)}\n` +
     `Self-declared tags: ${Object.values(show.categories || {}).join(', ') || 'none'}\n\n` +
-    `Does this podcast genuinely fit the "${categoryKey}" category? ` +
-    `Answer with exactly: PASS or FAIL, then a single sentence explaining why.`;
+    `Which single category best fits this podcast? Reply with ONLY the exact category name from the list above, or "none" if it does not fit any. No explanation.`;
 
   try {
     const msg = await anthropic.messages.create({
       model:      'claude-haiku-4-5-20251001',
-      max_tokens: 80,
+      max_tokens: 20,
+      temperature: 0,
       messages:   [{ role: 'user', content: prompt }],
     });
-    const text   = msg.content[0]?.text?.trim() || '';
-    const passes = text.toUpperCase().startsWith('PASS');
-    return {
-      pass:      passes,
-      signal,
-      rationale: text,
-    };
+    const raw = (msg.content[0]?.text || '').trim();
+    if (raw === 'none') return { category: 'unsupported', signal };
+    if (LIVE_CATEGORIES.includes(raw)) return { category: raw, signal };
+    // Model returned something that isn't a valid category — fail closed.
+    return { category: 'unsupported', signal: 'llm-error' };
   } catch (e) {
-    // Fail-closed on LLM error: consistent with "under-include over contaminate" philosophy.
-    // An unresolvable verdict is uncertainty; uncertain shows don't pass the gate.
-    return { pass: false, signal: 'llm-error', rationale: 'LLM error — failing closed: ' + e.message };
+    // Fail-closed on LLM error: uncertain shows don't get surfaced.
+    return { category: 'unsupported', signal: 'llm-error' };
   }
 }
 
-// Check a single show against a category.
-// appleGenreMap: Map<itunesId, primaryGenreName> pre-fetched for the batch.
-// anthropic: Anthropic client instance (only used for LLM fallback path).
-function checkOne(show, categoryKey, appleGenreMap, anthropic) {
-  const config = GATE_CONFIG[categoryKey];
-  if (!config) {
-    return Promise.resolve({ pass: true, signal: 'no-config', rationale: `No gate config for category "${categoryKey}" — defaulting to pass` });
+// Resolve a single show to a HiddenPod category (or "unsupported").
+//
+// appleGenreMap: Map<itunesId, primaryGenreName> pre-fetched for the batch (pass null to skip).
+// anthropic: Anthropic client instance (or null to disable LLM fallback).
+async function resolveCategory(show, appleGenreMap, anthropic) {
+  const itunesId = show.itunesId ? String(show.itunesId) : null;
+  const inMap    = itunesId && appleGenreMap ? appleGenreMap.has(itunesId) : false;
+  const genre    = inMap ? appleGenreMap.get(itunesId) : undefined;
+
+  // Apple resolved the ID and returned a genre — check the map.
+  if (genre) {
+    const mapped = GENRE_MAP[genre];
+    if (mapped) {
+      if (show.discoveryCats && !show.discoveryCats.includes(mapped)) {
+        console.warn(
+          `[category_resolver] mismatch: feedId=${show.feedId} "${show.feedTitle}" ` +
+          `discovered under [${show.discoveryCats.join(', ')}] but Apple genre="${genre}" → "${mapped}"`
+        );
+      }
+      return { category: mapped, signal: 'apple', genre };
+    }
+    // Genre exists but isn't in our map — fall through to LLM.
+    if (anthropic) return llmClassify(show, anthropic, 'llm-stale-itunes');
+    return { category: 'unsupported', signal: 'llm-stale-itunes' };
   }
 
-  const itunesId   = show.itunesId ? String(show.itunesId) : null;
-  const inMap      = itunesId ? appleGenreMap.has(itunesId) : false;
-  const appleGenre = inMap ? appleGenreMap.get(itunesId) : undefined;
-
-  if (appleGenre) {
-    // Apple resolved this ID and returned a genre.
-    const passes = config.applePass.includes(appleGenre);
-    return Promise.resolve({
-      pass:      passes,
-      signal:    'apple',
-      rationale: `Apple primaryGenreName="${appleGenre}" — ${passes ? 'in pass list' : 'not in pass list for ' + categoryKey}`,
-    });
+  // itunesId was queried but Apple returned null (stale/delisted) — LLM fallback.
+  if (inMap && genre === null) {
+    if (anthropic) return llmClassify(show, anthropic, 'llm-stale-itunes');
+    return { category: 'unsupported', signal: 'llm-stale-itunes' };
   }
 
-  if (inMap && appleGenre === null) {
-    // itunesId was queried but Apple returned no result — stale or delisted ID.
-    // Treat as no Apple coverage and fall through to LLM, but flag distinctly for auditing.
-    if (anthropic) return llmFallbackCheck(show, categoryKey, anthropic, 'llm-stale-itunes');
-  }
-
-  // No itunesId at all — show never had Apple Podcasts presence.
-  if (anthropic) return llmFallbackCheck(show, categoryKey, anthropic, 'llm-no-itunes');
-
-  return Promise.resolve({ pass: true, signal: 'no-data', rationale: 'No Apple data and no LLM client — defaulting to pass' });
+  // No itunesId — no Apple data at all.
+  if (anthropic) return llmClassify(show, anthropic, 'llm-no-itunes');
+  return { category: 'unsupported', signal: 'llm-no-itunes' };
 }
 
-// Check a batch of shows against a single category.
-// Shows must have an itunesId field (persisted by 01_discover.js).
-// Returns array of { show, pass, signal, rationale } in input order.
-async function checkBatch(shows, categoryKey, anthropic) {
-  const config = GATE_CONFIG[categoryKey];
-  if (!config) {
-    console.warn(`relevance_gate: no config for category "${categoryKey}" — all shows pass`);
-    return shows.map(show => ({ show, pass: true, signal: 'no-config', rationale: 'no config' }));
-  }
+// Resolve a batch of shows, fetching Apple genres in one pass.
+// Returns array of { feedId, feedTitle, category, signal, genre? } in input order.
+async function resolveBatch(shows, anthropic) {
+  const itunesIds    = [...new Set(shows.map(s => s.itunesId).filter(Boolean).map(String))];
+  const appleGenreMap = itunesIds.length ? await fetchAppleGenres(itunesIds) : new Map();
 
-  // Batch-fetch Apple genres for all shows that have an itunesId
-  const itunesIds   = [...new Set(shows.map(s => s.itunesId).filter(Boolean).map(String))];
-  const appleGenres = await fetchAppleGenres(itunesIds);
-
-  console.log(`  Apple genre lookup: ${appleGenres.size}/${itunesIds.length} itunesIds resolved`);
+  console.log(`  Apple genre lookup: ${[...appleGenreMap.values()].filter(Boolean).length}/${itunesIds.length} itunesIds resolved`);
 
   const results = [];
   for (const show of shows) {
-    const verdict = await checkOne(show, categoryKey, appleGenres, anthropic);
-    results.push({ show, ...verdict });
+    const r = await resolveCategory(show, appleGenreMap, anthropic);
+    results.push({ feedId: show.feedId, feedTitle: show.feedTitle, ...r });
   }
   return results;
 }
 
-module.exports = { checkBatch, fetchAppleGenres, GATE_CONFIG };
+module.exports = { resolveCategory, resolveBatch, fetchAppleGenres, GENRE_MAP, LIVE_CATEGORIES };

@@ -11,6 +11,23 @@
 
 const fs   = require('fs');
 const path = require('path');
+const { resolveBatch } = require('./utils/relevance_gate');
+
+// Full map from resolver Title Case → internal slug stored in c.cat.
+// Shows with a resolver-confirmed category (any) store it here and skip inferCats.
+// inferCats runs only when the resolver returns 'unsupported'.
+const RESOLVER_TO_SLUG = {
+  'News':           'news',
+  'Politics':       'politics',
+  'Technology':     'technology',
+  'Business':       'business',
+  'True Crime':     'true-crime',
+  'Health & Fitness': 'health-fitness',
+  'Sports':         'sports',
+};
+
+// Live (pill-browsable) subset.  Expand when discovery targets new genres.
+const LIVE_SLUGS = new Set(['news', 'politics']);
 
 const SCORE_FLOOR     = 40;  // below this = not surfaced
 const RELEVANCE_FLOOR = 30;  // topic relevance below this = not surfaced (blocks sports/entertainment)
@@ -123,7 +140,31 @@ async function main() {
   const aboveScore = scored.filter(s => (getLatestCS(s).totalScore || 0) >= SCORE_FLOOR).length;
   console.log(`Scored: ${scored.length} | Total≥${SCORE_FLOOR}: ${aboveScore} | +Relevance≥${RELEVANCE_FLOOR}: ${surfaceable.length} (all surfaced)`);
 
-  // 2. Build DATA-compatible show objects
+  // 2. Resolve categories — Apple/LLM signal first, inferCats only for unsupported.
+  //    Shows with a resolver-confirmed category (live or not) store that slug directly.
+  //    inferCats keyword matching only runs when the resolver returns 'unsupported',
+  //    preventing off-topic shows from leaking into News/Politics via catch-all defaults.
+  const anthropicKey = process.env.ANTHROPIC_API_KEY;
+  let anthropic = null;
+  if (anthropicKey) {
+    const Anthropic = require('@anthropic-ai/sdk');
+    anthropic = new Anthropic({ apiKey: anthropicKey });
+  }
+  console.log(`\nResolving categories (LLM fallback: ${anthropic ? 'enabled' : 'disabled — set ANTHROPIC_API_KEY to classify unsupported shows'})...`);
+
+  const resolverResults = await resolveBatch(surfaceable, anthropic);
+  const resolverMap = new Map(resolverResults.map(r => [String(r.feedId), r]));
+
+  const resolverConfirmed   = resolverResults.filter(r => r.category !== 'unsupported');
+  const resolverLive        = resolverResults.filter(r => LIVE_SLUGS.has(RESOLVER_TO_SLUG[r.category]));
+  const resolverNonLive     = resolverResults.filter(r => r.category !== 'unsupported' && !LIVE_SLUGS.has(RESOLVER_TO_SLUG[r.category]));
+  const resolverUnsupported = resolverResults.filter(r => r.category === 'unsupported');
+
+  console.log(`  Resolver-confirmed (live News/Politics):        ${resolverLive.length}/${surfaceable.length}`);
+  console.log(`  Resolver-confirmed (non-live, stored as-is):   ${resolverNonLive.length}  (${[...new Set(resolverNonLive.map(r => r.category))].join(', ') || 'none'})`);
+  console.log(`  Unsupported (→ inferCats keyword fallback):     ${resolverUnsupported.length}`);
+
+  // 3. Build DATA-compatible show objects
   const shows = surfaceable.map((show, idx) => {
     const id      = show.feedId;
     const major   = isMajor(show);
@@ -132,7 +173,10 @@ async function main() {
     const sc      = latestEp?.contentScore || {};
     const slp     = show.showLevelProduction || {};
     const stats   = makeSocialStats(sc.totalScore || 0, major);
-    const cats    = inferCats(show);
+    const rr      = resolverMap.get(String(id));
+    const cats    = (rr && rr.category !== 'unsupported')
+      ? [RESOLVER_TO_SLUG[rr.category] || rr.category.toLowerCase().replace(/\s+/g, '-')]
+      : inferCats(show);
     const dur     = show.clip?.durationSeconds || 30;
 
     return {
@@ -219,7 +263,7 @@ async function main() {
     };
   });
 
-  // 3. Write shows.json
+  // 4. Write shows.json
   const outPath = path.join(__dirname, '..', 'data', 'shows.json');
   const output = {
     meta: {

@@ -137,12 +137,14 @@ async function ingestShow(show) {
   const scoringWindow = extractWindow(plainText, clipStartSec, dur, 2000);
 
   return {
-    feedId:       show.feedId,
-    feedTitle:    show.feedTitle,
-    feedUrl:      show.feedUrl,
-    imageUrl:     show.imageUrl,
-    author:       show.author,
-    description:  show.description || '',
+    feedId:        show.feedId,
+    feedTitle:     show.feedTitle,
+    feedUrl:       show.feedUrl,
+    itunesId:      show.itunesId      || null,
+    discoveryCats: show.discoveryCats || null,
+    imageUrl:      show.imageUrl,
+    author:        show.author,
+    description:   show.description || '',
 
     latestEpisode: {
       title:           show.episodeTitle,
