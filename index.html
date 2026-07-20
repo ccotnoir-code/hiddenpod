@@ -158,6 +158,9 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--text);font-fam
 .ps-headline{display:flex;align-items:baseline;gap:7px;padding:6px 14px 8px;border-bottom:1px solid rgba(255,255,255,0.06);flex-shrink:0}
 .ps-total{font-size:28px;font-weight:800;color:var(--accent);font-family:var(--font-d);line-height:1}
 .ps-wordmark{font-size:10px;color:rgba(255,255,255,0.32);font-family:var(--font-d);font-weight:600;text-transform:uppercase;letter-spacing:0.07em;align-self:center}
+.score-expand{display:flex;align-items:center;gap:5px;padding:4px 14px 6px;cursor:pointer;opacity:0.5;font-size:10.5px;color:var(--fg);letter-spacing:0.02em;border-bottom:1px solid rgba(255,255,255,0.06);transition:opacity 0.15s;user-select:none}
+.score-expand:hover{opacity:0.85}
+.score-expand svg{width:9px;height:9px;flex-shrink:0;transition:transform 0.2s}
 .ps-tier{font-size:10px;font-weight:700;color:rgba(255,255,255,0.55);font-family:var(--font-d);align-self:center}
 
 /* ── BOTTOM SECTION ── */
@@ -1912,6 +1915,11 @@ function buildCard(c,idx){
     +(psTierLabel ? '<span class="ps-tier">'+psTierLabel+'</span>' : '')
     +'</div>';
 
+  var expandHtml = '<div class="score-expand" onclick="doInfo('+c.id+',event)">'
+    +'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>'
+    +'<span>Why this score?</span>'
+    +'</div>';
+
   var pubDate = formatEpDate(c._meta && c._meta.episodePubDate);
   var scoreRowHtml = isLoggedIn()
     ? '<div class="score-row">'+scorePills+'</div>'
@@ -1972,6 +1980,7 @@ function buildCard(c,idx){
     +'<button class="follow-btn" id="fb'+c.id+'" onclick="doFollow('+c.showId+')">+ Save</button>'
     +'</div>'
     +psHeadline
+    +expandHtml
     +'<div class="ep-info-area">'
     +epTitleHtml
     +(pubDate?'<div class="ep-date">'+pubDate+'</div>':'')
@@ -2017,7 +2026,7 @@ function doShare(id){
   }
 }
 
-function doInfo(id,ev){if(ev)ev.stopPropagation();var p=document.getElementById('dp'+id);if(p)p.classList.toggle('open');}
+function doInfo(id,ev){if(ev)ev.stopPropagation();var p=document.getElementById('dp'+id);if(!p){showCreatorScreen('creatorAuthScreen');return;}p.classList.toggle('open');}
 function doShowInfo(id,ev){if(ev)ev.stopPropagation();var p=document.getElementById('si'+id);if(p)p.classList.toggle('open');}
 
 function doFollow(showId){
