@@ -544,11 +544,21 @@ async function main() {
       continue;
     }
 
-    const outcome = await refreshShow(show);
+    let outcome;
+    try {
+      outcome = await refreshShow(show);
+    } catch (e) {
+      counts.other++;
+      process.stdout.write(`  ${i+1}/${shows.length} SHOW-ERROR [${show.feedId}] ${show.feedTitle.slice(0,32)}: ${e.message}\n`);
+      console.error(`[show-error] feedId=${show.feedId} "${show.feedTitle}"\n${e.stack}`);
+      await sleep(PI_DELAY);
+      continue;
+    }
 
     if (outcome.status === 'fully_refreshed') {
       counts.fully_refreshed++;
-      process.stdout.write(`  ${i+1}/${shows.length} RE-SCORED [${show.scores.totalScore}]: ${show.feedTitle.slice(0,38)}\n`);
+      const newTotal = (show.episodeScores || [])[0]?.contentScore?.totalScore ?? 0;
+      process.stdout.write(`  ${i+1}/${shows.length} RE-SCORED [${newTotal}]: ${show.feedTitle.slice(0,38)}\n`);
       await sleep(150); // breathe after LLM call
     } else if (outcome.status === 'vitality_only') {
       counts.vitality_only++;
