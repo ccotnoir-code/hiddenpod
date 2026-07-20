@@ -66,7 +66,7 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--text);font-fam
 .status-icons{display:flex;gap:6px;align-items:center}
 
 /* ── VIEW TABS ── */
-.view-tabs{display:flex;gap:7px;padding:6px 18px 0;flex-shrink:0}
+.view-tabs{display:flex;gap:7px;padding:6px 18px 0;flex-shrink:0;position:relative;z-index:11}
 .view-tab{font-family:var(--font-d);font-size:11px;font-weight:700;padding:5px 14px;border-radius:20px;border:1px solid var(--border);color:var(--muted);white-space:nowrap;cursor:pointer;flex-shrink:0;background:transparent;transition:all 0.18s}
 .view-tab.active{background:var(--accent);border-color:var(--accent);color:#0a0a0f}
 
@@ -564,7 +564,7 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--text);font-fam
 /* ── LIBRARY VIEW ── */
 .library-view{position:absolute;inset:0;background:var(--bg);z-index:10;display:none;flex-direction:column}
 .library-view.open{display:flex}
-.library-header{padding:52px 18px 0;flex-shrink:0;border-bottom:1px solid var(--border)}
+.library-header{padding:74px 18px 0;flex-shrink:0;border-bottom:1px solid var(--border)}
 .library-title{font-family:var(--font-d);font-size:18px;font-weight:800;margin-bottom:10px}
 .library-search{width:100%;padding:8px 12px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:10px;color:white;font-size:13px;font-family:var(--font-b);outline:none;box-sizing:border-box}
 .library-search::placeholder{color:rgba(240,240,245,0.3)}
@@ -592,15 +592,6 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--text);font-fam
 </head>
 <body>
 <div class="wrap">
-<nav class="site-nav">
-  <div class="site-nav-left">
-    <a href="/" class="site-nav-wm">hidden<span class="p">pod</span></a>
-    <a href="/creators" class="site-nav-link">For Creators</a>
-    <a href="/rankings" class="site-nav-link">Rankings</a>
-    <a href="#" class="site-nav-link" onclick="openNlOverlay();return false;">Newsletter</a>
-  </div>
-  <a href="/" class="site-nav-link" style="color:rgba(240,240,245,0.3)">← hiddenpod.com</a>
-</nav>
 <div class="phone" id="phone">
 
 <div class="top-nav">
@@ -624,10 +615,9 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--text);font-fam
 </div>
 
 <div class="view-tabs">
-  <div class="view-tab active" id="vt-discover" onclick="switchView('discover')">Discover</div>
-  <div class="view-tab" id="vt-allshows" onclick="switchView('allshows')">All shows</div>
-  <div class="view-tab" id="vt-trending" onclick="switchView('trending')">Trending</div>
+  <div class="view-tab active" id="vt-rankings" onclick="switchView('rankings')">Rankings</div>
   <div class="view-tab" id="vt-library" onclick="switchView('library')">Library</div>
+  <div class="view-tab" id="vt-newsletter" onclick="openNlOverlay()">Newsletter</div>
 </div>
 
 <div class="cat-row" id="catRow">
@@ -2117,7 +2107,7 @@ function finishSignIn() {
 // ── STATE ─────────────────────────────────────────────────────────────────────
 var liked={}, saved={}, followed={};
 var currentFilter='all';
-var activeTab='discover';
+var activeTab='rankings';
 var filteredData=[];
 
 // ── HELPERS ──────────────────────────────────────────────────────────────────
@@ -2299,7 +2289,7 @@ function doInfo(id,ev){if(ev)ev.stopPropagation();var p=document.getElementById(
 // ── FILTERING ─────────────────────────────────────────────────────────────────
 // Returns the base dataset for the current tab (before category filter)
 function getBaseData(){
-  if(activeTab==='discover') return DATA.filter(function(c){return c.tier==='indie';});
+  if(activeTab==='rankings') return DATA.filter(function(c){return c.tier==='indie';});
   if(activeTab==='trending') return DATA.slice().sort(function(){return Math.random()-0.5;});
   return DATA.slice(); // allshows
 }
@@ -2345,7 +2335,7 @@ function switchView(tab){
 
   // Show/hide discover badge
   var badge=document.getElementById('discoverBadge');
-  if(badge)badge.style.display=(tab==='discover')?'':'none';
+  if(badge)badge.style.display=(tab==='rankings')?'':'none';
 
   // Reset cat pills to "All"
   document.querySelectorAll('.cat-pill').forEach(function(p){p.classList.remove('active')});
@@ -2554,7 +2544,7 @@ function closeAllOverlays() {
 
 function showHome(){
   closeAllOverlays();
-  switchView('discover');
+  switchView('rankings');
 }
 
 // ── AUTOPLAY ──────────────────────────────────────────────────────────────────

@@ -334,7 +334,7 @@ function renderRankings(shows) {
       + '</div>'
       + '<div class="rank-info"><div class="rank-show">' + esc(s.show) + '</div><div class="rank-outlet">' + esc(s.outlet) + '</div></div>'
       + '<div class="rank-cat"><span class="cat-tag ' + catClass(cat) + '">' + catLabel + '</span></div>'
-      + '<div class="rank-listen"><a href="/discover" onclick="event.stopPropagation()">Listen</a></div>'
+      + '<div class="rank-listen"><a href="' + (s.listenUrl || '/discover') + '" onclick="event.stopPropagation()"' + (s.listenUrl ? ' target="_blank" rel="noopener"' : '') + '>Listen</a></div>'
       + '</div>';
   }).join('');
 }
@@ -414,7 +414,8 @@ fetch('/data/shows.json')
         show: s.show, outlet: s.outlet, cat: s.cat, tier: s.tier,
         scores: s.scores,
         rationales: (s._meta && s._meta.rationales) || {},
-        score: computeTotal(s)
+        score: computeTotal(s),
+        listenUrl: (s._meta && s._meta.appleEpisodeUrl) || (s._meta && s._meta.audioUrl) || null
       };
     }).sort(function(a,b){ return b.score - a.score; });
     applyFilters();
