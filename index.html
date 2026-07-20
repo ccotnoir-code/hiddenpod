@@ -1957,10 +1957,7 @@ function buildCard(c,idx){
 
   // Episode title row \u2014 title is tappable (opens dp drawer when logged in)
   // \u24d8 icon always shown but only functional when logged in
-  var epInfoIcon = isLoggedIn()
-    ? '<span class="info-btn" onclick="doInfo('+c.id+',event)" title="Score breakdown">i</span>'
-    : '';
-  var epTitleHtml = '<div class="ep-info-title"'+(isLoggedIn()?' onclick="doInfo('+c.id+',event)"':'')+'>'+c.ep+epInfoIcon+'</div>';
+  var epTitleHtml = '<div class="ep-info-title"'+(isLoggedIn()?' onclick="doInfo('+c.id+',event)"':'')+'>'+c.ep+'</div>';
 
   var listenHtml = '<div class="listen-row">'
     +(appleUrl ? '<a class="listen-btn apple" href="'+appleUrl+'" target="_blank" rel="noopener">'+apSVG()+' Open in Apple</a>' : '')
