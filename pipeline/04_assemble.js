@@ -164,112 +164,110 @@ async function main() {
   console.log(`  Resolver-confirmed (non-live, stored as-is):   ${resolverNonLive.length}  (${[...new Set(resolverNonLive.map(r => r.category))].join(', ') || 'none'})`);
   console.log(`  Unsupported (→ inferCats keyword fallback):     ${resolverUnsupported.length}`);
 
-  // 3. Build DATA-compatible show objects
-  const shows = surfaceable.map((show, idx) => {
-    const id      = show.feedId;
-    const major   = isMajor(show);
-    const colors  = idToColor(id);
-    const latestEp = (show.episodeScores || [])[0] || null;
-    const sc      = latestEp?.contentScore || {};
-    const slp     = show.showLevelProduction || {};
-    const stats   = makeSocialStats(sc.totalScore || 0, major);
-    const rr      = resolverMap.get(String(id));
-    const cats    = (rr && rr.category !== 'unsupported')
+  // 3. Build DATA-compatible episode objects (up to MAX_EPS per show, sorted by score)
+  const MAX_EPS = 2;
+
+  const shows = surfaceable.flatMap((show) => {
+    const id     = show.feedId;
+    const major  = isMajor(show);
+    const colors = idToColor(id);
+    const slp    = show.showLevelProduction || {};
+    const rr     = resolverMap.get(String(id));
+    const cats   = (rr && rr.category !== 'unsupported')
       ? [RESOLVER_TO_SLUG[rr.category] || rr.category.toLowerCase().replace(/\s+/g, '-')]
       : inferCats(show);
-    const dur     = show.clip?.durationSeconds || 30;
 
-    return {
-      // Core identity
-      id,
-      tier:    major ? 'major' : 'indie',
-      cat:     cats,
-      show:    show.feedTitle,
-      outlet:  show.author || show.feedTitle,
-      init:    makeInitials(show.feedTitle),
-      logoBg:  colors.bg,
-      cardBg:  colors.card,
-      ac:      colors.ac,
-      city:    '',          // not available from RSS metadata
-      sz:      szFromMajor(major),
-      szLbl:   major ? 'Major' : 'Independent',
-
-      // Match/social display (prototype values)
-      match: Math.min(99, (sc.totalScore || 0) + Math.round(Math.random() * 5)),
-      lk:    stats.lk,
-      sh:    stats.sh,
-      sv:    stats.sv,
-
-      // Episode
-      ep:    show.latestEpisode?.title  || '',
-      q:     show.clip?.text            || '',
-      ts:    '0:00',
-      dur:   '0:' + String(dur).padStart(2, '0'),
-      prog:  0,
-
-      // Card copy
-      reason: show.card?.reason  || 'Trending in News & Politics',
-      dh:     show.card?.tagline || show.feedTitle,
-      db:     show.card?.description || show.description?.slice(0, 100) || '',
-      dt:     show.card?.tags   || ['News', 'Politics'],
-
-      // Scores (flat object matching current DIM_NAMES keys, no geofit)
-      scores: {
-        quality:     typeof sc.bitrateQuality === 'number' ? sc.bitrateQuality : 65,
-        structure:   typeof sc.contentStructure  === 'object' ? (sc.contentStructure.score  || 0) : (sc.contentStructure  || 0),
-        relevance:   typeof sc.topicRelevance    === 'object' ? (sc.topicRelevance.score    || 0) : (sc.topicRelevance    || 0),
-        clipability: typeof sc.clipAbility       === 'object' ? (sc.clipAbility.score       || 0) : (sc.clipAbility       || 0),
-        consistency: slp.consistency || 0,
-        vitality:    slp.vitality    || 0,
-      },
-
-      momentum: makeMomentum(slp.vitality || 0, slp.consistency || 0),
-
-      // Clip timing — consumed by CLIP_STARTS/CLIP_DURATIONS in index.html fetch callback
-      clip: {
-        startSeconds:        show.clip?.startSeconds       || 0,
-        durationSeconds:     show.clip?.durationSeconds    || 30,
-        speechOffsetSeconds: 0,
-      },
-
-      // Audit fields (not used by frontend)
-      _meta: {
-        feedUrl:          show.feedUrl,
-        audioUrl:         show.latestEpisode?.audioUrl    || null,
-        transcriptUrl:    show.transcript?.url             || null,
-        transcriptType:   show.transcript?.type            || null,
-        episodeId:        latestEp?.episodeId              || null,
-        episodeTitle:     latestEp?.episodeTitle           || null,
-        episodePubDate:   latestEp?.pubDate                || null,
-        appleEpisodeUrl:  latestEp?.appleEpisodeUrl        || null,
-        itunesId:         show.itunesId                    || null,
-        totalScore:       sc.totalScore                    || 0,
-        scoreTier:        sc.tier                          || null,
-        algorithmVersion: sc.algorithmVersion              || null,
-        scoredAt:         sc.scoredAt                      || null,
-        productionAudio:  latestEp?.productionAudio        || null,
-        showLevelProduction: show.showLevelProduction      || null,
-        rationales: {
-          relevance:   typeof sc.topicRelevance   === 'object' ? sc.topicRelevance.rationale   : null,
-          structure:   typeof sc.contentStructure === 'object' ? sc.contentStructure.rationale : null,
-          clipability: typeof sc.clipAbility      === 'object' ? sc.clipAbility.rationale      : null,
-        },
-        bonusSignals: {
-          discoveryMomentum: null,
-          breakoutIndex:     null,
-          note: 'Not computed — requires 90-day baseline. Back-fill after shows have score history.',
-        }
-      }
+    const getCS = ep => ep?.contentScore || {};
+    const getRel = ep => {
+      const r = getCS(ep).topicRelevance;
+      return typeof r === 'object' ? (r.score || 0) : (r || 0);
     };
-  });
+
+    const eligibleEps = (show.episodeScores || []).filter((ep, epIdx) => {
+      if (epIdx === 0) return true;
+      const sc = getCS(ep);
+      return (sc.totalScore || 0) >= SCORE_FLOOR && getRel(ep) >= RELEVANCE_FLOOR;
+    }).slice(0, MAX_EPS);
+
+    return eligibleEps.map((ep, epIdx) => {
+      const sc    = getCS(ep);
+      const stats = makeSocialStats(sc.totalScore || 0, major);
+
+      return {
+        // id unique per episode; showId for show-level state (save/follow)
+        id:     id * 100 + epIdx,
+        showId: id,
+
+        tier:   major ? 'major' : 'indie',
+        cat:    cats,
+        show:   show.feedTitle,
+        outlet: show.author || show.feedTitle,
+        init:   makeInitials(show.feedTitle),
+        logoBg: colors.bg,
+        cardBg: colors.card,
+        ac:     colors.ac,
+        city:   '',
+        sz:     szFromMajor(major),
+        szLbl:  major ? 'Major' : 'Independent',
+
+        match: Math.min(99, (sc.totalScore || 0) + Math.round(Math.random() * 5)),
+        lk:    stats.lk,
+        sh:    stats.sh,
+        sv:    stats.sv,
+
+        ep:   ep.episodeTitle || show.latestEpisode?.title || '',
+        q:    show.clip?.text || '',
+        ts:   '0:00',
+        prog: 0,
+
+        reason: show.card?.reason       || 'Trending in News & Politics',
+        dh:     show.card?.tagline      || show.feedTitle,
+        db:     show.card?.description  || show.description?.slice(0, 100) || '',
+        dt:     show.card?.tags         || ['News', 'Politics'],
+
+        scores: {
+          quality:     typeof sc.bitrateQuality    === 'number' ? sc.bitrateQuality : 65,
+          structure:   typeof sc.contentStructure  === 'object' ? (sc.contentStructure.score  || 0) : (sc.contentStructure  || 0),
+          relevance:   typeof sc.topicRelevance    === 'object' ? (sc.topicRelevance.score    || 0) : (sc.topicRelevance    || 0),
+          clipability: typeof sc.clipAbility       === 'object' ? (sc.clipAbility.score       || 0) : (sc.clipAbility       || 0),
+          consistency: slp.consistency || 0,
+          vitality:    slp.vitality    || 0,
+        },
+
+        momentum: makeMomentum(slp.vitality || 0, slp.consistency || 0),
+
+        _meta: {
+          feedUrl:         show.feedUrl,
+          audioUrl:        ep.audioUrl          || null,
+          episodeId:       ep.episodeId          || null,
+          episodeTitle:    ep.episodeTitle        || null,
+          episodePubDate:  ep.pubDate             || null,
+          appleEpisodeUrl: ep.appleEpisodeUrl     || null,
+          itunesId:        show.itunesId          || null,
+          totalScore:      sc.totalScore          || 0,
+          scoreTier:       sc.tier                || null,
+          algorithmVersion: sc.algorithmVersion   || null,
+          scoredAt:        sc.scoredAt            || null,
+          showLevelProduction: show.showLevelProduction || null,
+          rationales: {
+            relevance:   typeof sc.topicRelevance   === 'object' ? sc.topicRelevance.rationale   : null,
+            structure:   typeof sc.contentStructure === 'object' ? sc.contentStructure.rationale : null,
+            clipability: typeof sc.clipAbility      === 'object' ? sc.clipAbility.rationale      : null,
+          },
+        },
+      };
+    });
+  }).sort((a, b) => (b._meta.totalScore || 0) - (a._meta.totalScore || 0));
 
   // 4. Write shows.json
   const outPath = path.join(__dirname, '..', 'data', 'shows.json');
+  const uniqueShowIds = new Set(shows.map(s => s.showId));
   const output = {
     meta: {
       generatedAt:      new Date().toISOString(),
       algorithmVersion: 'v1.2',
-      totalShows:       shows.length,
+      totalShows:       uniqueShowIds.size,
+      totalEpisodes:    shows.length,
       sourceCategories: ['News', 'Politics'],
     },
     shows,
@@ -277,15 +275,14 @@ async function main() {
 
   fs.writeFileSync(outPath, JSON.stringify(output, null, 2));
 
-  const indieCount = shows.filter(s => s.tier === 'indie').length;
-  const majorCount = shows.filter(s => s.tier === 'major').length;
+  const indieCount = [...uniqueShowIds].filter(id => shows.find(s => s.showId === id)?.tier === 'indie').length;
+  const majorCount = uniqueShowIds.size - indieCount;
 
   console.log('\n=== ASSEMBLY RESULTS ===');
-  console.log(`  Total shows in shows.json: ${shows.length}`);
-  console.log(`  Indie (Discover tab):      ${indieCount}`);
-  console.log(`  Major (All Shows tab):     ${majorCount}`);
-  console.log('\nTop 15 by score:');
-  shows.slice(0, 15).forEach(s => console.log(`  [${s.scores.quality},${s.scores.structure},${s.scores.relevance}] ${s.tier === 'indie' ? '★' : ' '} ${s.show}`));
+  console.log(`  Unique shows:   ${uniqueShowIds.size}  (indie: ${indieCount}, major: ${majorCount})`);
+  console.log(`  Total episodes: ${shows.length} (ranked entries in shows.json)`);
+  console.log('\nTop 15 episodes by score:');
+  shows.slice(0, 15).forEach(s => console.log(`  [${s.scores.quality},${s.scores.structure},${s.scores.relevance}] ${s.tier === 'indie' ? '★' : ' '} ${s.show} — ${(s.ep||'').slice(0,40)}`));
 
   console.log(`\ndata/shows.json written (${Math.round(fs.statSync(outPath).size / 1024)}KB)`);
   console.log('Deploy the repo to Vercel — index.html will fetch the new data automatically.');

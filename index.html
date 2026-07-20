@@ -70,13 +70,6 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--text);font-fam
 .view-tab{font-family:var(--font-d);font-size:11px;font-weight:700;padding:5px 14px;border-radius:20px;border:1px solid var(--border);color:var(--muted);white-space:nowrap;cursor:pointer;flex-shrink:0;background:transparent;transition:all 0.18s}
 .view-tab.active{background:var(--accent);border-color:var(--accent);color:#0a0a0f}
 
-/* ── AUTOPLAY TOGGLE ── */
-.autoplay-btn{display:flex;align-items:center;gap:5px;padding:4px 10px 4px 8px;border-radius:20px;border:1px solid var(--border);background:transparent;cursor:pointer;transition:all 0.18s;font-family:var(--font-d);font-size:10px;font-weight:600;color:var(--muted)}
-.autoplay-btn.on{background:rgba(232,255,71,0.1);border-color:rgba(232,255,71,0.4);color:var(--accent)}
-.ap-track{width:24px;height:13px;border-radius:7px;background:rgba(255,255,255,0.12);position:relative;transition:background 0.18s;flex-shrink:0}
-.autoplay-btn.on .ap-track{background:var(--accent)}
-.ap-thumb{width:9px;height:9px;border-radius:50%;background:rgba(255,255,255,0.4);position:absolute;top:2px;left:2px;transition:all 0.18s}
-.autoplay-btn.on .ap-thumb{background:#0a0a0f;left:13px}
 
 /* ── DISCOVER SHEET ── */
 .discover-sheet{position:absolute;inset:0;z-index:30;display:flex;flex-direction:column;justify-content:flex-end;pointer-events:none;opacity:0;transition:opacity 0.22s}
@@ -198,6 +191,15 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--text);font-fam
 .plt-apple{background:#fc3c44;color:#fff}
 .plt-spotify{background:#1db954;color:#fff}
 .plt-btn.done{opacity:0.45;cursor:default}
+/* ── LISTEN BUTTONS (new card footer) ── */
+.listen-row{display:flex;gap:5px;margin-top:8px}
+.listen-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:5px;padding:8px 5px;border-radius:8px;border:none;cursor:pointer;font-family:var(--font-b);font-size:10.5px;font-weight:600;white-space:nowrap;text-decoration:none;transition:opacity 0.18s,transform 0.12s;background:rgba(255,255,255,0.08);color:rgba(240,240,245,0.9)}
+.listen-btn:active{transform:scale(0.96);opacity:0.8}
+.listen-btn.apple{background:rgba(255,255,255,0.12)}
+/* ── EPISODE INFO AREA (replaces moment-area) ── */
+.ep-info-area{flex:1;display:flex;flex-direction:column;justify-content:center;padding:8px 0 4px;overflow:hidden;min-height:0}
+.ep-info-title{font-family:var(--font-b);font-size:13px;font-weight:500;color:rgba(240,240,245,0.95);line-height:1.4;margin-bottom:4px;cursor:pointer}
+.ep-info-title:hover{color:rgba(240,240,245,1)}
 
 /* ── ACTION RAIL ── */
 .action-rail{position:absolute;right:8px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:12px;z-index:3}
@@ -606,10 +608,6 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--text);font-fam
       </div>
     </div>
     <div class="wordmark"><span class="h">hidden</span><span class="p">pod</span><span class="creator-badge" id="creatorBadge" style="display:none">Creator</span></div>
-  </div>
-  <div class="autoplay-btn" id="autoplayBtn" onclick="toggleAutoplay()">
-    <div class="ap-track"><div class="ap-thumb"></div></div>
-    Autoplay
   </div>
   <div class="avatar" id="topAvatar" onclick="showProfile()" style="cursor:pointer">?</div>
 </div>
@@ -1277,281 +1275,13 @@ var DIM_WHY = {
 // Breakout Index: gap between quality and audience size
 function breakoutIndex(sz){ return sz==='micro'?'Hidden Gem':sz==='large'?'Established':null; }
 
-// ── REAL AUDIO ENGINE ────────────────────────────────────────────────────────
-var audioEl = null;
-var audioCache = {};      // showId -> mp3 url
-var audioLoading = {};    // showId -> true while fetching
-var playingId = null;
-var playTimer = null;
-// Populated from shows.json clip.startSeconds / clip.durationSeconds / clip.speechOffsetSeconds
+// ── AUDIO ENGINE STUBS (playback removed in v2) ──────────────────────────────
 var CLIP_STARTS = {};
 var CLIP_DURATIONS = {};
-// Word-highlight offset (seconds). Positive = delay highlighting, negative = advance.
 var CLIP_SPEECH_OFFSETS = {};
-var clipStartTime = 0;    // tracks where current clip began (for scrubber)
-
-function makeWave(prog, ac, cid) {
-  var bars = 32;
-  var played = Math.floor(prog * bars);
-  var heights = [18,28,22,35,25,42,30,20,38,26,44,32,22,36,28,46,24,34,20,40,28,36,22,44,30,26,40,22,34,28,18,38];
-  var html = '';
-  for (var i = 0; i < bars; i++) {
-    var h = heights[i % heights.length];
-    var cls = 'wave-bar' + (i < played ? ' played' : i === played ? ' active' : '');
-    var st = 'height:' + h + '%' + (i <= played ? ';background:' + ac : '');
-    html += '<div class="' + cls + '" style="' + st + '" data-b="' + i + '" data-c="' + cid + '"></div>';
-  }
-  return html;
-}
-
-function pico() {
-  return '<svg width="10" height="12" viewBox="0 0 10 12" fill="white"><path d="M0 0l10 6-10 6V0z"/></svg>';
-}
-function pauseIco() {
-  return '<svg width="10" height="12" viewBox="0 0 10 12" fill="white"><rect x="0" y="0" width="3.5" height="12"/><rect x="6.5" y="0" width="3.5" height="12"/></svg>';
-}
-function loadIco() {
-  return '<div class="loading-ring"></div>';
-}
-
-function setWaveProgress(id, prog, ac) {
-  var wf = document.getElementById('wf' + id);
-  if (!wf) return;
-  var bars = wf.children;
-  var played = Math.floor(prog * bars.length);
-  var heights = [18,28,22,35,25,42,30,20,38,26,44,32,22,36,28,46,24,34,20,40,28,36,22,44,30,26,40,22,34,28,18,38];
-  for (var i = 0; i < bars.length; i++) {
-    var b = bars[i];
-    b.className = 'wave-bar' + (i < played ? ' played' : i === played ? ' active' : '');
-    if (i <= played) b.style.background = ac;
-    else b.style.background = '';
-    b.style.height = heights[i % heights.length] + '%';
-  }
-}
-
-function stopCurrentAudio() {
-  if (playTimer) { clearInterval(playTimer); playTimer = null; }
-  if (audioEl) {
-    audioEl.pause();
-    if (audioEl._timeupdateHandler) {
-      audioEl.removeEventListener('timeupdate', audioEl._timeupdateHandler);
-      audioEl._timeupdateHandler = null;
-    }
-    audioEl.src = '';
-  }
-  if (playingId !== null) {
-    var btn = document.getElementById('pb' + playingId);
-    if (btn) btn.innerHTML = pico();
-    var td = document.getElementById('td' + playingId);
-    if (td) td.textContent = '0:00';
-    var c = DATA.find(function(x){return x.id===playingId;});
-    if (c) setWaveProgress(playingId, 0, c.ac);
-    document.querySelectorAll('#qq' + playingId + ' .q-word').forEach(function(w){w.classList.remove('q-active');});
-    playingId = null;
-  }
-}
-
-function doPlay(id) {
-  // If clicking currently playing — pause
-  if (playingId === id && audioEl && !audioEl.paused) {
-    audioEl.pause();
-    var btn = document.getElementById('pb' + id);
-    if (btn) btn.innerHTML = pico();
-    if (playTimer) { clearInterval(playTimer); playTimer = null; }
-    if (audioEl._timeupdateHandler) {
-      audioEl.removeEventListener('timeupdate', audioEl._timeupdateHandler);
-      audioEl._timeupdateHandler = null;
-    }
-    return;
-  }
-  // If same track paused — resume
-  if (playingId === id && audioEl && audioEl.paused) {
-    audioEl.play();
-    var btn = document.getElementById('pb' + id);
-    if (btn) btn.innerHTML = pauseIco();
-    startPlayTimer(id);
-    return;
-  }
-
-  // Stop whatever was playing
-  stopCurrentAudio();
-  playingId = id;
-
-  var btn = document.getElementById('pb' + id);
-  if (btn) btn.innerHTML = loadIco();
-
-  // If we already have the URL cached, play immediately
-  if (audioCache[id]) {
-    startAudio(id, audioCache[id]);
-    return;
-  }
-
-  // Fetch URL from proxy
-  fetch('/api/audio?show=' + id)
-    .then(function(r) { return r.json(); })
-    .then(function(data) {
-      if (data.url) {
-        audioCache[id] = data.url;
-        if (playingId === id) startAudio(id, data.url);
-      } else {
-        handleAudioError(id, 'Not available');
-      }
-    })
-    .catch(function() {
-      handleAudioError(id, 'Network error');
-    });
-}
-
-function startAudio(id, url) {
-  var c = DATA.find(function(x){return x.id===id;});
-  if (!c) return;
-
-  if (!audioEl) {
-    audioEl = new Audio();
-    audioEl.preload = 'none';
-  }
-
-  audioEl.src = url;
-
-  var btn = document.getElementById('pb' + id);
-
-  audioEl.oncanplay = function() {
-    audioEl.oncanplay = null; // fire once only
-    if (playingId !== id) return;
-
-    // Seek to clip start
-    audioEl.currentTime = CLIP_STARTS[id];
-
-    // Wait for seek to complete before starting playback + timer
-    audioEl.onseeked = function() {
-      audioEl.onseeked = null; // fire once only
-      if (playingId !== id) return;
-
-      audioEl.play().then(function() {
-        if (btn) btn.innerHTML = pauseIco();
-        startPlayTimer(id); // only start AFTER seek confirmed
-      }).catch(function() {
-        if (btn) btn.innerHTML = pico();
-        showToast('Tap play to start audio');
-      });
-    };
-  };
-
-  audioEl.onerror = function() {
-    handleAudioError(id, 'Stream unavailable');
-  };
-
-  audioEl.load();
-
-  // Pre-cache next card so autoplay starts instantly
-  var nextIdx = filteredData.findIndex(function(c){return c.id===id;});
-  if (nextIdx >= 0 && nextIdx < filteredData.length - 1) {
-    var nextId = filteredData[nextIdx + 1].id;
-    if (!audioCache[nextId]) {
-      fetch('/api/audio?show=' + nextId)
-        .then(function(r){return r.json();})
-        .then(function(d){if(d.url) audioCache[nextId]=d.url;})
-        .catch(function(){});
-    }
-  }
-}
-
-function startPlayTimer(id) {
-  var c = DATA.find(function(x){ return x.id === id; });
-  if (!c) return;
-  var clipStart = CLIP_STARTS[id];
-  var clipDuration = CLIP_DURATIONS[id];
-  var clipEnd = clipStart + clipDuration;
-
-  // Set clipStartTime so seekAudio() scrubber still works
-  clipStartTime = clipStart;
-
-  // Clear any previous timeupdate listener before attaching a new one
-  if (audioEl._timeupdateHandler) {
-    audioEl.removeEventListener('timeupdate', audioEl._timeupdateHandler);
-    audioEl._timeupdateHandler = null;
-  }
-
-  // Snapshot word elements once (DOM won't change mid-play)
-  var wordEls = document.querySelectorAll('#qq' + id + ' .q-word');
-  var wordCount = wordEls.length;
-  var secondsPerWord = wordCount > 0 ? clipDuration / wordCount : 1;
-
-  audioEl._timeupdateHandler = function() {
-    if (playingId !== id) return;
-
-    var elapsed = audioEl.currentTime - clipStart + (CLIP_SPEECH_OFFSETS[id] || 0);
-    if (elapsed < 0) elapsed = 0;
-
-    // Update time display
-    var td = document.getElementById('td' + id);
-    if (td) {
-      var mins = Math.floor(elapsed / 60);
-      var secs = Math.floor(elapsed % 60);
-      td.textContent = mins + ':' + (secs < 10 ? '0' : '') + secs;
-    }
-
-    // Update waveform progress
-    var prog = Math.min(elapsed / clipDuration, 1);
-    setWaveProgress(id, prog, c.ac);
-
-    // Update word highlight — index derived from actual playback position, never from a timer
-    if (wordCount > 0) {
-      var wi = Math.min(Math.floor(elapsed / secondsPerWord), wordCount - 1);
-      for (var j = 0; j < wordEls.length; j++) wordEls[j].classList.toggle('q-active', j === wi);
-    }
-
-    // Stop at clip end
-    if (audioEl.currentTime >= clipEnd) {
-      var wasAutoplay = autoplayOn;
-      stopCurrentAudio();
-      if (wasAutoplay) setTimeout(function(){ scrollToNextCard(id); }, 300);
-    }
-  };
-
-  audioEl.addEventListener('timeupdate', audioEl._timeupdateHandler);
-}
-
-function seekAudio(e, id) {
-  if (playingId !== id || !audioEl) return;
-  var wf = document.getElementById('wf' + id);
-  if (!wf) return;
-  var rect = wf.getBoundingClientRect();
-  var frac = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
-  audioEl.currentTime = clipStartTime + frac * CLIP_DURATIONS[playingId];
-}
-
-function handleAudioError(id, msg) {
-  if (playingId === id) {
-    var btn = document.getElementById('pb' + id);
-    if (btn) btn.innerHTML = pico();
-    playingId = null;
-    showToast('Audio: ' + msg + ' — open in Spotify or Apple');
-  }
-}
-
-// Platform buttons now open real URLs
-var SPOTIFY_URLS = {
-  1:  'https://open.spotify.com/show/7MCrEQ2aFijFG6KHru0lhI',
-  3:  'https://open.spotify.com/show/3wBfqov60qDZbEVjPHo0a8',
-  5:  'https://open.spotify.com/show/3mJkxQCfNInBHEMN37mcII',
-  7:  'https://open.spotify.com/show/5neGtOMkg5XmEGxZLEx9QK',
-  12: 'https://open.spotify.com/show/3oB5noYIwEB2dMAREj2F7S',
-  13: 'https://open.spotify.com/show/2Q02ecA0U7V4JUD7P9RTtI',
-  16: 'https://open.spotify.com/show/2dlMGUj6dY3gCsJVHPeHnQ',
-};
-function openAppleUrl(url) {
-  if (url) { window.open(url, '_blank'); showToast('Opening Apple Podcasts — follow the show there', true); }
-  else showToast('Not available on Apple Podcasts');
-}
-
-function doPlatform(p, id) {
-  if (p === 's') {
-    var url = SPOTIFY_URLS[id];
-    if (url) { window.open(url, '_blank'); showToast('Opening Spotify — follow the show there', true); }
-    else showToast('Not on Spotify — try Apple Podcasts');
-  }
-}
+function stopCurrentAudio() {}
+function doPlay(id) {}
+function seekAudio() {}
 
 // ── ONBOARDING & AUTH ────────────────────────────────────────────────────────
 var currentUser = null;
@@ -1954,10 +1684,6 @@ function finishOnboarding() {
     if (matchPill) filterCat(matchPill, firstPref);
   }
 
-  setTimeout(function() {
-    if (autoplayOn && filteredData.length > 0) doPlay(filteredData[0].id);
-  }, 600);
-
   // Persist login state
   try {
     localStorage.setItem('hp_user', JSON.stringify({
@@ -2184,14 +1910,9 @@ function buildCard(c,idx){
     +'</div>';
 
   var pubDate = formatEpDate(c._meta && c._meta.episodePubDate);
-  var appleUrl = (c._meta && c._meta.appleEpisodeUrl)
-    || (c._meta && c._meta.itunesId ? 'https://podcasts.apple.com/us/podcast/id' + c._meta.itunesId : '');
   var scoreRowHtml = isLoggedIn()
     ? '<div class="score-row">'+scorePills+'</div>'
     : '<div class="score-locked">Sign in to unlock score breakdown</div>';
-  var whyBtn = isLoggedIn()
-    ? '<div class="act-btn" onclick="doInfo('+c.id+',event)"><div class="act-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="white" stroke-width="2"/><path d="M12 8v4m0 4h.01" stroke="white" stroke-width="2" stroke-linecap="round"/></svg></div><span class="act-count">Why?</span></div>'
-    : '';
   var dpHtml = isLoggedIn()
     ? '<div class="dp" id="dp'+c.id+'">'
       +'<div class="dp-backdrop" onclick="doInfo('+c.id+',event)"></div>'
@@ -2208,43 +1929,41 @@ function buildCard(c,idx){
       +'</div></div>'
     : '';
 
+  var audioUrl   = (c._meta && c._meta.audioUrl)        || '';
+  var appleUrl   = (c._meta && c._meta.appleEpisodeUrl) || (c._meta && c._meta.itunesId ? 'https://podcasts.apple.com/us/podcast/id'+c._meta.itunesId : '');
+
+  // Episode title \u2014 opens Why drawer when logged in, plain otherwise
+  var epTitleHtml = isLoggedIn()
+    ? '<div class="ep-info-title" onclick="doInfo('+c.id+',event)">'+c.ep+'</div>'
+    : '<div class="ep-info-title">'+c.ep+'</div>';
+
+  // Listen buttons \u2014 Apple only when URL available, audio always present
+  var listenHtml = '<div class="listen-row">'
+    +(appleUrl ? '<a class="listen-btn apple" href="'+appleUrl+'" target="_blank" rel="noopener">'+apSVG()+' Open in Apple</a>' : '')
+    +(audioUrl ? '<a class="listen-btn" href="'+audioUrl+'" target="_blank" rel="noopener"><svg width="11" height="11" viewBox="0 0 24 24" fill="white"><path d="M12 1a9 9 0 0 1 9 9v7a3 3 0 0 1-3 3h-1v-8h2V10a8 8 0 1 0-16 0v2h2v8H4a3 3 0 0 1-3-3v-7a9 9 0 0 1 9-9z"/></svg> Listen</a>' : '')
+    +'</div>';
+
   return '<div class="clip-card" id="cc'+c.id+'" style="animation:slide-in 0.3s ease '+(idx*0.06)+'s both">'
     +'<style>@keyframes slide-in{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}</style>'
     +'<div class="card-bg" style="background:'+c.cardBg+'"></div>'
     +hint
-    +'<div class="action-rail">'
-    +'<div class="act-btn" onclick="doLike('+c.id+')"><div class="act-icon" id="li'+c.id+'"><svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></div><span class="act-count" id="lc'+c.id+'">'+c.lk+'</span></div>'
-    +'<div class="act-btn" onclick="doShare('+c.id+')"><div class="act-icon"><svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></div><span class="act-count" id="sc'+c.id+'">'+c.sh+'</span></div>'
-    +'<div class="act-btn" onclick="doSave('+c.id+')"><div class="act-icon" id="si'+c.id+'"><svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"/></svg></div><span class="act-count" id="svc'+c.id+'">'+c.sv+'</span></div>'
-    +whyBtn
-    +'</div>'
-    +'<div class="card-content">'
+    +'<div class="card-content" style="padding:13px 15px 12px">'
     +'<div class="show-strip">'
     +'<div class="show-logo" style="background:'+c.logoBg+';color:white">'+c.init+'</div>'
     +'<div class="show-info">'
     +'<div class="show-name-row"><span class="show-name">'+c.show+'</span></div>'
-    +'<div class="show-sub"><span class="size-tag '+sc+'">'+c.szLbl+'</span><span class="city-lbl">'+c.city+'</span></div>'
+    +'<div class="show-sub"><span class="size-tag '+sc+'">'+c.szLbl+'</span></div>'
     +'</div>'
-    +'<button class="follow-btn" id="fb'+c.id+'" onclick="doFollow('+c.id+')">+ Follow</button>'
+    +'<button class="follow-btn" id="fb'+c.id+'" onclick="doFollow('+c.showId+')">+ Save</button>'
     +'</div>'
     +psHeadline
-    +'<div class="moment-area">'
-    +'<div class="moment-lbl">Key moment</div>'
-    +'<div class="moment-quote" id="qq'+c.id+'">\u201c'+wrapQuoteWords(c.q)+'\u201d</div>'
-    +'<div class="ep-title">'+c.ep+'</div>'
+    +'<div class="ep-info-area">'
+    +epTitleHtml
     +(pubDate?'<div class="ep-date">'+pubDate+'</div>':'')
     +scoreRowHtml
     +'</div>'
     +'<div class="bottom-sec">'
-    +'<div class="match-row"><span class="match-tag">'+c.match+'% match</span><span class="reason-lbl">'+c.reason+'</span></div>'
-    +'<div class="player-area"><div class="waveform" id="wf'+c.id+'" onclick="seekAudio(event,'+c.id+')">'+makeWave(c.prog,c.ac,c.id)+'</div>'
-    +'<div class="player-ctrls"><button class="play-btn" id="pb'+c.id+'" onclick="doPlay('+c.id+')" style="background:'+c.ac+'">'+pico()+'</button>'
-    +'<span class="time-disp" id="td'+c.id+'">'+c.ts+'</span><span style="font-size:9px;color:var(--muted);margin-left:2px">/ clip</span>'
-    +'<span class="clip-dur">'+(CLIP_DURATIONS[c.id]||30)+'s clip</span></div></div>'
-    +'<div class="platform-row">'
-    +'<button class="plt-btn plt-apple" id="ab'+c.id+'" onclick="openAppleUrl(\''+appleUrl+'\')">'+apSVG()+'<span id="al'+c.id+'">Open in Apple</span></button>'
-    +'<button class="plt-btn plt-spotify" id="sb'+c.id+'" onclick="doPlatform(\'s\','+c.id+')">'+spSVG()+'<span id="sl'+c.id+'">Open in Spotify</span></button>'
-    +'</div>'
+    +listenHtml
     +'</div>'
     +'</div>'
     +dpHtml
@@ -2256,8 +1975,6 @@ function render(data){
   data.forEach(function(c,i){out+=buildCard(c,i)});
   document.getElementById('feed').innerHTML=out;
   // restore states
-  Object.keys(liked).forEach(function(id){if(liked[id])applyLike(parseInt(id),true)});
-  Object.keys(saved).forEach(function(id){if(saved[id])applySave(parseInt(id),true)});
   Object.keys(followed).forEach(function(id){if(followed[id])applyFollow(parseInt(id),true)});
   
   
@@ -2285,6 +2002,24 @@ function doShare(id){
 }
 
 function doInfo(id,ev){if(ev)ev.stopPropagation();var p=document.getElementById('dp'+id);if(p)p.classList.toggle('open');}
+
+function doFollow(showId){
+  if(!isLoggedIn()){showToast('Sign in to save shows');return;}
+  var on=!followed[showId];
+  followed[showId]=on;
+  applyFollow(showId,on);
+  showToast(on?'Show saved':'Show removed');
+}
+function applyFollow(showId,on){
+  DATA.filter(function(c){return c.showId===showId;}).forEach(function(c){
+    var btn=document.getElementById('fb'+c.id);
+    if(btn){btn.textContent=on?'✓ Saved':'+ Save';btn.classList.toggle('on',on);}
+  });
+}
+function doLike(id){}
+function applyLike(id,on){}
+function doSave(id){}
+function applySave(id,on){}
 
 // ── FILTERING ─────────────────────────────────────────────────────────────────
 // Returns the base dataset for the current tab (before category filter)
@@ -2351,10 +2086,6 @@ function switchView(tab){
   render(filteredData);
   document.getElementById('feed').scrollTop=0;
 
-  // Restart autoplay with new filtered set
-  if(autoplayOn&&filteredData.length>0){
-    setTimeout(function(){doPlay(filteredData[0].id);},300);
-  }
 }
 
 // ── LIBRARY VIEW ──────────────────────────────────────────────────────────────
@@ -2519,16 +2250,16 @@ function renderFollowing(){
     list.innerHTML='<div class="saved-empty"><div class="saved-empty-icon">📻</div><div class="saved-empty-txt">You\u2019re not following any shows yet.<br>Tap \u201c+ Follow\u201d on any card.</div></div>';
     return;
   }
-  list.innerHTML=followedIds.map(function(id){
-    var c=DATA.find(function(x){return x.id===id});
+  list.innerHTML=followedIds.map(function(showId){
+    var c=DATA.find(function(x){return x.showId===showId});
     if(!c)return '';
     return '<div class="following-item">'
       +'<div class="following-logo" style="background:'+c.logoBg+';color:white">'+c.init+'</div>'
       +'<div class="following-info">'
       +'<div class="following-show">'+c.show+'</div>'
-      +'<div class="following-sub">'+c.city+' · '+c.szLbl+'</div>'
+      +'<div class="following-sub">'+c.szLbl+'</div>'
       +'</div>'
-      +'<button class="unfollow-btn" onclick="doFollow('+id+');renderFollowing()">Unfollow</button>'
+      +'<button class="unfollow-btn" onclick="doFollow('+showId+');renderFollowing()">Remove</button>'
       +'</div>';
   }).join('');
 }
@@ -2547,26 +2278,7 @@ function showHome(){
   switchView('rankings');
 }
 
-// ── AUTOPLAY ──────────────────────────────────────────────────────────────────
 var autoplayOn=false;
-function toggleAutoplay(){
-  autoplayOn=!autoplayOn;
-  document.getElementById('autoplayBtn').classList.toggle('on',autoplayOn);
-  showToast(autoplayOn?'Autoplay on — next card loads automatically':'Autoplay off');
-}
-function scrollToNextCard(currentId){
-  var idx=filteredData.findIndex(function(c){return c.id===currentId});
-  if(idx>=0&&idx<filteredData.length-1){
-    var next=filteredData[idx+1];
-    var nextCard=document.getElementById('cc'+next.id);
-    if(nextCard){
-      nextCard.scrollIntoView({behavior:'smooth'});
-      // If URL already cached, play quickly; otherwise allow time for scroll + fetch
-      var delay=audioCache[next.id]?150:700;
-      setTimeout(function(){doPlay(next.id);},delay);
-    }
-  }
-}
 
 // ── DISCOVER SHEET ────────────────────────────────────────────────────────────
 var currentDiscoverMode='default';
@@ -2616,32 +2328,6 @@ function showToast(msg,green){
   tTimer=setTimeout(function(){t.className='toast'},2400);
 }
 
-// ── SCROLL AUTOPLAY ───────────────────────────────────────────────────────────
-var _scrollAutoTimer;
-function initFeedAutoplay() {
-  var feed = document.getElementById('feed');
-  if (!feed || feed._apBound) return;
-  feed._apBound = true;
-  feed.addEventListener('scroll', function() {
-    clearTimeout(_scrollAutoTimer);
-    _scrollAutoTimer = setTimeout(function() {
-      if (!autoplayOn) return;
-      var feedRect = feed.getBoundingClientRect();
-      var cards = document.querySelectorAll('.clip-card');
-      var best = null, bestOverlap = 0;
-      cards.forEach(function(card) {
-        var r = card.getBoundingClientRect();
-        var overlap = Math.max(0, Math.min(r.bottom, feedRect.bottom) - Math.max(r.top, feedRect.top));
-        if (overlap > bestOverlap) { bestOverlap = overlap; best = card; }
-      });
-      if (best) {
-        var id = parseInt(best.id.replace('cc', ''), 10);
-        if (id && playingId !== id) doPlay(id);
-      }
-    }, 300);
-  });
-}
-
 // ── SWIPE HINT ───────────────────────────────────────────────────────────────
 function dismissSwipeHint() {
   var hint = document.getElementById('swipeHintPill');
@@ -2682,16 +2368,8 @@ fetch('/data/shows.json')
   .then(function(r) { return r.json(); })
   .then(function(json) {
     DATA = json.shows || [];
-    // Populate audio clip lookup tables from per-show clip objects
-    DATA.forEach(function(s) {
-      var c = s.clip || {};
-      CLIP_STARTS[s.id]        = c.startSeconds    || 0;
-      CLIP_DURATIONS[s.id]     = c.durationSeconds || 30;
-      CLIP_SPEECH_OFFSETS[s.id]= c.speechOffsetSeconds || 0;
-    });
     filteredData = DATA.filter(function(c) { return c.tier === 'indie'; });
     render(filteredData);
-    initFeedAutoplay();
     initSwipeHint();
 
     // Restore session state after feed is populated
