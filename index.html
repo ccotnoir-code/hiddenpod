@@ -155,7 +155,7 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--text);font-fam
 .score-pill.hi{border-color:rgba(232,255,71,0.25);color:rgba(232,255,71,0.65)}
 
 /* ── PODSIGNAL SCORE HEADLINE ── */
-.ps-headline{display:flex;align-items:baseline;gap:7px;padding:6px 14px 8px;border-bottom:1px solid rgba(255,255,255,0.06);flex-shrink:0}
+.ps-headline{display:flex;align-items:baseline;gap:7px;padding:6px 14px 8px;border-top:1px solid rgba(255,255,255,0.06);flex-shrink:0}
 .ps-total{font-size:28px;font-weight:800;color:var(--accent);font-family:var(--font-d);line-height:1}
 .ps-wordmark{font-size:10px;color:rgba(255,255,255,0.32);font-family:var(--font-d);font-weight:600;text-transform:uppercase;letter-spacing:0.07em;align-self:center}
 .score-expand{display:flex;align-items:center;gap:5px;padding:4px 14px 6px;cursor:pointer;opacity:0.5;font-size:10.5px;color:var(--fg);letter-spacing:0.02em;border-bottom:1px solid rgba(255,255,255,0.06);transition:opacity 0.15s;user-select:none}
@@ -203,7 +203,8 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--text);font-fam
 .listen-btn:active{transform:scale(0.96);opacity:0.8}
 .listen-btn.apple{background:rgba(255,255,255,0.12)}
 /* ── EPISODE INFO AREA (replaces moment-area) ── */
-.ep-info-area{flex:1;display:flex;flex-direction:column;justify-content:center;padding:8px 0 4px;overflow:hidden;min-height:0}
+.ep-label{font-size:9px;font-weight:700;color:rgba(255,255,255,0.3);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:5px}
+.ep-info-area{flex:1;display:flex;flex-direction:column;justify-content:flex-start;padding:8px 0 4px;overflow:hidden;min-height:0}
 .ep-info-title{font-family:var(--font-b);font-size:13px;font-weight:500;color:rgba(240,240,245,0.95);line-height:1.4;margin-bottom:4px;cursor:pointer}
 .ep-info-title:hover{color:rgba(240,240,245,1)}
 
@@ -1911,7 +1912,7 @@ function buildCard(c,idx){
   var psTierLabel = psTierKey === 'exceptional' ? ' · Exceptional' : psTierKey === 'strong' ? ' · Strong' : '';
   var psHeadline = '<div class="ps-headline">'
     +'<span class="ps-total">'+psTotal+'</span>'
-    +'<span class="ps-wordmark">PodSignal</span>'
+    +'<span class="ps-wordmark">Episode Score</span>'
     +(psTierLabel ? '<span class="ps-tier">'+psTierLabel+'</span>' : '')
     +'</div>';
 
@@ -1979,13 +1980,14 @@ function buildCard(c,idx){
     +'</div>'
     +'<button class="follow-btn" id="fb'+c.id+'" onclick="doFollow('+c.showId+')">+ Save</button>'
     +'</div>'
-    +psHeadline
-    +expandHtml
     +'<div class="ep-info-area">'
+    +'<div class="ep-label">Episode</div>'
     +epTitleHtml
     +(pubDate?'<div class="ep-date">'+pubDate+'</div>':'')
-    +scoreRowHtml
     +'</div>'
+    +psHeadline
+    +expandHtml
+    +scoreRowHtml
     +'<div class="bottom-sec">'
     +listenHtml
     +'</div>'
