@@ -531,15 +531,18 @@ async function main() {
 
   const data  = JSON.parse(fs.readFileSync(SCORED_PATH, 'utf8'));
   const shows = data.scored;
-  console.log(`Pool: ${shows.length} shows\n`);
+  const _targetId = process.argv.find(a => a.startsWith('--feedId='))?.split('=')[1];
+  const showsToProcess = _targetId ? shows.filter(s => String(s.feedId) === _targetId) : shows;
+  if (_targetId) console.log(`[single-show mode] targeting feedId=${_targetId}\n`);
+  console.log(`Pool: ${shows.length} shows${_targetId ? ` (processing 1)` : ''}\n`);
 
   const counts = { vitality_only:0, fully_refreshed:0, new_ep_no_transcript:0, api_error:0, dead:0, other:0 };
 
-  for (let i = 0; i < shows.length; i++) {
-    const show = shows[i];
+  for (let i = 0; i < showsToProcess.length; i++) {
+    const show = showsToProcess[i];
 
     if (show._refreshMeta?.inactive) {
-      process.stdout.write(`  ${i+1}/${shows.length} SKIP(dead): ${show.feedTitle.slice(0,40)}\n`);
+      process.stdout.write(`  ${i+1}/${showsToProcess.length} SKIP(dead): ${show.feedTitle.slice(0,40)}\n`);
       counts.dead++;
       continue;
     }
@@ -549,7 +552,7 @@ async function main() {
       outcome = await refreshShow(show);
     } catch (e) {
       counts.other++;
-      process.stdout.write(`  ${i+1}/${shows.length} SHOW-ERROR [${show.feedId}] ${show.feedTitle.slice(0,32)}: ${e.message}\n`);
+      process.stdout.write(`  ${i+1}/${showsToProcess.length} SHOW-ERROR [${show.feedId}] ${show.feedTitle.slice(0,32)}: ${e.message}\n`);
       console.error(`[show-error] feedId=${show.feedId} "${show.feedTitle}"\n${e.stack}`);
       await sleep(PI_DELAY);
       continue;
@@ -558,31 +561,31 @@ async function main() {
     if (outcome.status === 'fully_refreshed') {
       counts.fully_refreshed++;
       const newTotal = (show.episodeScores || [])[0]?.contentScore?.totalScore ?? 0;
-      process.stdout.write(`  ${i+1}/${shows.length} RE-SCORED [${newTotal}]: ${show.feedTitle.slice(0,38)}\n`);
+      process.stdout.write(`  ${i+1}/${showsToProcess.length} RE-SCORED [${newTotal}]: ${show.feedTitle.slice(0,38)}\n`);
       await sleep(150); // breathe after LLM call
     } else if (outcome.status === 'vitality_only') {
       counts.vitality_only++;
-      process.stdout.write(`  ${i+1}/${shows.length} vitality: ${show.feedTitle.slice(0,42)}\r`);
+      process.stdout.write(`  ${i+1}/${showsToProcess.length} vitality: ${show.feedTitle.slice(0,42)}\r`);
     } else if (outcome.status === 'new_ep_no_transcript') {
       counts.new_ep_no_transcript++;
-      process.stdout.write(`  ${i+1}/${shows.length} NEW EP/no-tx: ${show.feedTitle.slice(0,38)}\n`);
+      process.stdout.write(`  ${i+1}/${showsToProcess.length} NEW EP/no-tx: ${show.feedTitle.slice(0,38)}\n`);
     } else if (outcome.status === 'api_error') {
       counts.api_error++;
       if (outcome.deadCount >= DEAD_THRESHOLD) {
         counts.dead++;
-        process.stdout.write(`  ${i+1}/${shows.length} DEAD FEED (${outcome.deadCount} failures): ${show.feedTitle.slice(0,30)}\n`);
+        process.stdout.write(`  ${i+1}/${showsToProcess.length} DEAD FEED (${outcome.deadCount} failures): ${show.feedTitle.slice(0,30)}\n`);
       } else {
-        process.stdout.write(`  ${i+1}/${shows.length} api-err (${outcome.deadCount}/${DEAD_THRESHOLD}): ${show.feedTitle.slice(0,32)}\n`);
+        process.stdout.write(`  ${i+1}/${showsToProcess.length} api-err (${outcome.deadCount}/${DEAD_THRESHOLD}): ${show.feedTitle.slice(0,32)}\n`);
       }
     } else {
       counts.other++;
-      process.stdout.write(`  ${i+1}/${shows.length} ${outcome.status}: ${show.feedTitle.slice(0,38)}\n`);
+      process.stdout.write(`  ${i+1}/${showsToProcess.length} ${outcome.status}: ${show.feedTitle.slice(0,38)}\n`);
     }
 
     // Checkpoint to temp file (not yet replacing real file)
     if ((i + 1) % CHECKPOINT_EVERY === 0) {
       fs.writeFileSync(SCORED_TMP, JSON.stringify({ ...data, scored: shows, refreshedAt: new Date().toISOString() }, null, 2));
-      process.stdout.write(`\n  [checkpoint ${i+1}/${shows.length}]\n`);
+      process.stdout.write(`\n  [checkpoint ${i+1}/${showsToProcess.length}]\n`);
     }
 
     await sleep(PI_DELAY);

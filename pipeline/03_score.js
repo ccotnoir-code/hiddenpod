@@ -273,17 +273,18 @@ async function main() {
   console.log(`  Scored:  ${scored.length}`);
   console.log(`  Failed:  ${failed.length}`);
 
-  const aboveThreshold = scored.filter(s => s.scores.totalScore >= 40);
+  const getCS = s => (s.episodeScores||[])[0]?.contentScore || {};
+  const aboveThreshold = scored.filter(s => (getCS(s).totalScore||0) >= 40);
   const byTier = {};
-  scored.forEach(s => { byTier[s.scores.tier] = (byTier[s.scores.tier] || 0) + 1; });
+  scored.forEach(s => { const t = getCS(s).tier||'unknown'; byTier[t] = (byTier[t] || 0) + 1; });
 
   console.log('\nScore distribution:');
   Object.entries(byTier).sort().forEach(([t, c]) => console.log(`  ${t.padEnd(18)} ${c}`));
   console.log(`\nAbove 40 threshold (surfaceable): ${aboveThreshold.length}`);
   console.log(`Top 10 scores:`);
-  scored.sort((a, b) => b.scores.totalScore - a.scores.totalScore)
+  scored.sort((a, b) => (getCS(b).totalScore||0) - (getCS(a).totalScore||0))
     .slice(0, 10)
-    .forEach(s => console.log(`  ${String(s.scores.totalScore).padStart(3)}  ${s.feedTitle}`));
+    .forEach(s => console.log(`  ${String(getCS(s).totalScore||0).padStart(3)}  ${s.feedTitle}`));
 
   console.log('\nScored shows → pipeline/scored_shows.json');
   console.log('Run 04_assemble.js next.');

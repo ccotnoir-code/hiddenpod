@@ -81,11 +81,9 @@ function main() {
   const scoreMap = {};
   if (scoredData) {
     (scoredData.scored || []).forEach(s => {
-      if (s.scores) {
-        const WEIGHTS = {quality:0.18, structure:0.20, relevance:0.22, clipability:0.16, consistency:0.16, vitality:0.08};
-        scoreMap[s.feedId] = Math.round(
-          Object.keys(WEIGHTS).reduce((t,k) => t + (s.scores[k]||0)*WEIGHTS[k], 0)
-        );
+      const totalScore = (s.episodeScores||[])[0]?.contentScore?.totalScore;
+      if (totalScore != null) {
+        scoreMap[s.feedId] = totalScore;
       }
     });
   }

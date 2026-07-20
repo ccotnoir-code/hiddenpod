@@ -75,9 +75,22 @@ Return ONLY valid JSON, no markdown, no preamble:
   }
 }`;
 
-function getScore(s, k) {
-  const v = s.scores[k];
-  return typeof v === 'object' ? (v.score || 0) : (v || 0);
+function getCS(show) {
+  return (show.episodeScores||[])[0]?.contentScore || {};
+}
+
+function getScore(show, k) {
+  const cs = getCS(show);
+  const slp = show.showLevelProduction || {};
+  switch (k) {
+    case 'quality':     return cs.bitrateQuality || 0;
+    case 'structure':   return typeof cs.contentStructure === 'object' ? (cs.contentStructure.score||0) : (cs.contentStructure||0);
+    case 'relevance':   return typeof cs.topicRelevance === 'object' ? (cs.topicRelevance.score||0) : (cs.topicRelevance||0);
+    case 'clipability': return typeof cs.clipAbility === 'object' ? (cs.clipAbility.score||0) : (cs.clipAbility||0);
+    case 'consistency': return slp.consistency || 0;
+    case 'vitality':    return slp.vitality || 0;
+    default: return 0;
+  }
 }
 
 async function rescore(show) {
@@ -112,7 +125,7 @@ async function main() {
     if (!TARGET_FEED_IDS.has(String(show.feedId))) continue;
 
     const oldRel   = getScore(show, 'relevance');
-    const oldTotal = show.scores.totalScore;
+    const oldTotal = getCS(show).totalScore;
 
     console.log(`Re-scoring: ${show.feedTitle}`);
     console.log(`  Before — rel:${oldRel}  total:${oldTotal}`);
@@ -125,30 +138,37 @@ async function main() {
       continue;
     }
 
-    // Patch LLM-scored dimensions
-    const patch = (key, score, rationale) => {
-      if (typeof show.scores[key] === 'object') {
-        show.scores[key].score     = score;
-        show.scores[key].rationale = rationale;
-      } else {
-        show.scores[key] = score;
-      }
-    };
-
-    patch('relevance',   llm.topic_relevance.score,   llm.topic_relevance.rationale);
-    patch('structure',   llm.content_structure.score,  llm.content_structure.rationale);
-    patch('clipability', llm.clip_ability.score,        llm.clip_ability.rationale);
+    // Patch LLM-scored dimensions into episodeScores[0].contentScore
+    const cs = getCS(show);
+    if (cs.topicRelevance && typeof cs.topicRelevance === 'object') {
+      cs.topicRelevance.score     = llm.topic_relevance.score;
+      cs.topicRelevance.rationale = llm.topic_relevance.rationale;
+    } else {
+      cs.topicRelevance = { score: llm.topic_relevance.score, rationale: llm.topic_relevance.rationale };
+    }
+    if (cs.contentStructure && typeof cs.contentStructure === 'object') {
+      cs.contentStructure.score     = llm.content_structure.score;
+      cs.contentStructure.rationale = llm.content_structure.rationale;
+    } else {
+      cs.contentStructure = { score: llm.content_structure.score, rationale: llm.content_structure.rationale };
+    }
+    if (cs.clipAbility && typeof cs.clipAbility === 'object') {
+      cs.clipAbility.score     = llm.clip_ability.score;
+      cs.clipAbility.rationale = llm.clip_ability.rationale;
+    } else {
+      cs.clipAbility = { score: llm.clip_ability.score, rationale: llm.clip_ability.rationale };
+    }
 
     // Update card copy
     show.card = llm.card;
-    show.scores.scoredAt = new Date().toISOString();
+    cs.scoredAt = new Date().toISOString();
 
     // Recompute total
-    show.scores.totalScore = Math.round(
+    cs.totalScore = Math.round(
       Object.keys(WEIGHTS).reduce((t, k) => t + getScore(show, k) * WEIGHTS[k], 0)
     );
 
-    console.log(`  After  — rel:${llm.topic_relevance.score}  total:${show.scores.totalScore}`);
+    console.log(`  After  — rel:${llm.topic_relevance.score}  total:${cs.totalScore}`);
     console.log(`  Rationale: ${llm.topic_relevance.rationale}`);
 
     fs.writeFileSync(SCORED_PATH, JSON.stringify(data, null, 2));

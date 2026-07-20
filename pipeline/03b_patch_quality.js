@@ -105,24 +105,31 @@ async function main() {
     const si = scoredIdx[show.feedId];
     if (si !== undefined) {
       const newScore = scoreAudioQuality(bytes, dur);
-      const oldScore = scoredData.scored[si].scores && scoredData.scored[si].scores.quality
-        ? (typeof scoredData.scored[si].scores.quality === 'object'
-            ? scoredData.scored[si].scores.quality.score
-            : scoredData.scored[si].scores.quality)
-        : 65;
-
-      if (typeof scoredData.scored[si].scores.quality === 'object') {
-        scoredData.scored[si].scores.quality.score = newScore;
-      } else {
-        scoredData.scored[si].scores.quality = newScore;
+      const cs = (scoredData.scored[si].episodeScores||[])[0]?.contentScore;
+      if (!cs) {
+        process.stdout.write(`  ${i+1}/${shows.length} — NO CONTENT SCORE: ${show.feedTitle.slice(0,35)}\n`);
+        fallback++;
+        continue;
       }
+      const oldScore = cs.bitrateQuality || 65;
+      cs.bitrateQuality = newScore;
 
-      // Recompute totalScore
+      // Recompute totalScore from episodeScores + showLevelProduction fields
       const WEIGHTS = {quality:0.18, structure:0.20, relevance:0.22, clipability:0.16, consistency:0.16, vitality:0.08};
-      const s = scoredData.scored[si].scores;
-      const get = (k) => typeof s[k] === 'object' ? (s[k].score || 0) : (s[k] || 0);
-      const newTotal = Math.round(Object.keys(WEIGHTS).reduce((t,k) => t + get(k)*WEIGHTS[k], 0));
-      scoredData.scored[si].scores.totalScore = newTotal;
+      const slp = scoredData.scored[si].showLevelProduction || {};
+      const getW = (k) => {
+        switch (k) {
+          case 'quality':     return cs.bitrateQuality || 0;
+          case 'structure':   return typeof cs.contentStructure === 'object' ? (cs.contentStructure.score||0) : (cs.contentStructure||0);
+          case 'relevance':   return typeof cs.topicRelevance === 'object' ? (cs.topicRelevance.score||0) : (cs.topicRelevance||0);
+          case 'clipability': return typeof cs.clipAbility === 'object' ? (cs.clipAbility.score||0) : (cs.clipAbility||0);
+          case 'consistency': return slp.consistency || 0;
+          case 'vitality':    return slp.vitality || 0;
+          default: return 0;
+        }
+      };
+      const newTotal = Math.round(Object.keys(WEIGHTS).reduce((t,k) => t + getW(k)*WEIGHTS[k], 0));
+      cs.totalScore = newTotal;
 
       const kbps = Math.round((bytes * 8) / dur / 1000);
       process.stdout.write(`  ${i+1}/${shows.length} — ${kbps}kbps → quality ${oldScore}→${newScore} | ${show.feedTitle.slice(0,35)}\n`);

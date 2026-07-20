@@ -68,9 +68,8 @@ function main() {
       ? (ingestData.ingested[ingestIdx].publishHistory?.last10EpisodeDates || [])
       : [];
 
-    const oldScore = typeof s.scores.consistency === 'object'
-      ? (s.scores.consistency.score || 50)
-      : (s.scores.consistency || 50);
+    const slp = scoredData.scored[si].showLevelProduction || {};
+    const oldScore = slp.consistency || 50;
 
     if (dates.length < 2) {
       noHistory++;
@@ -79,21 +78,28 @@ function main() {
     }
 
     const newScore = scoreConsistency(dates);
-
-    if (typeof s.scores.consistency === 'object') {
-      scoredData.scored[si].scores.consistency.score = newScore;
-    } else {
-      scoredData.scored[si].scores.consistency = newScore;
+    if (scoredData.scored[si].showLevelProduction) {
+      scoredData.scored[si].showLevelProduction.consistency = newScore;
     }
 
-    // Recompute totalScore
+    // Recompute totalScore from episodeScores + showLevelProduction fields
+    const cs = (scoredData.scored[si].episodeScores||[])[0]?.contentScore || {};
+    const slpNow = scoredData.scored[si].showLevelProduction || {};
     const get = (k) => {
-      const v = scoredData.scored[si].scores[k];
-      return typeof v === 'object' ? (v.score || 0) : (v || 0);
+      switch (k) {
+        case 'quality':     return cs.bitrateQuality || 0;
+        case 'structure':   return typeof cs.contentStructure === 'object' ? (cs.contentStructure.score||0) : (cs.contentStructure||0);
+        case 'relevance':   return typeof cs.topicRelevance === 'object' ? (cs.topicRelevance.score||0) : (cs.topicRelevance||0);
+        case 'clipability': return typeof cs.clipAbility === 'object' ? (cs.clipAbility.score||0) : (cs.clipAbility||0);
+        case 'consistency': return slpNow.consistency || 0;
+        case 'vitality':    return slpNow.vitality || 0;
+        default: return 0;
+      }
     };
-    scoredData.scored[si].scores.totalScore = Math.round(
-      Object.keys(WEIGHTS).reduce((t, k) => t + get(k) * WEIGHTS[k], 0)
-    );
+    const cs2 = (scoredData.scored[si].episodeScores||[])[0]?.contentScore;
+    if (cs2) {
+      cs2.totalScore = Math.round(Object.keys(WEIGHTS).reduce((t, k) => t + get(k) * WEIGHTS[k], 0));
+    }
 
     updated++;
     process.stdout.write(`  ${oldScore}→${newScore} (${dates.length} eps) | ${s.feedTitle.slice(0, 45)}\n`);
