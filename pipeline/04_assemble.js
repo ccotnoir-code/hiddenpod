@@ -165,7 +165,7 @@ async function main() {
   console.log(`  Unsupported (→ inferCats keyword fallback):     ${resolverUnsupported.length}`);
 
   // 3. Build DATA-compatible episode objects (up to MAX_EPS per show, sorted by score)
-  const MAX_EPS = 2;
+  const MAX_EPS = 3;
 
   const shows = surfaceable.flatMap((show) => {
     const id     = show.feedId;
