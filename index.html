@@ -1555,7 +1555,8 @@ function showCreatorDashboard() {
   var badge = document.getElementById('creatorBadge');
   if (badge) badge.style.display = '';
   // Sync alias vars for storage
-  claimedShow = { name: creatorShowName, outlet: creatorShowOutlet };
+  var _csMatch = DATA.find(function(c){ return c.show.toLowerCase() === creatorShowName.toLowerCase(); });
+  claimedShow = { name: creatorShowName, outlet: creatorShowOutlet, showId: _csMatch ? _csMatch.showId : null };
   creatorDownloads = creatorDownloadValue || null;
   // Persist login state
   try {
@@ -1853,6 +1854,12 @@ function spSVG(){return '<svg width="10" height="10" viewBox="0 0 24 24" fill="w
 // makeWave defined in audio engine below
 
 function isLoggedIn() { return currentUser !== null; }
+function isCreatorOf(showId) {
+  if (!currentUser || userMode !== 'creator' || !claimedShow) return false;
+  if (claimedShow.showId != null) return claimedShow.showId === showId;
+  // Fallback for claims stored before showId was captured
+  return DATA.some(function(c){ return c.showId === showId && c.show.toLowerCase() === (claimedShow.name||'').toLowerCase(); });
+}
 
 function formatEpDate(isoStr) {
   if (!isoStr) return '';
@@ -1922,10 +1929,10 @@ function buildCard(c,idx){
     +'</div>';
 
   var pubDate = formatEpDate(c._meta && c._meta.episodePubDate);
-  var scoreRowHtml = isLoggedIn()
+  var scoreRowHtml = isCreatorOf(c.showId)
     ? '<div class="score-row">'+scorePills+'</div>'
     : '<div class="score-locked">Sign in to unlock score breakdown</div>';
-  var dpHtml = isLoggedIn()
+  var dpHtml = isCreatorOf(c.showId)
     ? '<div class="dp" id="dp'+c.id+'">'
       +'<div class="dp-backdrop" onclick="doInfo('+c.id+',event)"></div>'
       +'<div class="dp-sheet">'
@@ -1957,7 +1964,7 @@ function buildCard(c,idx){
 
   // Episode title row \u2014 title is tappable (opens dp drawer when logged in)
   // \u24d8 icon always shown but only functional when logged in
-  var epTitleHtml = '<div class="ep-info-title"'+(isLoggedIn()?' onclick="doInfo('+c.id+',event)"':'')+'>'+c.ep+'</div>';
+  var epTitleHtml = '<div class="ep-info-title"'+(isCreatorOf(c.showId)?' onclick="doInfo('+c.id+',event)"':'')+'>'+c.ep+'</div>';
 
   var listenHtml = '<div class="listen-row">'
     +(appleUrl ? '<a class="listen-btn apple" href="'+appleUrl+'" target="_blank" rel="noopener">'+apSVG()+' Open in Apple</a>' : '')
