@@ -2519,8 +2519,8 @@ fetch('/data/shows.json')
           if (!card) return;
           var feed = document.getElementById('feed');
           if (feed) feed.scrollTop = card.offsetTop;
-          card.style.borderColor = '#E8FF47';
-          setTimeout(function(){ card.style.borderColor = ''; }, 2400);
+          card.style.border = '2px solid #E8FF47';
+          setTimeout(function(){ card.style.border = ''; }, 2400);
         }, 150);
       } catch(e) {}
     })();
