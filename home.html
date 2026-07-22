@@ -110,6 +110,7 @@ section{padding:80px 40px}
 .cat-tech{background:rgba(80,160,255,0.12);color:#50a0ff;border:1px solid rgba(80,160,255,0.2)}
 .cat-science{background:rgba(100,220,120,0.12);color:#64dc78;border:1px solid rgba(100,220,120,0.2)}
 .cat-news{background:rgba(255,100,100,0.12);color:#ff6464;border:1px solid rgba(255,100,100,0.2)}
+.cat-business{background:rgba(80,160,255,0.12);color:#50a0ff;border:1px solid rgba(80,160,255,0.2)}
 .disco-listen{font-family:var(--font-d);font-size:12px;font-weight:700;color:var(--accent);text-decoration:none;display:flex;align-items:center;gap:4px;transition:gap 0.18s}
 .disco-listen:hover{gap:7px}
 
@@ -230,6 +231,7 @@ footer{background:rgba(0,0,0,0.4);border-top:1px solid var(--border);padding:56p
         <a href="/creators" class="btn-primary" id="heroCreatorCta">Claim your show →</a>
         <a href="/discover" class="btn-outline" id="heroListenerCta">Browse discoveries →</a>
       </div>
+      <p id="heroLoginLink" style="margin-top:14px;font-size:13px;color:var(--muted)">Already a member? <a href="/discover?flow=signin" style="color:var(--accent);font-weight:600;text-decoration:none">Log in →</a></p>
     </div>
     <div class="hero-visual" aria-hidden="true">
       <!-- Card 1: Granite Goodness -->
@@ -301,7 +303,8 @@ footer{background:rgba(0,0,0,0.4);border-top:1px solid var(--border);padding:56p
   <div class="container">
     <div class="section-eyebrow">How it works</div>
     <h2 class="section-heading">What is PodSignal?</h2>
-    <p class="ps-body">PodSignal is HiddenPod's proprietary quality scoring system. Every active independent podcast is assessed across six dimensions — audio quality, content structure, topic relevance, clip-ability, consistency, and episode vitality. Scores run 0–100, plus up to 10 bonus points for Discovery Momentum when an episode is outperforming a show's own baseline. The result is a score that tells listeners whether a show is worth their time, and tells creators exactly what to improve.</p>
+    <p class="ps-body">PodSignal is HiddenPod's proprietary quality scoring system. Every active independent podcast is assessed across six dimensions — audio quality, content structure, topic relevance, clip-ability, consistency, and episode vitality. Scores run 0–100. The result is a score that tells listeners whether a show is worth their time, and tells creators exactly what to improve.</p>
+    <p class="ps-body" style="margin-top:16px;font-size:14px;border-left:2px solid rgba(200,240,0,0.3);padding-left:14px">PodSignal measures production quality, structure, consistency, and topical fit. It does not evaluate, fact-check, or vouch for the accuracy of a show's content.</p>
     <div class="dim-pills">
       <div class="dim-pill"><span class="dim-pill-name">Audio Quality</span><span class="dim-pill-desc">Clarity, balance, mastering — 18%</span></div>
       <div class="dim-pill"><span class="dim-pill-name">Content Structure</span><span class="dim-pill-desc">Hook speed, flow, segment density — 20%</span></div>
@@ -318,82 +321,45 @@ footer{background:rgba(0,0,0,0.4);border-top:1px solid var(--border);padding:56p
   <div class="container">
     <div class="section-eyebrow">Weekly top picks</div>
     <h2 class="section-heading">This week's top discoveries</h2>
-    <p class="disco-subhead">The highest PodSignal scores among independent shows published in the last 7 days.</p>
-    <div class="disco-grid">
-
-      <div class="disco-card">
-        <div class="disco-card-top">
-          <div class="disco-show">Granite Goodness</div>
-          <div class="disco-score">84</div>
-        </div>
-        <p class="disco-desc">New Hampshire's weekly civic affairs digest, produced independently from Concord.</p>
-        <div class="disco-footer">
-          <span class="cat-tag cat-local">Local</span>
-          <a href="/discover" class="disco-listen">Listen →</a>
-        </div>
-      </div>
-
-      <div class="disco-card">
-        <div class="disco-card-top">
-          <div class="disco-show">The Paper Chase</div>
-          <div class="disco-score">79</div>
-        </div>
-        <p class="disco-desc">How four Calgarians are making their cities better through independent bookshops.</p>
-        <div class="disco-footer">
-          <span class="cat-tag cat-culture">Culture</span>
-          <a href="/discover" class="disco-listen">Listen →</a>
-        </div>
-      </div>
-
-      <div class="disco-card">
-        <div class="disco-card-top">
-          <div class="disco-show">Lawfare Daily</div>
-          <div class="disco-score">88</div>
-        </div>
-        <p class="disco-desc">Daily legal analysis of national security, foreign policy, and the rule of law.</p>
-        <div class="disco-footer">
-          <span class="cat-tag cat-politics">Politics</span>
-          <a href="/discover" class="disco-listen">Listen →</a>
-        </div>
-      </div>
-
-      <div class="disco-card">
-        <div class="disco-card-top">
-          <div class="disco-show">The Sprawl</div>
-          <div class="disco-score">82</div>
-        </div>
-        <p class="disco-desc">Calgary's in-depth municipal journalism podcast.</p>
-        <div class="disco-footer">
-          <span class="cat-tag cat-investigative">Investigative</span>
-          <a href="/discover" class="disco-listen">Listen →</a>
-        </div>
-      </div>
-
-      <div class="disco-card">
-        <div class="disco-card-top">
-          <div class="disco-show">Civic Frequency</div>
-          <div class="disco-score">76</div>
-        </div>
-        <p class="disco-desc">Weekly accountability journalism from a two-person newsroom in Boise, Idaho.</p>
-        <div class="disco-footer">
-          <span class="cat-tag cat-local">Local</span>
-          <a href="/discover" class="disco-listen">Listen →</a>
-        </div>
-      </div>
-
-      <div class="disco-card">
-        <div class="disco-card-top">
-          <div class="disco-show">The Signal Room</div>
-          <div class="disco-score">81</div>
-        </div>
-        <p class="disco-desc">Independent technology analysis without the Silicon Valley consensus.</p>
-        <div class="disco-footer">
-          <span class="cat-tag cat-tech">Technology</span>
-          <a href="/discover" class="disco-listen">Listen →</a>
-        </div>
-      </div>
-
+    <p class="disco-subhead">Top-scoring independent shows in the HiddenPod index — one episode per show, ranked by PodSignal score.</p>
+    <div class="disco-grid" id="discoGrid">
+      <div style="grid-column:1/-1;padding:40px 0;text-align:center;color:rgba(232,240,232,0.25);font-size:14px">Loading…</div>
     </div>
+<script>
+(function(){
+  var CAT_MAP={news:'News',politics:'Politics',business:'Business',local:'Local',culture:'Culture',investigative:'Investigative',tech:'Technology',science:'Science'};
+  function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+  fetch('/data/shows.json')
+    .then(function(r){return r.json();})
+    .then(function(json){
+      var data=json.shows||[];
+      var best={};
+      data.forEach(function(c){
+        var s=c._meta&&c._meta.totalScore!=null?c._meta.totalScore:0;
+        if(!best[c.showId]||s>best[c.showId].score)
+          best[c.showId]={id:c.id,show:c.show,score:s,cat:(c.cat&&c.cat[0])||'',db:c.db||''};
+      });
+      var top10=Object.values(best).sort(function(a,b){return b.score-a.score;}).slice(0,10);
+      var grid=document.getElementById('discoGrid');
+      if(!grid)return;
+      grid.innerHTML=top10.map(function(c){
+        var catClass='cat-'+(c.cat||'news');
+        var catLabel=CAT_MAP[c.cat]||c.cat||'';
+        return '<div class="disco-card">'
+          +'<div class="disco-card-top"><div class="disco-show">'+esc(c.show)+'</div><div class="disco-score">'+c.score+'</div></div>'
+          +'<p class="disco-desc">'+esc(c.db)+'</p>'
+          +'<div class="disco-footer">'
+          +'<span class="cat-tag '+catClass+'">'+esc(catLabel)+'</span>'
+          +'<a href="/discover?ep='+c.id+'" class="disco-listen">View in Rankings →</a>'
+          +'</div></div>';
+      }).join('');
+    })
+    .catch(function(){
+      var g=document.getElementById('discoGrid');
+      if(g)g.innerHTML='<div style="grid-column:1/-1;padding:40px 0;text-align:center;color:rgba(232,240,232,0.25);font-size:14px">Scores unavailable — check back shortly.</div>';
+    });
+})();
+</script>
   </div>
 </section>
 
@@ -560,7 +526,9 @@ function nlSubscribe(){
     var listenerCta    = document.getElementById('heroListenerCta');
     var sectionCta     = document.getElementById('creatorSectionCta');
     var welcome        = document.getElementById('heroWelcome');
+    var loginLink      = document.getElementById('heroLoginLink');
     var firstName      = u.name ? u.name.split(' ')[0] : null;
+    if (loginLink) loginLink.style.display = 'none';
 
     if (u.mode === 'creator') {
       if (u.claimedShow && u.claimedShow.name) {
