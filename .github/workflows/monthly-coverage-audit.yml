@@ -1,8 +1,10 @@
 name: Monthly Coverage Audit
 
 on:
-  schedule:
-    - cron: '0 10 1-7 * 3'
+  # Schedule paused 2026-07-22 — Production Score is carrying quality signal for now;
+  # Quality Score expansion isn't an active priority. Re-enable when that changes.
+  # schedule:
+  #   - cron: '0 10 1-7 * 3'
   workflow_dispatch:
 
 concurrency:
