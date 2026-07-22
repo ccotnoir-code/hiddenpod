@@ -643,6 +643,9 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--text);font-fam
   <div class="cat-pill" onclick="filterCat(this,'politics')">Politics</div>
 </div>
 
+<div id="rankSearchWrap" style="padding:4px 15px 6px">
+  <input class="library-search" id="rankSearch" type="search" placeholder="Search shows and episodes…" oninput="filterRankings()">
+</div>
 <div class="discover-badge" id="discoverBadge">Showing independent and emerging shows only</div>
 <div class="feed-container"><div class="feed" id="feed"></div></div>
 
@@ -1872,6 +1875,7 @@ var liked={}, saved={}, followed={};
 var currentFilter='all';
 var activeTab='rankings';
 var filteredData=[];
+var rankingsQuery='';
 
 // ── HELPERS ──────────────────────────────────────────────────────────────────
 function szClass(s){return s==='micro'?'size-micro':s==='mid'?'size-mid':'size-large'}
@@ -2090,14 +2094,27 @@ function getBaseData(){
   return DATA.slice(); // allshows
 }
 
+function applyRankingsFilters(){
+  var base=getBaseData();
+  var catFiltered=currentFilter==='all'?base:base.filter(function(c){return c.cat.indexOf(currentFilter)>-1;});
+  var q=rankingsQuery.trim().toLowerCase();
+  filteredData=q?catFiltered.filter(function(c){
+    return (c.show||'').toLowerCase().includes(q)||(c.ep||'').toLowerCase().includes(q);
+  }):catFiltered;
+  render(filteredData);
+  document.getElementById('feed').scrollTop=0;
+}
+
+function filterRankings(){
+  rankingsQuery=document.getElementById('rankSearch').value;
+  applyRankingsFilters();
+}
+
 function filterCat(el,cat){
   document.querySelectorAll('.cat-pill').forEach(function(p){p.classList.remove('active')});
   el.classList.add('active');
   currentFilter=cat;
-  var base=getBaseData();
-  filteredData=cat==='all'?base:base.filter(function(c){return c.cat.indexOf(cat)>-1;});
-  render(filteredData);
-  document.getElementById('feed').scrollTop=0;
+  applyRankingsFilters();
 }
 
 // ── VIEW SWITCHING ─────────────────────────────────────────────────────────────
@@ -2112,6 +2129,10 @@ function switchView(tab){
   if(tab!=='library'){
     if(lv)lv.classList.remove('open');
   }
+
+  // Show/hide rankings search
+  var rsw=document.getElementById('rankSearchWrap');
+  if(rsw)rsw.style.display=(tab==='rankings')?'':'none';
 
   if(tab==='library'){
     // Hide discover badge and cat row for library mode
@@ -2137,14 +2158,15 @@ function switchView(tab){
   var allPill=document.querySelector('.cat-pill[onclick*="\'all\'"]');
   if(allPill)allPill.classList.add('active');
   currentFilter='all';
+  rankingsQuery='';
+  var rs=document.getElementById('rankSearch');
+  if(rs)rs.value='';
 
   // Stop playing audio before switching context
   stopCurrentAudio();
 
   // Build filtered set for new tab
-  filteredData=getBaseData();
-  render(filteredData);
-  document.getElementById('feed').scrollTop=0;
+  applyRankingsFilters();
 
 }
 
