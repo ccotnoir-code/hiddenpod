@@ -591,10 +591,20 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--text);font-fam
 .lib-outlet{font-size:10.5px;color:var(--muted);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .lib-meta{display:flex;align-items:center;gap:5px;margin-top:4px;flex-wrap:wrap}
 .lib-tag{font-size:9px;padding:2px 6px;border-radius:6px;border:1px solid rgba(255,255,255,0.08);color:rgba(255,255,255,0.38);font-family:var(--font-d);font-weight:600}
-.lib-score{font-size:10px;font-weight:700;color:var(--accent);font-family:var(--font-d)}
+.lib-name-row{display:flex;align-items:center;gap:5px;min-width:0}
+.lib-info-btn{flex-shrink:0}
 .lib-claimed{font-size:9px;padding:3px 8px;border-radius:8px;background:rgba(71,255,232,0.1);border:1px solid rgba(71,255,232,0.25);color:#47ffe8;font-family:var(--font-d);font-weight:700;white-space:nowrap;flex-shrink:0}
-.lib-claim-btn{font-size:10px;padding:5px 10px;border-radius:8px;border:1px solid rgba(232,255,71,0.3);color:var(--accent);background:rgba(232,255,71,0.06);cursor:pointer;font-family:var(--font-d);font-weight:600;flex-shrink:0;white-space:nowrap;transition:all 0.15s}
-.lib-claim-btn:active{opacity:0.7}
+.lib-listen-row{display:flex;gap:4px;flex-shrink:0}
+.lib-listen-btn{display:flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:8px;background:rgba(255,255,255,0.07);color:rgba(240,240,245,0.7);text-decoration:none;border:1px solid rgba(255,255,255,0.1);transition:background 0.15s}
+.lib-listen-btn.apple{background:rgba(255,255,255,0.1)}
+.lib-cat-dropdown{position:relative;display:inline-block}
+.lib-cat-trigger{display:flex;align-items:center;gap:5px;padding:5px 12px;border-radius:20px;border:1px solid rgba(255,255,255,0.12);color:rgba(255,255,255,0.5);background:transparent;cursor:pointer;font-size:11px;font-family:var(--font-d);font-weight:600;white-space:nowrap;transition:all 0.15s}
+.lib-cat-trigger.active{background:rgba(232,255,71,0.1);border-color:rgba(232,255,71,0.4);color:var(--accent)}
+.lib-cat-panel{display:none;position:absolute;top:calc(100% + 6px);left:0;background:#1a1a24;border:1px solid rgba(255,255,255,0.12);border-radius:10px;padding:5px;z-index:30;min-width:140px;box-shadow:0 4px 20px rgba(0,0,0,0.5)}
+.lib-cat-panel.open{display:block}
+.lib-cat-opt{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:6px;cursor:pointer;font-size:12px;font-family:var(--font-b);color:rgba(240,240,245,0.7);transition:background 0.12s}
+.lib-cat-opt:hover{background:rgba(255,255,255,0.05)}
+.lib-cat-opt input{accent-color:var(--accent);width:14px;height:14px;cursor:pointer}
 .lib-load-more{width:100%;padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.1);background:transparent;color:rgba(255,255,255,0.5);font-size:12px;cursor:pointer;font-family:var(--font-b);margin-top:14px;transition:opacity 0.15s}
 .lib-load-more:active{opacity:0.7}
 </style>
@@ -660,13 +670,30 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--text);font-fam
   <div class="library-header">
     <div class="library-title">Show Directory</div>
     <input class="library-search" id="libSearch" type="text" placeholder="Search shows…" oninput="filterLibrary()" />
-    <div class="lib-cats" id="libCats">
-      <div class="lib-cat-pill active" onclick="setLibCat(this,'all')">All</div>
-      <div class="lib-cat-pill" onclick="setLibCat(this,'news')">News</div>
-      <div class="lib-cat-pill" onclick="setLibCat(this,'politics')">Politics</div>
+    <div style="padding:8px 0 12px">
+      <div class="lib-cat-dropdown" id="libCatDd">
+        <button class="lib-cat-trigger" id="libCatTrigger" onclick="toggleLibCatDropdown(event)">
+          <span id="libCatLabel">Category</span>
+          <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="lib-cat-panel" id="libCatPanel">
+          <label class="lib-cat-opt"><input type="checkbox" value="news" onchange="libCatChange(this)"> News</label>
+          <label class="lib-cat-opt"><input type="checkbox" value="politics" onchange="libCatChange(this)"> Politics</label>
+        </div>
+      </div>
     </div>
   </div>
   <div class="library-list" id="libraryList"></div>
+  <!-- shared info overlay for show descriptions -->
+  <div class="si" id="libSi">
+    <div class="dp-backdrop" onclick="closeLibInfo()"></div>
+    <div class="dp-sheet">
+      <div class="dp-handle"></div>
+      <div class="dp-title" id="libSiTitle"></div>
+      <div class="dp-body" id="libSiBody"></div>
+      <button class="dp-close" onclick="closeLibInfo()">Got it</button>
+    </div>
+  </div>
 </div>
 
 <!-- FOLLOWING VIEW -->
@@ -2090,12 +2117,11 @@ function switchView(tab){
     if(badge)badge.style.display='none';
     stopCurrentAudio();
     if(lv){lv.classList.add('open');}
-    libPage=0;libCat='all';libQuery='';
+    libPage=0;libSelectedCats=new Set();libQuery='';
     var si=document.getElementById('libSearch');
     if(si)si.value='';
-    document.querySelectorAll('#libCats .lib-cat-pill').forEach(function(p){p.classList.remove('active')});
-    var ap=document.querySelector('#libCats .lib-cat-pill');
-    if(ap)ap.classList.add('active');
+    document.querySelectorAll('#libCatPanel input[type=checkbox]').forEach(function(cb){cb.checked=false;});
+    updateLibCatLabel();
     renderLibrary();
     return;
   }
@@ -2121,18 +2147,34 @@ function switchView(tab){
 }
 
 // ── LIBRARY VIEW ──────────────────────────────────────────────────────────────
-var libPage=0, libCat='all', libQuery='', LIB_PAGE_SIZE=30;
+var libPage=0, libSelectedCats=new Set(), libQuery='', LIB_PAGE_SIZE=30;
+var _libShowsCache=null; // invalidated when DATA changes
 
-var LIB_CAT_LABELS={
-  news:'News',politics:'Politics',tech:'Tech',world:'World',
-  local:'Local',investigative:'Investigative',science:'Science'
-};
+function getLibShows(){
+  if(!DATA||!DATA.length)return[];
+  // Deduplicate to one entry per showId — prefer epIdx=0 (id===showId*100, latest episode)
+  var byShow={};
+  DATA.forEach(function(c){
+    if(!byShow[c.showId]||c.id===c.showId*100) byShow[c.showId]=c;
+  });
+  return Object.keys(byShow).map(function(k){return byShow[k];})
+    .sort(function(a,b){return(a.show||'').localeCompare(b.show||'');});
+}
 
-function setLibCat(el,cat){
-  document.querySelectorAll('#libCats .lib-cat-pill').forEach(function(p){p.classList.remove('active')});
-  el.classList.add('active');
-  libCat=cat;libPage=0;
-  renderLibrary();
+function getLibData(){
+  var shows=getLibShows();
+  var q=libQuery;
+  var hasCatFilter=libSelectedCats.size>0;
+  return shows.filter(function(c){
+    if(hasCatFilter){
+      var cats=c.cat||[];
+      if(!cats.some(function(cat){return libSelectedCats.has(cat);})) return false;
+    }
+    if(!q)return true;
+    return (c.show&&c.show.toLowerCase().indexOf(q)>-1)||
+           (c.db&&c.db.toLowerCase().indexOf(q)>-1)||
+           (c.outlet&&c.outlet.toLowerCase().indexOf(q)>-1);
+  });
 }
 
 function filterLibrary(){
@@ -2141,26 +2183,56 @@ function filterLibrary(){
   renderLibrary();
 }
 
-function getLibData(){
-  if(!DATA)return[];
-  var q=libQuery;
-  return DATA.filter(function(c){
-    var catMatch=(libCat==='all')||(c.cat&&c.cat.indexOf(libCat)>-1);
-    if(!catMatch)return false;
-    if(!q)return true;
-    return (c.show&&c.show.toLowerCase().indexOf(q)>-1)||
-           (c.outlet&&c.outlet.toLowerCase().indexOf(q)>-1);
-  });
+function toggleLibCatDropdown(ev){
+  if(ev)ev.stopPropagation();
+  var panel=document.getElementById('libCatPanel');
+  if(!panel)return;
+  var opening=!panel.classList.contains('open');
+  panel.classList.toggle('open');
+  if(opening){
+    setTimeout(function(){document.addEventListener('click',closeLibCatDropdown);},0);
+  }
+}
+function closeLibCatDropdown(){
+  var panel=document.getElementById('libCatPanel');
+  if(panel)panel.classList.remove('open');
+  document.removeEventListener('click',closeLibCatDropdown);
+}
+function libCatChange(cb){
+  if(cb.checked)libSelectedCats.add(cb.value);else libSelectedCats.delete(cb.value);
+  libPage=0;
+  updateLibCatLabel();
+  renderLibrary();
+}
+function updateLibCatLabel(){
+  var lbl=document.getElementById('libCatLabel');
+  var trigger=document.getElementById('libCatTrigger');
+  if(!lbl)return;
+  if(libSelectedCats.size===0){
+    lbl.textContent='Category';
+    if(trigger)trigger.classList.remove('active');
+  } else {
+    var names=[];
+    libSelectedCats.forEach(function(c){names.push(c.charAt(0).toUpperCase()+c.slice(1));});
+    lbl.textContent=names.join(', ');
+    if(trigger)trigger.classList.add('active');
+  }
 }
 
-function claimFromLibrary(id){
-  if(!currentUser){
-    showCreatorScreen('creatorAuthScreen');
-  } else if(userMode==='creator'){
-    showCreatorScreen('creatorSearchScreen');
-  } else {
-    showCreatorScreen('creatorAuthScreen');
-  }
+function openLibInfo(showId){
+  var shows=getLibShows();
+  var c=shows.find(function(s){return s.showId===showId;});
+  if(!c)return;
+  var title=document.getElementById('libSiTitle');
+  var body=document.getElementById('libSiBody');
+  var si=document.getElementById('libSi');
+  if(title)title.textContent=c.show;
+  if(body)body.textContent=c.db||'No description available.';
+  if(si)si.classList.add('open');
+}
+function closeLibInfo(){
+  var si=document.getElementById('libSi');
+  if(si)si.classList.remove('open');
 }
 
 function renderLibrary(){
@@ -2168,7 +2240,6 @@ function renderLibrary(){
   var list=document.getElementById('libraryList');
   if(!list)return;
 
-  var myShow=currentUser&&userMode==='creator'&&claimedShow&&claimedShow.name||null;
   var page=libPage;
   var slice=data.slice(0,(page+1)*LIB_PAGE_SIZE);
   var hasMore=data.length>(page+1)*LIB_PAGE_SIZE;
@@ -2181,30 +2252,31 @@ function renderLibrary(){
     var c=slice[i];
     var cats=c.cat||[];
     var catLabel=cats.map(function(k){return catLabels[k]||k;}).join(' · ');
+    var audioUrl=(c._meta&&c._meta.audioUrl)||'';
     var appleUrl=(c._meta&&c._meta.appleEpisodeUrl)||(c._meta&&c._meta.itunesId?'https://podcasts.apple.com/us/podcast/id'+c._meta.itunesId:'');
-    var isClaimed=myShow&&c.show&&c.show===myShow;
-    var tier=c._meta&&c._meta.scoreTier?c._meta.scoreTier:'';
-    var score=c._meta&&c._meta.totalScore?c._meta.totalScore:null;
+    var isClaimed=isCreatorOf(c.showId);
 
-    var badgeHtml='';
+    var actionHtml='';
     if(isClaimed){
-      badgeHtml='<span class="lib-claimed">Your show ✓</span>';
-    } else {
-      badgeHtml='<button class="lib-claim-btn" onclick="claimFromLibrary('+c.id+')">Claim</button>';
+      actionHtml='<span class="lib-claimed">Your show ✓</span>';
+    } else if(appleUrl||audioUrl){
+      actionHtml='<div class="lib-listen-row">'
+        +(appleUrl?'<a class="lib-listen-btn apple" href="'+appleUrl+'" target="_blank" rel="noopener" title="Open in Apple Podcasts">'+apSVG()+'</a>':'')
+        +(audioUrl?'<a class="lib-listen-btn" href="'+audioUrl+'" target="_blank" rel="noopener" title="Listen"><svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M12 1a9 9 0 0 1 9 9v7a3 3 0 0 1-3 3h-1v-8h2V10a8 8 0 1 0-16 0v2h2v8H4a3 3 0 0 1-3-3v-7a9 9 0 0 1 9-9z"/></svg></a>':'')
+        +'</div>';
     }
 
     html+='<div class="lib-row">'
       +'<div class="lib-logo" style="background:'+c.logoBg+';color:white">'+c.init+'</div>'
       +'<div class="lib-info">'
-        +'<div class="lib-name">'+c.show+'</div>'
-        +(c.outlet&&c.outlet!==c.show?'<div class="lib-outlet">'+c.outlet+'</div>':'')
-        +'<div class="lib-meta">'
-          +(catLabel?'<span class="lib-tag">'+catLabel+'</span>':'')
-          +(tier?'<span class="lib-tag">'+tier+'</span>':'')
-          +(isLoggedIn()&&score!==null?'<span class="lib-score">'+score+'</span>':'')
+        +'<div class="lib-name-row">'
+          +'<span class="lib-name">'+c.show+'</span>'
+          +'<span class="info-btn lib-info-btn" onclick="openLibInfo('+c.showId+')" title="About this show">i</span>'
         +'</div>'
+        +(c.outlet&&c.outlet!==c.show?'<div class="lib-outlet">'+c.outlet+'</div>':'')
+        +(catLabel?'<div class="lib-meta"><span class="lib-tag">'+catLabel+'</span></div>':'')
       +'</div>'
-      +badgeHtml
+      +actionHtml
       +'</div>';
   }
 
@@ -2218,7 +2290,6 @@ function renderLibrary(){
 function libLoadMore(){
   libPage++;
   renderLibrary();
-  // Scroll to bottom of list so new items are visible
   var list=document.getElementById('libraryList');
   if(list)setTimeout(function(){list.scrollTop=list.scrollHeight;},50);
 }
