@@ -343,7 +343,7 @@ function applyFilters() {
   var q = (document.getElementById('searchInput').value || '').toLowerCase().trim();
   var filtered = ALL_SHOWS.filter(function(s) {
     var catMatch = activeCat === 'all' || (Array.isArray(s.cat) ? s.cat : [s.cat]).some(function(c){ return c.toLowerCase() === activeCat; });
-    var textMatch = !q || s.show.toLowerCase().includes(q) || s.outlet.toLowerCase().includes(q);
+    var textMatch = !q || s.show.toLowerCase().includes(q) || s.outlet.toLowerCase().includes(q) || s.ep.toLowerCase().includes(q);
     return catMatch && textMatch;
   });
   renderRankings(filtered);
@@ -411,7 +411,7 @@ fetch('/data/shows.json')
   .then(function(data) {
     ALL_SHOWS = (data.shows || []).map(function(s){
       return {
-        show: s.show, outlet: s.outlet, cat: s.cat, tier: s.tier,
+        show: s.show, outlet: s.outlet, ep: s.ep || '', cat: s.cat, tier: s.tier,
         scores: s.scores,
         rationales: (s._meta && s._meta.rationales) || {},
         score: computeTotal(s),
