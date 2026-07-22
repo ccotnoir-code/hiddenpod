@@ -2518,8 +2518,7 @@ fetch('/data/shows.json')
         setTimeout(function(){
           var card = document.getElementById('cc' + targetId);
           if (!card) return;
-          var feed = document.getElementById('feed');
-          feed.scrollTo({ top: card.offsetTop - feed.offsetTop, behavior: 'smooth' });
+          card.scrollIntoView({ behavior: 'smooth', block: 'start' });
           card.classList.add('card-hl');
           setTimeout(function(){ card.classList.remove('card-hl'); }, 2600);
         }, 80);
