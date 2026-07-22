@@ -332,7 +332,7 @@ footer{background:rgba(0,0,0,0.4);border-top:1px solid var(--border);padding:56p
   fetch('/data/shows.json')
     .then(function(r){return r.json();})
     .then(function(json){
-      var data=json.shows||[];
+      var data=(json.shows||[]).filter(function(c){return c.tier==='indie';});
       var best={};
       data.forEach(function(c){
         var s=c._meta&&c._meta.totalScore!=null?c._meta.totalScore:0;
