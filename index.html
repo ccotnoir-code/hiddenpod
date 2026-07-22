@@ -2519,12 +2519,8 @@ fetch('/data/shows.json')
           if (!card) return;
           var feed = document.getElementById('feed');
           if (feed) feed.scrollTop = card.offsetTop;
-          // let scroll-snap settle, then highlight via inline style
-          // (CSS animation can't override the card's own inline animation shorthand)
-          setTimeout(function(){
-            card.style.borderColor = '#E8FF47';
-            setTimeout(function(){ card.style.borderColor = ''; }, 2200);
-          }, 80);
+          card.style.borderColor = '#E8FF47';
+          setTimeout(function(){ card.style.borderColor = ''; }, 2400);
         }, 150);
       } catch(e) {}
     })();
