@@ -119,8 +119,7 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--text);font-fam
 
 /* ── CLIP CARD ── */
 .clip-card{height:420px;scroll-snap-align:start;position:relative;margin:0 10px 8px;border-radius:22px;overflow:hidden;background:var(--surface);border:1px solid var(--border);display:flex;flex-direction:column}
-@keyframes card-hl{0%,100%{border-color:var(--border)}30%{border-color:var(--accent)}70%{border-color:var(--accent)}}
-.card-hl{animation:card-hl 2.4s ease forwards}
+
 .card-bg{position:absolute;inset:0;z-index:0}
 .card-content{position:relative;z-index:2;display:flex;flex-direction:column;height:100%;padding:13px 15px 12px}
 /* ── SHOW INFO OVERLAY ── */
@@ -2520,10 +2519,11 @@ fetch('/data/shows.json')
           if (!card) return;
           var feed = document.getElementById('feed');
           if (feed) feed.scrollTop = card.offsetTop;
-          // let scroll-snap settle, then apply highlight
+          // let scroll-snap settle, then highlight via inline style
+          // (CSS animation can't override the card's own inline animation shorthand)
           setTimeout(function(){
-            card.classList.add('card-hl');
-            setTimeout(function(){ card.classList.remove('card-hl'); }, 2600);
+            card.style.borderColor = '#E8FF47';
+            setTimeout(function(){ card.style.borderColor = ''; }, 2200);
           }, 80);
         }, 150);
       } catch(e) {}
