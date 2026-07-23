@@ -462,8 +462,9 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--text);font-fam
 .ep-row-head{display:flex;align-items:center;justify-content:space-between}
 .ep-row-title{font-size:13px;font-weight:600;font-family:var(--font-d)}
 .ep-row-sub{font-size:11px;color:rgba(255,255,255,0.38);margin-top:2px}
-.ep-chev{font-size:12px;color:rgba(255,255,255,0.25);transition:transform 0.2s;flex-shrink:0}
-.ep-row.open .ep-chev{transform:rotate(90deg)}
+.ep-row-score-wrap{text-align:right;flex-shrink:0}
+.ep-row-score-num{font-size:18px;font-weight:800;font-family:var(--font-d);color:white;line-height:1}
+.ep-row-score-why{font-size:10px;color:var(--accent);margin-top:3px;letter-spacing:0.3px}
 .ep-scores-grid{display:none;grid-template-columns:1fr 1fr;gap:6px;margin-top:12px}
 .ep-row.open .ep-scores-grid{display:grid}
 .ep-score-item{border-radius:8px;padding:8px 10px;position:relative;overflow:hidden}
@@ -1037,30 +1038,6 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--text);font-fam
         <div class="creator-show-outlet-lbl" id="dashShowOutlet">Your Outlet</div>
       </div>
     </div>
-    <!-- Circular score gauge -->
-    <div class="gauge-wrap">
-      <svg width="80" height="80" viewBox="0 0 80 80" style="flex-shrink:0">
-        <circle cx="40" cy="40" r="32" fill="none" stroke="rgba(255,255,255,0.07)" stroke-width="7"/>
-        <circle cx="40" cy="40" r="32" fill="none" stroke="#1A6B3C" stroke-width="7"
-          stroke-dasharray="201" stroke-dashoffset="58" stroke-linecap="round"
-          transform="rotate(-90 40 40)"/>
-        <text x="40" y="45" text-anchor="middle" fill="white" font-size="17" font-weight="800" font-family="Syne,sans-serif">71</text>
-      </svg>
-      <div>
-        <div style="display:flex;align-items:baseline;gap:3px">
-          <span class="gauge-score-num">71</span><span class="gauge-denom">/100</span>
-        </div>
-        <div class="gauge-meta-label">PodSignal Score</div>
-        <div class="gauge-tagline">Strong PodSignal score — room to grow on consistency and structure.</div>
-      </div>
-    </div>
-  </div>
-  <!-- Stats grid -->
-  <div class="dash-stats">
-    <div class="dash-stat"><div class="dash-stat-n">1,247</div><div class="dash-stat-l">Plays</div></div>
-    <div class="dash-stat"><div class="dash-stat-n">38</div><div class="dash-stat-l">Likes</div></div>
-    <div class="dash-stat"><div class="dash-stat-n">12</div><div class="dash-stat-l">Follows</div></div>
-    <div class="dash-stat"><div class="dash-stat-n">9</div><div class="dash-stat-l">Subscribers</div></div>
   </div>
   <!-- Internal nav tabs -->
   <div class="dash-nav-tabs">
@@ -1075,17 +1052,6 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--text);font-fam
   <div class="dash-section">
     <div class="dash-sec-title">Recent Episodes</div>
     <div id="dashEpList"></div>
-    <!-- placeholder ep3-subcats so applyDashboardTier doesn't error on old refs -->
-    <div style="display:none" id="ep3-subcats">
-        <div class="ep-subcats-content blurred" id="ep3-subcats-content"></div>
-        <div class="ep-subcats-overlay" id="ep3-subcats-overlay" onclick="openUpgradeModal('starter');event.stopPropagation()">
-          <div class="ep-subcats-prompt">
-            <div class="ep-subcats-prompt-icon">🔒</div>
-            <div class="ep-subcats-prompt-text">See exactly what's driving each score</div>
-            <button class="ep-subcats-prompt-btn" onclick="openUpgradeModal('starter');event.stopPropagation()">Upgrade to Starter →</button>
-          </div>
-        </div>
-      </div>
     </div>
   </div>
 
@@ -2196,6 +2162,8 @@ function filterCat(el,cat){
 
 // ── VIEW SWITCHING ─────────────────────────────────────────────────────────────
 function switchView(tab){
+  var dash=document.getElementById('creatorDash');
+  if(dash)dash.classList.remove('open');
   activeTab=tab;
   document.querySelectorAll('.view-tab').forEach(function(t){t.classList.remove('active')});
   var el=document.getElementById('vt-'+tab);
@@ -2679,20 +2647,18 @@ function buildDashEpRow(c) {
       +'</div>';
   }).join('');
   var pubDate = formatEpDate(c._meta && c._meta.episodePubDate);
+  var totalScore = (c._meta && c._meta.totalScore != null) ? Math.round(c._meta.totalScore) : '–';
   return '<div class="ep-row" onclick="toggleEpRow(this)">'
     +'<div class="ep-row-head"><div>'
     +'<div class="ep-row-title">'+(c.ep||'Episode')+'</div>'
     +(pubDate?'<div class="ep-row-sub">'+pubDate+'</div>':'')
-    +'</div><span class="ep-chev">›</span></div>'
+    +'</div>'
+    +'<div class="ep-row-score-wrap">'
+    +'<div class="ep-row-score-num">'+totalScore+'</div>'
+    +'<div class="ep-row-score-why">Why this score?</div>'
+    +'</div>'
+    +'</div>'
     +'<div class="ep-scores-grid">'+scoreItems+'</div>'
-    +'<div class="ep-subcats-wrap">'
-    +'<div class="ep-subcats-content blurred"></div>'
-    +'<div class="ep-subcats-overlay" onclick="openUpgradeModal(\'starter\');event.stopPropagation()">'
-    +'<div class="ep-subcats-prompt">'
-    +'<div class="ep-subcats-prompt-icon">🔒</div>'
-    +'<div class="ep-subcats-prompt-text">See exactly what\'s driving each score</div>'
-    +'<button class="ep-subcats-prompt-btn" onclick="openUpgradeModal(\'starter\');event.stopPropagation()">Upgrade to Starter →</button>'
-    +'</div></div></div>'
     +'</div>';
 }
 
@@ -2789,10 +2755,8 @@ function applyDashboardTier(tier){
   }
   var cta=document.getElementById('dashUpgradeCta');
   var proBanner=document.getElementById('dashProBanner');
-  var proSection=document.querySelector('.pro-locked-section');
-  if(cta)cta.style.display=(tier==='free')?'':'none';
-  if(proBanner)proBanner.style.display=(tier==='starter')?'':'none';
-  if(proSection)proSection.style.display=(tier==='pro')?'none':'';
+  if(cta)cta.style.display='none';
+  if(proBanner)proBanner.style.display='none';
 }
 
 // ── UPGRADE MODAL ─────────────────────────────────────────────────────────────
