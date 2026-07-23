@@ -1853,12 +1853,54 @@ function toggleSignInEmailForm(show) {
   if (show) { var el = document.getElementById('siEmailInput'); if (el) el.focus(); }
 }
 
+// SIMULATED_AUTH: test account table — not real design, not real identity.
+// Stands in for backend session/identity lookup. Replace entire auth system
+// with real OAuth + backend persistence before ship.
+// claimedShowName is resolved against live DATA at login time so showId stays current.
+var SIMULATED_TEST_USERS = {
+  'ccotnoir@icloud.com': { type: 'creator', name: 'Chris Cotnoir', claimedShowName: 'Texas Tribune TribCast' }
+  // Add more test accounts here:
+  // 'another@example.com': { type: 'listener', name: 'Test Listener' }
+  // 'creator2@example.com': { type: 'creator', name: 'Creator Name', claimedShowName: 'Show Name Here' }
+};
+
+// SIMULATED_AUTH: shared path for both SSO and email login — apply a test entry
+function _applyTestLogin(entry) {
+  if (entry.type === 'creator') {
+    if (entry.claimedShowName) {
+      var match = (DATA || []).find(function(c){ return c.show.toLowerCase() === entry.claimedShowName.toLowerCase(); });
+      creatorShowName = entry.claimedShowName;
+      creatorShowOutlet = 'Independent';
+      claimedShow = { name: entry.claimedShowName, outlet: 'Independent', showId: match ? match.showId : null };
+    }
+    showCreatorDashboard();
+  } else {
+    userMode = 'listener';
+    try {
+      localStorage.setItem('hp_user', JSON.stringify({
+        name: currentUser.name, email: currentUser.email, provider: currentUser.provider, mode: 'listener'
+      }));
+    } catch(e) {}
+    dismissOnboarding();
+    var _li = currentUser.name.split(' ').map(function(w){return w[0];}).join('').slice(0,2).toUpperCase();
+    var _av = document.getElementById('topAvatar');
+    if (_av) { _av.textContent = _li; _av.style.background = 'linear-gradient(135deg,#47ffe8,#1a6b3c)'; _av.style.color = '#0a0a0f'; }
+    render(filteredData);
+    showToast('Welcome to HiddenPod ✦', true);
+  }
+}
+
 function doSignInSSO(provider) {
-  // SIMULATED_AUTH: mock SSO — replace with real OAuth before ship
-  var names  = {google:'Google User', apple:'Apple User'};
-  var emails = {google:'user@gmail.com', apple:'user@icloud.com'};
-  currentUser = { name: names[provider], email: emails[provider], provider: provider };
-  finishSignIn();
+  // SIMULATED_AUTH: Google→listener, Apple→first creator in SIMULATED_TEST_USERS
+  if (provider === 'google') {
+    currentUser = { name: 'Google Listener', email: 'listener@hiddenpod.test', provider: 'google' };
+    _applyTestLogin({ type: 'listener' });
+  } else {
+    var _appleEmail = 'ccotnoir@icloud.com';
+    var _appleEntry = SIMULATED_TEST_USERS[_appleEmail];
+    currentUser = { name: _appleEntry.name, email: _appleEmail, provider: 'apple' };
+    _applyTestLogin(_appleEntry);
+  }
 }
 
 function doSignInEmail() {
@@ -1866,11 +1908,22 @@ function doSignInEmail() {
   var pw = document.getElementById('siPwInput').value;
   if (!email || !pw) { showToast('Please enter email and password'); return; }
   if (!email.includes('@')) { showToast('Please enter a valid email'); return; }
-  currentUser = {
-    name: email.split('@')[0].charAt(0).toUpperCase() + email.split('@')[0].slice(1),
-    email: email, provider: 'email'
-  };
-  finishSignIn();
+  var testEntry = SIMULATED_TEST_USERS[email.toLowerCase()];
+  if (testEntry) {
+    // Known test account — restore exact state
+    currentUser = {
+      name: testEntry.name || (email.split('@')[0].charAt(0).toUpperCase() + email.split('@')[0].slice(1)),
+      email: email, provider: 'email'
+    };
+    _applyTestLogin(testEntry);
+  } else {
+    // Unknown email — treat as new signup; send to role chooser
+    currentUser = {
+      name: email.split('@')[0].charAt(0).toUpperCase() + email.split('@')[0].slice(1),
+      email: email, provider: 'email'
+    };
+    showCreatorScreen('onboardLandingScreen');
+  }
 }
 
 function finishSignIn() {
@@ -1897,7 +1950,13 @@ function finishSignIn() {
   if (prevMode === 'creator') {
     showCreatorDashboard();
   } else {
+    // Restore listener mode (or null→anonymous) and re-render so score gating reflects the restored state
+    if (prevMode) userMode = prevMode;
     dismissOnboarding();
+    var _fsi = currentUser ? currentUser.name.split(' ').map(function(w){return w[0];}).join('').slice(0,2).toUpperCase() : '';
+    var _fsav = document.getElementById('topAvatar');
+    if (_fsav && _fsi) { _fsav.textContent = _fsi; _fsav.style.background = 'linear-gradient(135deg,#47ffe8,#1a6b3c)'; _fsav.style.color = '#0a0a0f'; }
+    render(filteredData);
   }
 }
 
@@ -2530,9 +2589,9 @@ function initSwipeHint() {
     var _s = localStorage.getItem('hp_user');
     if (_s) {
       var _u = JSON.parse(_s);
-      if (_u && _u.name && _u.mode && _u.mode !== 'listener') {
+      if (_u && _u.name && _u.mode) {
         currentUser = { name: _u.name, email: _u.email, provider: _u.provider };
-        userMode = _u.mode;
+        userMode = _u.mode;  // listeners included so first render gates correctly
       }
     }
   } catch(e) {}
