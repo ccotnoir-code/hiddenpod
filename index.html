@@ -2890,6 +2890,22 @@ function updateAvatarMenu() {
 }
 document.addEventListener('click', function() { closeAvatarMenu(); });
 
+// ── URL PARAM TAB TRIGGER ──────────────────────────────────────────────────────
+// /discover?tab=rankings → activate Rankings tab
+// /discover?tab=library  → activate Library tab
+// Fires for all users regardless of auth state
+(function() {
+  try {
+    var params = new URLSearchParams(window.location.search);
+    var tab = params.get('tab');
+    if (!tab) return;
+    window.history.replaceState({}, '', window.location.pathname);
+    setTimeout(function() {
+      if (tab === 'rankings' || tab === 'library') switchView(tab);
+    }, 50);
+  } catch(e) {}
+})();
+
 // ── URL PARAM FLOW TRIGGER ─────────────────────────────────────────────────────
 // /discover?flow=creator  → launch creator onboarding
 // /discover?flow=listener → launch listener onboarding
