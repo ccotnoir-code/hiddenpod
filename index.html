@@ -310,9 +310,22 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--text);font-fam
 .auth-btn:active{background:rgba(255,255,255,0.1)}
 .auth-btn.google{border-color:rgba(66,133,244,0.3);background:rgba(66,133,244,0.08)}
 .auth-btn.apple{border-color:rgba(255,255,255,0.15);background:rgba(255,255,255,0.06)}
-.auth-btn.spotify{border-color:rgba(29,185,84,0.3);background:rgba(29,185,84,0.08)}
 .auth-btn.email{border-color:rgba(255,255,255,0.08);background:transparent;color:rgba(255,255,255,0.5);justify-content:center;font-size:13px;margin-top:4px}
 .auth-btn svg{flex-shrink:0}
+/* Listener onboarding path cards */
+.onboard-path-cards{display:flex;flex-direction:column;gap:10px;width:100%;margin:16px 0 8px}
+.onboard-path-card{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:16px;padding:18px 20px;cursor:pointer;transition:border-color 0.18s,background 0.18s;display:flex;align-items:center;gap:14px;text-align:left}
+.onboard-path-card:active{background:rgba(255,255,255,0.08)}
+.onboard-path-icon{font-size:24px;flex-shrink:0}
+.onboard-path-title{font-family:var(--font-d);font-size:15px;font-weight:700;color:var(--text);margin-bottom:2px}
+.onboard-path-desc{font-size:12px;color:var(--muted)}
+/* Newsletter opt-in checkbox */
+.nl-opt-in-row{display:flex;align-items:flex-start;gap:10px;cursor:pointer;margin:10px 0 4px;text-align:left}
+.nl-opt-in-check{flex-shrink:0;width:16px;height:16px;margin-top:1px;accent-color:var(--accent);cursor:pointer}
+.nl-opt-in-label{font-size:12px;color:rgba(240,240,245,0.5);line-height:1.45}
+/* Score gate — cards beyond #5 for anonymous users */
+.ps-total-blurred{filter:blur(6px);user-select:none;pointer-events:none}
+.ps-gate-cta{display:block;font-family:var(--font-d);font-size:11px;font-weight:700;color:var(--accent);background:rgba(232,255,71,0.1);border:1px solid rgba(232,255,71,0.25);border-radius:20px;padding:6px 14px;cursor:pointer;margin-top:8px;width:auto;white-space:nowrap}
 .auth-divider{display:flex;align-items:center;gap:10px;width:100%;margin:6px 0 10px}
 .auth-divider-line{flex:1;height:1px;background:rgba(255,255,255,0.08)}
 .auth-divider-text{font-size:11px;color:rgba(255,255,255,0.3)}
@@ -770,6 +783,50 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--text);font-fam
   <div class="onboard-content">
     <div class="onboard-logo"><span class="h">hidden</span><span class="p">pod</span></div>
 
+    <!-- LANDING: choose listener or creator path -->
+    <div class="creator-screen" id="onboardLandingScreen">
+      <div class="creator-heading">Join HiddenPod.</div>
+      <div class="creator-sub">Free — no card required.</div>
+      <div class="onboard-path-cards">
+        <div class="onboard-path-card" onclick="showCreatorScreen('listenerAuthScreen')">
+          <div class="onboard-path-icon">🎧</div>
+          <div><div class="onboard-path-title">I'm a listener</div><div class="onboard-path-desc">Unlock full scores + weekly discoveries</div></div>
+        </div>
+        <div class="onboard-path-card" onclick="showCreatorScreen('creatorAuthScreen')">
+          <div class="onboard-path-icon">🎙</div>
+          <div><div class="onboard-path-title">I'm a podcast creator</div><div class="onboard-path-desc">Claim your show and see your episode analytics</div></div>
+        </div>
+      </div>
+      <button class="creator-back" onclick="dismissOnboarding()">← Back</button>
+    </div>
+
+    <!-- LISTENER AUTH -->
+    <div class="creator-screen" id="listenerAuthScreen">
+      <div class="creator-heading">Join free.</div>
+      <div class="creator-sub">Full scores + weekly podcast discoveries</div>
+      <label class="nl-opt-in-row" style="margin-bottom:14px">
+        <input type="checkbox" id="listenerNLOptIn" class="nl-opt-in-check">
+        <span class="nl-opt-in-label">Send me the weekly HiddenPod discoveries newsletter</span>
+      </label>
+      <button class="auth-btn google" onclick="doListenerSSO('google')">
+        <svg width="20" height="20" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+        Continue with Google
+      </button>
+      <button class="auth-btn apple" onclick="doListenerSSO('apple')">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+        Continue with Apple
+      </button>
+      <div class="auth-divider"><div class="auth-divider-line"></div><span class="auth-divider-text">or</span><div class="auth-divider-line"></div></div>
+      <button class="auth-btn email" id="lEmailToggleBtn" onclick="toggleListenerEmailForm(true)">Use email address</button>
+      <div class="email-form" id="lEmailForm">
+        <input class="auth-input" id="lEmailInput" type="email" placeholder="Email address" autocomplete="email">
+        <button class="auth-submit" onclick="doListenerEmailAuth()">Join free →</button>
+        <button class="auth-back" onclick="toggleListenerEmailForm(false)">← Back</button>
+      </div>
+      <div class="auth-terms">By continuing you agree to our <a href="#">Terms</a> and <a href="#">Privacy Policy</a></div>
+      <button class="creator-back" onclick="showCreatorScreen('onboardLandingScreen')">← Back</button>
+    </div>
+
     <!-- CREATOR SCREEN 1: AUTH -->
     <div class="creator-screen" id="creatorAuthScreen">
       <div class="creator-heading">Join as a Creator.</div>
@@ -781,10 +838,6 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--text);font-fam
       <button class="auth-btn apple" onclick="doCreatorSSO('apple')">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
         Continue with Apple
-      </button>
-      <button class="auth-btn spotify" onclick="doCreatorSSO('spotify')">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
-        Continue with Spotify
       </button>
       <div class="auth-divider"><div class="auth-divider-line"></div><span class="auth-divider-text">or</span><div class="auth-divider-line"></div></div>
       <button class="auth-btn email" id="cEmailToggleBtn" onclick="toggleCreatorEmailForm(true)">Use email &amp; password</button>
@@ -898,10 +951,6 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--text);font-fam
         <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
         Continue with Apple
       </button>
-      <button class="auth-btn spotify" onclick="doSignInSSO('spotify')">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
-        Continue with Spotify
-      </button>
       <div class="auth-divider"><div class="auth-divider-line"></div><span class="auth-divider-text">or</span><div class="auth-divider-line"></div></div>
       <button class="auth-btn email" id="siEmailToggleBtn" onclick="toggleSignInEmailForm(true)">Use email &amp; password</button>
       <div class="email-form" id="siEmailForm">
@@ -991,83 +1040,12 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--text);font-fam
 
   <!-- OVERVIEW TAB -->
   <div id="dashTabOverview">
-  <!-- Episode list -->
+  <!-- Episode list — populated dynamically by renderDashEpisodes() -->
   <div class="dash-section">
     <div class="dash-sec-title">Recent Episodes</div>
-    <!-- EP 1 -->
-    <div class="ep-row" onclick="toggleEpRow(this)">
-      <div class="ep-row-head">
-        <div>
-          <div class="ep-row-title" id="dashEp1Title">Latest Episode</div>
-          <div class="ep-row-sub">Published 2 days ago · 847 plays</div>
-        </div>
-        <span class="ep-chev">›</span>
-      </div>
-      <div class="ep-scores-grid">
-        <div class="ep-score-item unlocked"><div class="ep-score-label">Audio Quality</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" id="aq1" style="width:74%"></div></div><div class="ep-score-val" id="aqv1">74/100</div></div>
-        <div class="ep-score-item unlocked"><div class="ep-score-label">Content Structure</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" style="width:68%"></div></div><div class="ep-score-val">68/100</div></div>
-        <div class="ep-score-item unlocked"><div class="ep-score-label">Topic Relevance</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" style="width:76%"></div></div><div class="ep-score-val">76/100</div></div>
-        <div class="ep-score-item unlocked"><div class="ep-score-label">Clip-ability</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" style="width:63%"></div></div><div class="ep-score-val">63/100</div></div>
-        <div class="ep-score-item unlocked"><div class="ep-score-label">Consistency</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" style="width:81%"></div></div><div class="ep-score-val">81/100</div></div>
-        <div class="ep-score-item unlocked"><div class="ep-score-label">Episode Vitality</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" style="width:72%"></div></div><div class="ep-score-val">72/100</div></div>
-      </div>
-      <div class="ep-subcats-wrap" id="ep1-subcats">
-        <div class="ep-subcats-content blurred" id="ep1-subcats-content"></div>
-        <div class="ep-subcats-overlay" id="ep1-subcats-overlay" onclick="openUpgradeModal('starter');event.stopPropagation()">
-          <div class="ep-subcats-prompt">
-            <div class="ep-subcats-prompt-icon">🔒</div>
-            <div class="ep-subcats-prompt-text">See exactly what's driving each score</div>
-            <button class="ep-subcats-prompt-btn" onclick="openUpgradeModal('starter');event.stopPropagation()">Upgrade to Starter →</button>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- EP 2 -->
-    <div class="ep-row" onclick="toggleEpRow(this)">
-      <div class="ep-row-head">
-        <div>
-          <div class="ep-row-title" id="dashEp2Title">Previous Episode</div>
-          <div class="ep-row-sub">Published 9 days ago · 312 plays</div>
-        </div>
-        <span class="ep-chev">›</span>
-      </div>
-      <div class="ep-scores-grid">
-        <div class="ep-score-item unlocked"><div class="ep-score-label">Audio Quality</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" id="aq2" style="width:80%"></div></div><div class="ep-score-val" id="aqv2">80/100</div></div>
-        <div class="ep-score-item unlocked"><div class="ep-score-label">Content Structure</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" style="width:71%"></div></div><div class="ep-score-val">71/100</div></div>
-        <div class="ep-score-item unlocked"><div class="ep-score-label">Topic Relevance</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" style="width:84%"></div></div><div class="ep-score-val">84/100</div></div>
-        <div class="ep-score-item unlocked"><div class="ep-score-label">Clip-ability</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" style="width:67%"></div></div><div class="ep-score-val">67/100</div></div>
-        <div class="ep-score-item unlocked"><div class="ep-score-label">Consistency</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" style="width:79%"></div></div><div class="ep-score-val">79/100</div></div>
-        <div class="ep-score-item unlocked"><div class="ep-score-label">Episode Vitality</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" style="width:85%"></div></div><div class="ep-score-val">85/100</div></div>
-      </div>
-      <div class="ep-subcats-wrap" id="ep2-subcats">
-        <div class="ep-subcats-content blurred" id="ep2-subcats-content"></div>
-        <div class="ep-subcats-overlay" id="ep2-subcats-overlay" onclick="openUpgradeModal('starter');event.stopPropagation()">
-          <div class="ep-subcats-prompt">
-            <div class="ep-subcats-prompt-icon">🔒</div>
-            <div class="ep-subcats-prompt-text">See exactly what's driving each score</div>
-            <button class="ep-subcats-prompt-btn" onclick="openUpgradeModal('starter');event.stopPropagation()">Upgrade to Starter →</button>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- EP 3 -->
-    <div class="ep-row" onclick="toggleEpRow(this)">
-      <div class="ep-row-head">
-        <div>
-          <div class="ep-row-title" id="dashEp3Title">Older Episode</div>
-          <div class="ep-row-sub">Published 16 days ago · 88 plays</div>
-        </div>
-        <span class="ep-chev">›</span>
-      </div>
-      <div class="ep-scores-grid">
-        <div class="ep-score-item unlocked"><div class="ep-score-label">Audio Quality</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" id="aq3" style="width:65%"></div></div><div class="ep-score-val" id="aqv3">65/100</div></div>
-        <div class="ep-score-item unlocked"><div class="ep-score-label">Content Structure</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" style="width:77%"></div></div><div class="ep-score-val">77/100</div></div>
-        <div class="ep-score-item unlocked"><div class="ep-score-label">Topic Relevance</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" style="width:69%"></div></div><div class="ep-score-val">69/100</div></div>
-        <div class="ep-score-item unlocked"><div class="ep-score-label">Clip-ability</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" style="width:73%"></div></div><div class="ep-score-val">73/100</div></div>
-        <div class="ep-score-item unlocked"><div class="ep-score-label">Consistency</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" style="width:62%"></div></div><div class="ep-score-val">62/100</div></div>
-        <div class="ep-score-item unlocked"><div class="ep-score-label">Episode Vitality</div><div class="ep-score-bar-bg"><div class="ep-score-bar-fill" style="width:66%"></div></div><div class="ep-score-val">66/100</div></div>
-      </div>
-      <div class="ep-subcats-wrap" id="ep3-subcats">
+    <div id="dashEpList"></div>
+    <!-- placeholder ep3-subcats so applyDashboardTier doesn't error on old refs -->
+    <div style="display:none" id="ep3-subcats">
         <div class="ep-subcats-content blurred" id="ep3-subcats-content"></div>
         <div class="ep-subcats-overlay" id="ep3-subcats-overlay" onclick="openUpgradeModal('starter');event.stopPropagation()">
           <div class="ep-subcats-prompt">
@@ -1379,10 +1357,15 @@ function dismissOnboarding() {
   setTimeout(function() { wrap.style.display = 'none'; }, 400);
 }
 
-function showRoleSplash() { dismissOnboarding(); }  // legacy alias — listener onboarding removed
+// ── SIMULATED AUTH FLAG ───────────────────────────────────────────────────────
+// Auth is deliberately simulated (no real OAuth/backend). Set to false and
+// replace doCreatorSSO / doListenerSSO / doSignInSSO with real OAuth before ship.
+var SIMULATED_AUTH = true;
+
+function showRoleSplash() { showCreatorScreen('onboardLandingScreen'); }
 
 function showCreatorScreen(screenId) {
-  ['creatorAuthScreen','creatorSearchScreen','creatorVerifyScreen','creatorAboutScreen','signinScreen'].forEach(function(id){
+  ['onboardLandingScreen','listenerAuthScreen','creatorAuthScreen','creatorSearchScreen','creatorVerifyScreen','creatorAboutScreen','signinScreen'].forEach(function(id){
     var el = document.getElementById(id);
     if (el) el.className = 'creator-screen' + (id === screenId ? ' visible' : '');
   });
@@ -1391,11 +1374,60 @@ function showCreatorScreen(screenId) {
   wrap.classList.remove('hidden');
 }
 
+// ── LISTENER AUTH ─────────────────────────────────────────────────────────────
+function isListenerOrCreator() { return userMode === 'listener' || userMode === 'creator'; }
+
+function toggleListenerEmailForm(show) {
+  var form = document.getElementById('lEmailForm');
+  var btn  = document.getElementById('lEmailToggleBtn');
+  if (form) form.className = 'email-form' + (show ? ' visible' : '');
+  if (btn)  btn.style.display = show ? 'none' : '';
+  if (show) { var i = document.getElementById('lEmailInput'); if (i) i.focus(); }
+}
+
+// SIMULATED_AUTH: mock SSO — replace with real OAuth before ship
+function doListenerSSO(provider) {
+  var names  = {google:'Google Listener', apple:'Apple Listener'};
+  var emails = {google:'listener@gmail.com', apple:'listener@icloud.com'};
+  currentUser = {name:names[provider], email:emails[provider], provider:provider};
+  finishListenerSignup();
+}
+
+function doListenerEmailAuth() {
+  var email = document.getElementById('lEmailInput').value.trim();
+  if (!email || !email.includes('@')) { showToast('Please enter a valid email'); return; }
+  currentUser = {
+    name: email.split('@')[0].charAt(0).toUpperCase() + email.split('@')[0].slice(1),
+    email: email, provider: 'email'
+  };
+  finishListenerSignup();
+}
+
+function finishListenerSignup() {
+  var nlOptIn = false;
+  try { nlOptIn = document.getElementById('listenerNLOptIn').checked; } catch(e) {}
+  userMode = 'listener';
+  try {
+    localStorage.setItem('hp_user', JSON.stringify({
+      name: currentUser.name, email: currentUser.email, provider: currentUser.provider,
+      mode: 'listener',
+      newsletterOptIn: nlOptIn  // placeholder — wire to Mailchimp/Substack when platform chosen
+    }));
+  } catch(e) {}
+  dismissOnboarding();
+  var initials = currentUser.name.split(' ').map(function(w){return w[0];}).join('').slice(0,2).toUpperCase();
+  var av = document.getElementById('topAvatar');
+  if (av) { av.textContent = initials; av.style.background = 'linear-gradient(135deg,#47ffe8,#1a6b3c)'; av.style.color = '#0a0a0f'; }
+  render(filteredData);
+  showToast('Welcome to HiddenPod ✦', true);
+}
+
 // ── CREATOR AUTH ──────────────────────────────────────────────────────────────
 function doCreatorSSO(provider) {
-  var names = {google:'Google Creator',apple:'Apple Creator',spotify:'Spotify Creator'};
-  var emails = {google:'creator@gmail.com',apple:'creator@icloud.com',spotify:'creator@spotify.com'};
-  currentUser = {name:names[provider],email:emails[provider],provider:provider};
+  // SIMULATED_AUTH: mock SSO — replace with real OAuth before ship
+  var names  = {google:'Google Creator', apple:'Apple Creator'};
+  var emails = {google:'creator@gmail.com', apple:'creator@icloud.com'};
+  currentUser = {name:names[provider], email:emails[provider], provider:provider};
   showCreatorScreen('creatorSearchScreen');
 }
 
@@ -1559,18 +1591,6 @@ function showCreatorDashboard() {
   document.getElementById('dashShowInit').textContent = showInitials;
   document.getElementById('dashShowName').textContent = creatorShowName || 'Your Show';
   document.getElementById('dashShowOutlet').textContent = creatorShowOutlet || 'Independent';
-  // Randomize audio quality scores (60–85)
-  var aqScores = [
-    Math.floor(Math.random()*26)+60,
-    Math.floor(Math.random()*26)+60,
-    Math.floor(Math.random()*26)+60
-  ];
-  for (var i = 1; i <= 3; i++) {
-    var bar = document.getElementById('aq'+i);
-    var val = document.getElementById('aqv'+i);
-    if (bar) bar.style.width = aqScores[i-1]+'%';
-    if (val) val.textContent = aqScores[i-1]+'/100';
-  }
   // Hide unlock DL button if they already submitted downloads
   if (!creatorSkippedDetails) {
     var dlBtn = document.getElementById('unlockDlBtn');
@@ -1608,9 +1628,8 @@ function showCreatorDashboard() {
   var dash = document.getElementById('creatorDash');
   document.getElementById('phone').appendChild(dash);
   dash.classList.add('open');
-  // Render subcategory detail rows and apply tier gating
-  renderEpisodeSubcats(1); renderEpisodeSubcats(2); renderEpisodeSubcats(3);
-  applyDashboardTier(getUserTier());
+  // Render episode list from real DATA and apply tier gating
+  renderDashEpisodes();
   render(filteredData);
   showToast('Welcome to your creator dashboard ✦', true);
 }
@@ -1825,8 +1844,9 @@ function toggleSignInEmailForm(show) {
 }
 
 function doSignInSSO(provider) {
-  var names = {google:'Google User', apple:'Apple User', spotify:'Spotify Listener'};
-  var emails = {google:'user@gmail.com', apple:'user@icloud.com', spotify:'user@spotify.com'};
+  // SIMULATED_AUTH: mock SSO — replace with real OAuth before ship
+  var names  = {google:'Google User', apple:'Apple User'};
+  var emails = {google:'user@gmail.com', apple:'user@icloud.com'};
   currentUser = { name: names[provider], email: emails[provider], provider: provider };
   finishSignIn();
 }
@@ -1951,21 +1971,33 @@ function buildCard(c,idx){
   var psTotal = (c._meta && c._meta.totalScore) || 0;
   var psTierKey = (c._meta && c._meta.scoreTier) || '';
   var psTierLabel = psTierKey === 'exceptional' ? ' · Exceptional' : psTierKey === 'strong' ? ' · Strong' : '';
-  var psHeadline = '<div class="ps-headline">'
-    +'<span class="ps-total">'+psTotal+'</span>'
-    +'<span class="ps-wordmark">Episode Score</span>'
-    +(psTierLabel ? '<span class="ps-tier">'+psTierLabel+'</span>' : '')
-    +'</div>';
 
-  var expandHtml = '<div class="score-expand" onclick="doInfo('+c.id+',event)">'
-    +'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>'
-    +'<span>Why this score?</span>'
-    +'</div>';
+  // Gate overall score for anonymous users beyond card #5 (0-indexed)
+  var scoreGated = idx >= 5 && !isListenerOrCreator();
+  var psHeadline, expandHtml;
+  if (scoreGated) {
+    psHeadline = '<div class="ps-headline">'
+      +'<span class="ps-total ps-total-blurred">'+psTotal+'</span>'
+      +'<span class="ps-wordmark">Episode Score</span>'
+      +'</div>'
+      +'<button class="ps-gate-cta" onclick="showCreatorScreen(\'onboardLandingScreen\')">Sign up free to see all scores →</button>';
+    expandHtml = '';
+  } else {
+    psHeadline = '<div class="ps-headline">'
+      +'<span class="ps-total">'+psTotal+'</span>'
+      +'<span class="ps-wordmark">Episode Score</span>'
+      +(psTierLabel ? '<span class="ps-tier">'+psTierLabel+'</span>' : '')
+      +'</div>';
+    expandHtml = '<div class="score-expand" onclick="doInfo('+c.id+',event)">'
+      +'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>'
+      +'<span>Why this score?</span>'
+      +'</div>';
+  }
 
   var pubDate = formatEpDate(c._meta && c._meta.episodePubDate);
   var scoreRowHtml = isCreatorOf(c.showId)
     ? '<div class="score-row">'+scorePills+'</div>'
-    : '<div class="score-locked">Sign in to unlock score breakdown</div>';
+    : (!isLoggedIn() && !scoreGated ? '<div class="score-locked">Sign in to unlock score breakdown</div>' : '');
   var dpHtml = isCreatorOf(c.showId)
     ? '<div class="dp" id="dp'+c.id+'">'
       +'<div class="dp-backdrop" onclick="doInfo('+c.id+',event)"></div>'
@@ -2435,7 +2467,7 @@ function applyDiscoverMode(){
 }
 function showProfile() {
   if (!currentUser || !userMode) {
-    showCreatorScreen('creatorAuthScreen');
+    showCreatorScreen('onboardLandingScreen');
     return;
   }
   if (userMode === 'creator') {
@@ -2444,6 +2476,7 @@ function showProfile() {
     dash.classList.add('open');
     return;
   }
+  // listener — no separate dashboard yet; no-op (avatar tap does nothing extra)
 }
 
 // ── TOAST ─────────────────────────────────────────────────────────────────────
@@ -2532,12 +2565,6 @@ fetch('/data/shows.json')
         if (!stored) return;
         var u = JSON.parse(stored);
         if (!u || !u.name || !u.mode) return;
-        // Listener accounts removed — migrate saved listener sessions to signed-out
-        if (u.mode === 'listener') {
-          try { localStorage.removeItem('hp_user'); } catch(e2) {}
-          currentUser = null; userMode = null;
-          return;
-        }
 
         currentUser = { name: u.name, email: u.email, provider: u.provider };
         userMode = u.mode;
@@ -2566,19 +2593,15 @@ fetch('/data/shows.json')
             document.getElementById('dashShowInit').textContent = creatorShowName.split(/\s+/).slice(0,2).map(function(w){return w[0];}).join('').toUpperCase() || 'HP';
             document.getElementById('dashShowName').textContent = creatorShowName || 'Your Show';
             document.getElementById('dashShowOutlet').textContent = creatorShowOutlet || 'Independent';
-            var aqScores = [Math.floor(Math.random()*26)+60, Math.floor(Math.random()*26)+60, Math.floor(Math.random()*26)+60];
-            for (var i = 1; i <= 3; i++) {
-              var bar = document.getElementById('aq'+i); var val = document.getElementById('aqv'+i);
-              if (bar) bar.style.width = aqScores[i-1]+'%';
-              if (val) val.textContent = aqScores[i-1]+'/100';
-            }
             if (!creatorSkippedDetails && creatorDownloadValue) {
               var dlBtn = document.getElementById('unlockDlBtn');
               if (dlBtn) dlBtn.style.display = 'none';
             }
-            renderEpisodeSubcats(1); renderEpisodeSubcats(2); renderEpisodeSubcats(3);
-            applyDashboardTier(getUserTier());
+            renderDashEpisodes();
             dash.classList.add('open');
+          } else if (userMode === 'listener') {
+            var av = document.getElementById('topAvatar');
+            if (av) { av.textContent = initials; av.style.background = 'linear-gradient(135deg,#47ffe8,#1a6b3c)'; av.style.color = '#0a0a0f'; }
           }
           setTimeout(function() {
             showToast('Welcome back, ' + currentUser.name.split(' ')[0] + ' ✦', true);
@@ -2597,6 +2620,76 @@ fetch('/data/shows.json')
   });
 
 // ── TIER MANAGEMENT ───────────────────────────────────────────────────────────
+// ── CREATOR DASHBOARD EPISODES ────────────────────────────────────────────────
+var DASH_EP_PAGE = 3;
+var _dashEpData = [];
+var _dashEpShown = 0;
+
+function buildDashEpRow(c) {
+  var scoreItems = Object.keys(DIM_NAMES).map(function(k){
+    var v = (c.scores && c.scores[k]) || 0;
+    return '<div class="ep-score-item unlocked">'
+      +'<div class="ep-score-label">'+DIM_NAMES[k]+'</div>'
+      +'<div class="ep-score-bar-bg"><div class="ep-score-bar-fill" style="width:'+v+'%"></div></div>'
+      +'<div class="ep-score-val">'+v+'/100</div>'
+      +'</div>';
+  }).join('');
+  var pubDate = formatEpDate(c._meta && c._meta.episodePubDate);
+  return '<div class="ep-row" onclick="toggleEpRow(this)">'
+    +'<div class="ep-row-head"><div>'
+    +'<div class="ep-row-title">'+(c.ep||'Episode')+'</div>'
+    +(pubDate?'<div class="ep-row-sub">'+pubDate+'</div>':'')
+    +'</div><span class="ep-chev">›</span></div>'
+    +'<div class="ep-scores-grid">'+scoreItems+'</div>'
+    +'<div class="ep-subcats-wrap">'
+    +'<div class="ep-subcats-content blurred"></div>'
+    +'<div class="ep-subcats-overlay" onclick="openUpgradeModal(\'starter\');event.stopPropagation()">'
+    +'<div class="ep-subcats-prompt">'
+    +'<div class="ep-subcats-prompt-icon">🔒</div>'
+    +'<div class="ep-subcats-prompt-text">See exactly what\'s driving each score</div>'
+    +'<button class="ep-subcats-prompt-btn" onclick="openUpgradeModal(\'starter\');event.stopPropagation()">Upgrade to Starter →</button>'
+    +'</div></div></div>'
+    +'</div>';
+}
+
+function renderDashEpisodes() {
+  var showId = claimedShow && claimedShow.showId;
+  _dashEpData = showId
+    ? DATA.filter(function(c){ return c.showId === showId; })
+         .sort(function(a,b){
+           var da=(a._meta&&a._meta.episodePubDate)||'';
+           var db=(b._meta&&b._meta.episodePubDate)||'';
+           return db.localeCompare(da);
+         })
+    : [];
+  _dashEpShown = 0;
+  var container = document.getElementById('dashEpList');
+  if (!container) return;
+  var slice = _dashEpData.slice(0, DASH_EP_PAGE);
+  _dashEpShown = slice.length;
+  container.innerHTML = slice.map(buildDashEpRow).join('') + _buildDashLoadMoreBtn();
+  applyDashboardTier(getUserTier());
+}
+
+function _buildDashLoadMoreBtn() {
+  var remaining = _dashEpData.length - _dashEpShown;
+  if (remaining <= 0) return '';
+  var next = Math.min(DASH_EP_PAGE, remaining);
+  return '<button class="lib-load-more" id="dashLoadMoreBtn" onclick="dashEpLoadMore()">Load '+next+' more episode'+(next>1?'s':'')+'</button>';
+}
+
+function dashEpLoadMore() {
+  var slice = _dashEpData.slice(_dashEpShown, _dashEpShown + DASH_EP_PAGE);
+  _dashEpShown += slice.length;
+  var container = document.getElementById('dashEpList');
+  var btn = document.getElementById('dashLoadMoreBtn');
+  if (btn) btn.remove();
+  var frag = document.createElement('div');
+  frag.innerHTML = slice.map(buildDashEpRow).join('') + _buildDashLoadMoreBtn();
+  while (frag.firstChild) container.appendChild(frag.firstChild);
+  applyDashboardTier(getUserTier());
+}
+
 function getUserTier(){
   try{var u=JSON.parse(localStorage.getItem('hp_user')||'{}');return u.tier||'free';}catch(e){return 'free';}
 }
