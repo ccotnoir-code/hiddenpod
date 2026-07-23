@@ -194,8 +194,9 @@ footer{background:rgba(0,0,0,0.4);border-top:1px solid var(--border);padding:56p
   .footer-grid{grid-template-columns:1fr;gap:32px}
 }
 @media(max-width:640px){
-  .nav-link{display:none}
-  .nav-cta{padding:6px 12px;font-size:12px}
+  .nav-link:not(.nav-link-primary){display:none}
+  .nav-link-primary{padding:4px 6px;font-size:11px}
+  .nav-cta{padding:5px 8px;font-size:11px}
 }
 @media(max-width:600px){
   .hero-headline{font-size:30px}
@@ -215,8 +216,8 @@ footer{background:rgba(0,0,0,0.4);border-top:1px solid var(--border);padding:56p
   <div class="nav-links">
     <a href="/creators" class="nav-link">For Creators</a>
     <a href="#newsletter" class="nav-link">Newsletter</a>
-    <a href="/discover?tab=rankings" class="nav-link">Rankings</a>
-    <a href="/discover?tab=library" class="nav-link">Library</a>
+    <a href="/discover?tab=rankings" class="nav-link nav-link-primary">Rankings</a>
+    <a href="/discover?tab=library" class="nav-link nav-link-primary">Library</a>
     <a href="/discover?flow=signup" class="nav-cta nav-signup" id="homeSignupCta">Sign up free</a>
     <div class="nav-avatar-wrap">
       <div class="nav-avatar" id="homeAvatar" onclick="toggleHomeAvatarMenu(event)" style="display:none">?</div>
