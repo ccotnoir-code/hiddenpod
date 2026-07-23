@@ -441,7 +441,7 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--text);font-fam
 /* ── CREATOR DASHBOARD ── */
 .creator-dash{position:absolute;inset:0;background:var(--bg);z-index:10;display:none;flex-direction:column;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:32px}
 .creator-dash.open{display:flex}
-.dash-top{padding:52px 20px 14px;flex-shrink:0}
+.dash-top{padding:74px 20px 14px;flex-shrink:0}
 .creator-show-row{display:flex;align-items:center;gap:12px;margin-bottom:14px}
 .creator-show-init{width:46px;height:46px;border-radius:11px;background:linear-gradient(135deg,#0d2a1a,#1a4a2a);border:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;font-family:var(--font-d);font-weight:800;font-size:15px;color:var(--accent);flex-shrink:0}
 .creator-show-name{font-size:16px;font-weight:700;font-family:var(--font-d);line-height:1.2}
@@ -1083,8 +1083,8 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--text);font-fam
     <button class="pro-upgrade-banner-btn" onclick="openUpgradeModal('pro')">Upgrade to Pro →</button>
   </div>
 
-  <!-- Pro-gated features preview -->
-  <div class="pro-locked-section">
+  <!-- Pro-gated features preview — hidden until paid tier is spec'd -->
+  <div class="pro-locked-section" style="display:none">
     <div class="pro-locked-row">
       <div class="pro-locked-name">Guest Directory Access</div>
       <div class="pro-badge-pill">🔒 Pro</div>
