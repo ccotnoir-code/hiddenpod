@@ -426,6 +426,9 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--text);font-fam
 .tip-wrap:hover .tip-box{display:block}
 .about-section{width:100%;margin-bottom:16px}
 .about-label{font-size:11px;font-weight:600;color:rgba(255,255,255,0.45);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:7px}
+.upload-label{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,0.04);border:1px dashed rgba(255,255,255,0.2);border-radius:10px;padding:10px 16px;cursor:pointer;font-size:13px;color:rgba(255,255,255,0.6);transition:background 0.15s;margin-top:2px}
+.upload-label:hover{background:rgba(255,255,255,0.07);border-color:rgba(255,255,255,0.35)}
+.upload-note{font-size:11px;color:rgba(255,255,255,0.4);margin-top:6px;line-height:1.4}
 .range-pills{display:flex;flex-wrap:wrap;gap:7px}
 .range-pill{padding:7px 13px;border-radius:20px;border:1.5px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.04);color:rgba(255,255,255,0.5);font-size:12px;cursor:pointer;transition:all 0.15s;font-family:var(--font-b)}
 .range-pill.on{border-color:var(--accent);background:rgba(232,255,71,0.1);color:var(--accent)}
@@ -545,7 +548,7 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--text);font-fam
 .unlock-pro-btn:active{opacity:0.85}
 .unlock-dl-btn{width:100%;padding:12px;border-radius:12px;border:1.5px solid rgba(255,255,255,0.15);background:transparent;color:rgba(255,255,255,0.55);font-size:13px;cursor:pointer;font-family:var(--font-b)}
 /* ── CREATOR DASH INTERNAL NAV ── */
-.dash-nav-tabs{display:flex;gap:4px;padding:0 20px 14px;border-bottom:1px solid rgba(255,255,255,0.06);margin-bottom:0}
+.dash-nav-tabs{display:flex;gap:4px;padding:0 20px 14px;border-bottom:1px solid rgba(255,255,255,0.06);margin-bottom:12px}
 .dash-nav-tab{font-family:var(--font-d);font-size:12px;font-weight:700;padding:6px 14px;border-radius:16px;color:var(--muted);cursor:pointer;transition:all 0.18s;border:1px solid transparent;user-select:none}
 .dash-nav-tab.active{background:rgba(26,107,60,0.15);border-color:rgba(26,107,60,0.35);color:#6fcf97}
 .dash-nav-tab:not(.active):hover{color:var(--text)}
@@ -928,6 +931,21 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--text);font-fam
         </div>
         <div class="field-err" id="downloadErr">Please enter your monthly downloads.</div>
       </div>
+      <!-- Screenshot upload -->
+      <div class="about-section">
+        <div class="about-label">
+          Verify with a screenshot (optional)
+          <div class="tip-wrap">
+            <span class="tip-icon">ⓘ</span>
+            <div class="tip-box">Upload a screenshot from your podcast host's analytics dashboard to verify your download count. We'll review it manually if provided.</div>
+          </div>
+        </div>
+        <label class="upload-label" id="screenshotLabel">
+          <input type="file" id="screenshotInput" accept="image/*" onchange="handleScreenshotUpload(this)" style="display:none">
+          <span id="screenshotBtnText">📎 Attach screenshot</span>
+        </label>
+        <div class="upload-note" id="screenshotNote" style="display:none"></div>
+      </div>
       <!-- Cadence section -->
       <div class="about-section">
         <div class="about-label">
@@ -1048,7 +1066,7 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--text);font-fam
   <div class="dash-nav-tabs">
     <div class="dash-nav-tab active" data-tab="overview" onclick="showDashTab('overview')">Overview</div>
     <div class="dash-nav-tab" data-tab="newsletter" onclick="showDashTab('newsletter')">Newsletter</div>
-    <div class="dash-nav-tab" data-tab="rankings" onclick="showDashTab('rankings')">Rankings</div>
+    <div class="dash-nav-tab" onclick="document.getElementById('creatorDash').classList.remove('open');switchView('rankings')">Rankings</div>
   </div>
 
   <!-- OVERVIEW TAB -->
@@ -1071,8 +1089,8 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--text);font-fam
     </div>
   </div>
 
-  <!-- Upgrade CTA — visible for free tier only -->
-  <div class="unlock-cta-box" id="dashUpgradeCta">
+  <!-- Upgrade CTA — hidden until paid tier is spec'd -->
+  <div class="unlock-cta-box" id="dashUpgradeCta" style="display:none">
     <div class="unlock-cta-title">See exactly what's driving each score</div>
     <div class="unlock-cta-sub">Upgrade to Starter to unlock subcategory breakdowns, category rankings, and growth recommendations per dimension.</div>
     <div class="pricing-tiers">
@@ -1156,14 +1174,8 @@ html,body{width:100%;height:100%;background:var(--bg);color:var(--text);font-fam
     </div>
   </div>
 
-  <!-- RANKINGS TAB -->
-  <div id="dashTabRankings" style="display:none">
-    <div class="dash-coming-soon">
-      <div style="font-size:28px;margin-bottom:12px">📊</div>
-      <div style="font-family:var(--font-d);font-size:14px;font-weight:700;color:rgba(240,240,245,0.5);margin-bottom:6px">Category Rankings</div>
-      <div>See how your show ranks against similar independent podcasts.<br>Coming with Starter.</div>
-    </div>
-  </div>
+  <!-- RANKINGS TAB — tab navigates to main Rankings view, content unused -->
+  <div id="dashTabRankings" style="display:none"></div>
 
   <!-- Footer -->
   <div class="dash-footer">
@@ -1327,7 +1339,8 @@ var creatorDownloadValue = '';
 var creatorCadence = '';
 var creatorSkippedDetails = false;
 // Aliases used by localStorage save/restore
-var claimedShow = null;      // { name, outlet }
+var claimedShow = null;      // { name, outlet, showId }
+var creatorScreenshot = null;
 var creatorDownloads = null; // download value string
 
 var CREATOR_SHOWS = [
@@ -1476,28 +1489,36 @@ function creatorSearchShows(query) {
     return;
   }
   var q = query.toLowerCase();
-  var results = CREATOR_SHOWS.filter(function(s){
-    return s.name.toLowerCase().indexOf(q) > -1 || s.outlet.toLowerCase().indexOf(q) > -1;
-  }).slice(0,6);
+  // Deduplicate DATA by showId and filter by query
+  var seen = {};
+  var results = [];
+  (DATA || []).forEach(function(c) {
+    if (!seen[c.showId] && c.show.toLowerCase().indexOf(q) > -1) {
+      seen[c.showId] = true;
+      results.push({name: c.show, showId: c.showId});
+    }
+  });
+  results = results.slice(0, 6);
   if (results.length === 0) {
-    dropdown.innerHTML = '<div class="search-result" onclick="selectCreatorShow(\''+query.replace(/'/g,"\\'")+"','')\"><div class=\"search-result-show\">&ldquo;"+query+"&rdquo;</div><div class=\"search-result-outlet\">Claim as new show</div></div>";
+    var safeQ = query.replace(/'/g,"\\'").replace(/</g,'&lt;');
+    dropdown.innerHTML = '<div class="search-result" onclick="selectCreatorShow(\''+safeQ+'\',\'\',null)"><div class="search-result-show">&ldquo;'+query+'&rdquo;</div><div class="search-result-outlet">Claim as new show</div></div>';
     dropdown.classList.add('open');
     return;
   }
   dropdown.innerHTML = results.map(function(s){
     var safeN = s.name.replace(/'/g,"\\'");
-    var safeO = s.outlet.replace(/'/g,"\\'");
-    return '<div class="search-result" onclick="selectCreatorShow(\''+safeN+'\',\''+safeO+'\')">'
+    return '<div class="search-result" onclick="selectCreatorShow(\''+safeN+'\',\'Independent\','+s.showId+')">'
       +'<div class="search-result-show">'+s.name+'</div>'
-      +'<div class="search-result-outlet">'+s.outlet+'</div>'
+      +'<div class="search-result-outlet">Independent</div>'
       +'</div>';
   }).join('');
   dropdown.classList.add('open');
 }
 
-function selectCreatorShow(name, outlet) {
+function selectCreatorShow(name, outlet, showId) {
   creatorShowName = name;
   creatorShowOutlet = outlet || 'Independent';
+  if (showId) claimedShow = { name: name, outlet: creatorShowOutlet, showId: showId };
   document.getElementById('showSearchInput').value = name;
   document.getElementById('showDropdown').classList.remove('open');
   document.getElementById('searchErr').className = 'field-err';
@@ -1566,6 +1587,16 @@ function selectRange(el, value) {
   el.classList.add('on');
   creatorDownloadValue = value;
   document.getElementById('downloadErr').className = 'field-err';
+}
+
+function handleScreenshotUpload(input) {
+  if (input.files && input.files[0]) {
+    creatorScreenshot = input.files[0];
+    document.getElementById('screenshotBtnText').textContent = '✓ ' + creatorScreenshot.name;
+    var note = document.getElementById('screenshotNote');
+    note.textContent = 'Screenshot attached — we\'ll review it along with your download count.';
+    note.style.display = '';
+  }
 }
 
 function selectCadence(el, value) {
@@ -2922,9 +2953,9 @@ document.addEventListener('click', function() { closeAvatarMenu(); });
     // Small tick so DOM is fully ready before triggering flow
     setTimeout(function() {
       if (flow === 'creator') {
-        selectRole('podcaster');
+        showCreatorScreen('creatorAuthScreen');
       } else if (flow === 'listener') {
-        selectRole('listener');
+        showCreatorScreen('listenerAuthScreen');
       } else if (flow === 'signin') {
         var wrap = document.getElementById('onboardWrap');
         if (wrap) { wrap.style.display = ''; wrap.classList.remove('hidden'); }

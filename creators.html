@@ -444,8 +444,8 @@ function toggleFaq(el){
     if (u.mode === 'creator') {
       if (u.claimedShow && u.claimedShow.name) {
         // Already claimed — shortcut to dashboard
-        if (heroCta)   { heroCta.textContent   = 'Go to Dashboard →'; heroCta.href   = '/discover'; }
-        if (bandCta)   { bandCta.textContent   = 'Go to Dashboard →'; bandCta.href   = '/discover'; }
+        if (heroCta)   { heroCta.textContent   = 'View your dashboard →'; heroCta.href   = '/discover'; }
+        if (bandCta)   { bandCta.textContent   = 'View your dashboard →'; bandCta.href   = '/discover'; }
         if (welcome)   { welcome.textContent = 'Welcome back — ' + u.claimedShow.name; welcome.style.display = ''; }
       } else {
         // Logged in but no show yet — skip auth in flow

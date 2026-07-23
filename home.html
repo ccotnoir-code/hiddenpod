@@ -63,6 +63,8 @@ section{padding:80px 40px}
 .btn-primary:hover{opacity:0.88}
 .btn-outline{display:inline-flex;align-items:center;gap:6px;border:1px solid rgba(200,240,0,0.4);color:var(--accent);font-family:var(--font-d);font-size:14px;font-weight:700;padding:12px 24px;border-radius:24px;text-decoration:none;transition:all 0.18s;white-space:nowrap}
 .btn-outline:hover{background:rgba(200,240,0,0.07);border-color:var(--accent)}
+.hero-inline-cta{color:var(--accent);font-weight:600;text-decoration:none;border-bottom:1px solid rgba(200,240,0,0.35);padding-bottom:1px;transition:border-color 0.15s}
+.hero-inline-cta:hover{border-color:var(--accent)}
 
 /* ── FLOATING CARDS ── */
 .hero-visual{position:relative;height:500px;overflow:hidden}
@@ -232,13 +234,15 @@ footer{background:rgba(0,0,0,0.4);border-top:1px solid var(--border);padding:56p
     <div class="hero-text">
       <div class="hero-eyebrow">The quality layer for independent podcasting</div>
       <h1 class="hero-headline">Great podcasts deserve to be found.</h1>
-      <p class="hero-sub">PodSignal scores every independent show on six dimensions of quality — independent of audience size. For the first time, a 300-listener local journalism podcast can outscore an iHeart network show on merit.</p>
+      <p class="hero-sub">PodSignal scores every podcast — independent or network-backed — on six dimensions of quality, independent of audience size. For the first time, a 300-listener local journalism podcast appears on the same scale as an iHeart network show, judged on merit alone.</p>
       <div id="heroWelcome" style="display:none;font-size:13px;font-family:var(--font-d);font-weight:600;color:rgba(200,240,0,0.75);margin-bottom:12px"></div>
       <div class="hero-ctas">
-        <a href="/creators" class="btn-primary" id="heroCreatorCta">Claim your show →</a>
-        <a href="/discover" class="btn-outline" id="heroListenerCta">Browse discoveries →</a>
+        <a href="/discover?flow=creator" class="btn-primary" id="heroCreatorCta">Claim your show →</a>
+        <a href="/discover?tab=library" class="btn-outline" id="heroListenerCta">Browse discoveries →</a>
       </div>
-      <p id="heroLoginLink" style="margin-top:14px;font-size:13px;color:var(--muted)">Already a member? <a href="/discover?flow=signin" style="color:var(--accent);font-weight:600;text-decoration:none">Log in →</a></p>
+      <p style="margin-top:18px;font-size:14px;color:var(--muted);line-height:1.65">Podcast creators can claim their shows and unlock detailed metrics to understand where future episodes can be improved. <a href="/creators" class="hero-inline-cta" id="heroExploreCta">Explore as Creator →</a></p>
+      <p style="margin-top:12px;font-size:14px;color:var(--muted);line-height:1.65" id="heroListenerText">Interested in browsing the library and discovering new shows? <a href="/discover?flow=signup" style="color:var(--accent);font-weight:600;text-decoration:none">Sign up free</a>. Already a HiddenPod member? <a href="/discover?flow=signin" style="color:var(--accent);font-weight:600;text-decoration:none">Log in</a>.</p>
+      <p id="heroLoginLink" style="display:none;margin-top:14px;font-size:13px;color:var(--muted)">Already a member? <a href="/discover?flow=signin" style="color:var(--accent);font-weight:600;text-decoration:none">Log in →</a></p>
     </div>
     <div class="hero-visual" aria-hidden="true">
       <!-- Card 1: Granite Goodness -->
@@ -310,7 +314,7 @@ footer{background:rgba(0,0,0,0.4);border-top:1px solid var(--border);padding:56p
   <div class="container">
     <div class="section-eyebrow">How it works</div>
     <h2 class="section-heading">What is PodSignal?</h2>
-    <p class="ps-body">PodSignal is HiddenPod's proprietary quality scoring system. Every active independent podcast is assessed across six dimensions — audio quality, content structure, topic relevance, clip-ability, consistency, and episode vitality. Scores run 0–100. The result is a score that tells listeners whether a show is worth their time, and tells creators exactly what to improve.</p>
+    <p class="ps-body">PodSignal is HiddenPod's proprietary quality scoring system. Every active podcast is assessed across six dimensions — audio quality, content structure, topic relevance, clip-ability, consistency, and episode vitality. Scores run 0–100. The result is a score that tells listeners whether a show is worth their time, and tells creators exactly what to improve.</p>
     <p class="ps-body" style="margin-top:16px;font-size:14px;border-left:2px solid rgba(200,240,0,0.3);padding-left:14px">PodSignal measures production quality, structure, consistency, and topical fit. It does not evaluate, fact-check, or vouch for the accuracy of a show's content.</p>
     <div class="dim-pills">
       <div class="dim-pill"><span class="dim-pill-name">Audio Quality</span><span class="dim-pill-desc">Clarity, balance, mastering — 18%</span></div>
@@ -566,6 +570,10 @@ document.addEventListener('click', function() { closeHomeAvatarMenu(); });
     if (loginLink) loginLink.style.display = 'none';
     if (signupCta) signupCta.style.display = 'none';
 
+    // Hide sign-up/login inline text for logged-in users
+    var listenerText = document.getElementById('heroListenerText');
+    if (listenerText) listenerText.style.display = 'none';
+
     // Show avatar with initials
     if (avatar) {
       var initials = u.name
@@ -584,8 +592,8 @@ document.addEventListener('click', function() { closeHomeAvatarMenu(); });
 
     if (u.mode === 'creator') {
       if (u.claimedShow && u.claimedShow.name) {
-        if (creatorCta)  { creatorCta.textContent  = 'Go to Dashboard →'; creatorCta.href  = '/discover'; }
-        if (sectionCta)  { sectionCta.textContent  = 'Go to Dashboard →'; sectionCta.href  = '/discover'; }
+        if (creatorCta)  { creatorCta.textContent  = 'View your dashboard →'; creatorCta.href  = '/discover'; }
+        if (sectionCta)  { sectionCta.textContent  = 'View your dashboard →'; sectionCta.href  = '/discover'; }
         if (welcome)     { welcome.textContent = 'Welcome back — ' + u.claimedShow.name; welcome.style.display = ''; }
       } else {
         if (creatorCta) creatorCta.href = '/discover?flow=creator';
